@@ -1,0 +1,8 @@
+-r common.txt
+
+# Testing Dependencies
+pytest==6.1.1  # https://docs.pytest.org/en/stable/
+coverage==5.3  # https://coverage.readthedocs.io/en/coverage-5.3/
+pytest-cov==2.10.1  # https://github.com/pytest-dev/pytest-cov
+pytest-bdd==4.0.1  # https://github.com/pytest-dev/pytest-bdd
+beautifulsoup4==4.9.3  # https://www.crummy.com/software/BeautifulSoup/bs4/doc/
