@@ -47,8 +47,8 @@ The LAM services are split into:
 
 service | URL | info
 ------- | ------- | ----
-`lam-api` | [localhost:5000](http://localhost:5000) | _access [localhost:5000/ui](http://localhost:5000/ui) for the swagger interface_ 
-`lam-ui` | [localhost:9000](http://localhost:9000) |
+`lam-api` | [localhost:4050](http://localhost:4050) | _access [localhost:4050/ui](http://localhost:4050/ui) for the swagger interface_ 
+`lam-ui` | [localhost:8050](http://localhost:8050) |
 
 ## Stop services
 To stop the containers run:
