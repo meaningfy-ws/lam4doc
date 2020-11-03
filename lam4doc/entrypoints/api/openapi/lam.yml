@@ -1,0 +1,52 @@
+openapi: 3.0.1
+
+info:
+  title: LAM 2 DOC Service
+  description: |
+    This API provides the possibility to <description needed>.
+
+  contact:
+    name: Eugeniu Costetchi
+    url: http://costezki.ro
+    email: costezki.eugen@gmail.com
+  license:
+    name: GNU General Public License Version 3 (GPLv3)
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.1
+
+servers:
+  - url: 'http://localhost:5000/'
+    description: Default server
+
+components:
+  parameters:
+    exampleParam:
+      in: query
+      name: exampleParam
+      required: false
+      schema:
+        type: string
+      description: Example parameter
+
+  schemas:
+    ExampleSchema:
+      type: object
+      description: Example schema
+      properties:
+        example_value:
+          type: string
+          description: Example value
+
+
+paths:
+  /lam-example:
+    get:
+      operationId: lam4doc.entrypoints.api.handlers.lam_example
+      description: Example endpoint.
+      parameters:
+        - $ref: '#/components/parameters/exampleParam'
+      responses:
+        200:
+          description: OK.
+        5XX:
+          description: Unexpected Error.

@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+/cache
 
 # C extensions
 *.so
@@ -50,6 +51,8 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+cucumber_report.*
+junit_report.*
 
 # Translations
 *.mo
@@ -102,7 +105,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
@@ -125,5 +127,16 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# projest related
+cucumber_report.json
+junit_report.xml
+*.ldb
+
 # Pyre type checker
 .pyre/
+
+# JetBrains
+.idea/
+
+# VScode
+.vscode
