@@ -1,0 +1,58 @@
+{% import "common/macros.html" as mc %}
+{% import "common/concept_macros.html" as cv %}
+
+<h1>Celex concepts</h1>
+{#  this will start from the a top concept and will get all narrower concepts recursively  #}
+{% macro build_child_concepts(concept_uri, level) %}
+    {%- set next_lvl = level + 1 %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+select ?concept ?prefLabel
+{
+  values ?parent {<"~concept_uri~">}
+  ?concept skos:broader ?parent .
+  optional {
+    ?concept skos:prefLabel ?prefLabel .
+  }
+
+} ORDER BY ?concept" %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call mc.render_fetch_results(content, error) %}
+        {% if not content.empty %}
+            {% for idx, row in content.iterrows() %}
+                {{ cv.build_concept_view(row["concept"], row["prefLabel"], level) }}
+                {{ build_child_concepts(row["concept"], next_lvl) }}
+            {% endfor %}
+        {% endif %}
+    {% endcall %}
+{% endmacro %}
+
+{#       starting from top concepts this will build all concepts         #}
+
+{% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+select ?concept ?prefLabel
+{
+  ?concept a skos:Concept .
+  ?concept skos:notation ?notation .
+   optional {
+    ?concept skos:prefLabel ?prefLabel
+  }
+  FILTER NOT EXISTS {
+    ?concept skos:broader ?parent .
+  }
+} ORDER BY ?notation" %}
+{% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+{% call mc.render_fetch_results(content, error) %}
+
+    {% set level = 2 %}
+    {% for idx, row in content.iterrows() %}
+        {{ cv.build_concept_view(row["concept"], row["prefLabel"], level) }}
+        {% set concept_uri = row["concept"] %}
+        {{ build_child_concepts(concept_uri,level=3) }}
+    {% endfor %}
+{% endcall %}
+
+
+
+
