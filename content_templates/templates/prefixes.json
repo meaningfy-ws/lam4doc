@@ -2622,5 +2622,6 @@
   "osmnode:": "https://www.openstreetmap.org/node/",
   "osmway:": "https://www.openstreetmap.org/way/",
   "asio:": "http://purl.org/hercules/asio/core#",
-  "taxrefprop:": "http://taxref.mnhn.fr/lod/property/"
+  "taxrefprop:": "http://taxref.mnhn.fr/lod/property/",
+  "euvoc": "http://publications.europa.eu/ontology/euvoc#"
 }

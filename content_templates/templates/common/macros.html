@@ -64,13 +64,35 @@
     {% if not result_set.empty and property_id in result_set.columns %}
         {% set values =  result_set[property_id].dropna() %}
         {% if not values.empty %}
-            <dt title="{{ property_id }}">{{ property_label }}</dt>
-            {% for idx, item in values.iteritems() %}
-                <dd title="{{ property_id }}">{{ item|e|replace("\n","<br/>") }}</dd>
-            {% endfor %}
+            <dl>
+                <dt title="{{ property_id }}">{{ property_label }}</dt>
+                {% for idx, item in values.iteritems() %}
+                    <dd title="{{ property_id }}">{{ item|e|replace("\n","<br/>") }}</dd>
+                {% endfor %}
+            </dl>
         {% endif %}
     {% else %}
         {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
     {% endif %}
 {%- endmacro %}
 
+
+{% macro build_description_item_local_iri(result_set, property_id, property_label, link_label_property_id=None) -%}
+    {% if not result_set.empty and property_id in result_set.columns %}
+        {% set values =  result_set[property_id].dropna() %}
+        {% if not values.empty %}
+            <dl>
+                <dt>{{ property_label }}</dt>
+                {% for idx, item in values.iteritems() %}
+                    {% if link_label_property_id is none %}
+                        <dd><a href="#{{ item }}">{{ item|e|replace("\n","<br/>") }}</a></dd>
+                    {% else %}
+                        <dd><a href="#{{ item }}">{{ link_label_property_id }}</a></dd>
+                    {% endif %}
+                {% endfor %}
+            </dl>
+        {% endif %}
+    {% else %}
+        {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
+    {% endif %}
+{%- endmacro %}
