@@ -3,6 +3,8 @@ PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+PREFIX lamd: <http://publications.europa.eu/resources/authority/lam/>
 
 SELECT
 ?celexURI
@@ -14,6 +16,10 @@ SELECT
 (group_concat(distinct ?broaderLabel; separator=", ") as ?broaderLabels)
 (group_concat(distinct ?collectionURI; separator=", ") as ?collectionURIS)
 (group_concat(distinct ?collectionLabel; separator=", ") as ?collectionLabels)
+(group_concat(distinct ?dttValue; separator=", ") as ?dttValues)
+(group_concat(distinct ?dtsValue; separator=", ") as ?dtsValues)
+(group_concat(distinct ?dtaValue; separator=", ") as ?dtaValues)
+(group_concat(distinct ?dtnValue; separator=", ") as ?dtnValues)
 {
   ?celexURI a skos:Concept .
   optional {
@@ -37,6 +43,26 @@ SELECT
   }
   optional {
     ?collectionURI skos:prefLabel ?collectionLabel .
+  }
+  optional {
+    ?celexURI lam:hasPropertyConfiguration ?hasPropertyConfigurationDtt .
+    ?hasPropertyConfigurationDtt lam:path lam:dtt;
+                              sh:value ?dttValue .
+  }
+  optional{
+    ?celexURI lam:hasPropertyConfiguration ?hasPropertyConfigurationDts .
+    ?hasPropertyConfigurationDts lam:path lam:dts;
+                              sh:value ?dtsValue .
+  }
+  optional{
+    ?celexURI lam:hasPropertyConfiguration ?hasPropertyConfigurationDta .
+    ?hasPropertyConfigurationDta lam:path lam:dta;
+                              sh:value ?dtaValue .
+  }
+  optional{
+    ?celexURI lam:hasPropertyConfiguration ?hasPropertyConfigurationDtn .
+    ?hasPropertyConfigurationDtn lam:path lam:dtn;
+                              sh:value ?dtnValue .
   }
 }
 group by
