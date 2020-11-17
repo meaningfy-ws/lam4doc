@@ -1,0 +1,29 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+select
+?classURI
+(group_concat(?rdfType; separator=", ") as ?types)
+(group_concat(?label; separator=", ") as ?labels)
+(group_concat(?note; separator=", ") as ?notes)
+(group_concat(?example; separator=", ") as ?examples)
+{
+  ?classURI a skos:Concept .
+  optional {
+    ?classURI rdf:type ?rdfType
+  }
+  optional {
+    ?classURI skos:prefLabel | skos:altLabel ?label .
+  }
+  optional {
+    ?classURI skos:editorialNote ?note
+  }
+  optional {
+    ?classURI skos:example ?example
+  }
+}
+group by
+?classURI
