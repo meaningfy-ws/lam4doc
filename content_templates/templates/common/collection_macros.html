@@ -1,0 +1,96 @@
+{% import "common/macros.html" as mc %}
+
+{% macro build_collection_view (collection_uri, collection_label, level) %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+select ?prefLabel
+{
+  values ?collection {<"~collection_uri~">}
+    optional {
+    ?collection skos:prefLabel ?prefLabel
+  }
+}" %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call mc.render_fetch_results(content, error) %}
+        <h{{ level }} id="{{ collection_uri }}">
+            {{ collection_label }} <sup title="collection">[collection]</sup>
+        </h{{ level }}>
+        <section>
+
+            <dl>
+                <dt>IRI</dt>
+                <dd><a href="#{{ collection_uri }}">{{ collection_uri }}</a></dd>
+            </dl>
+            {{ build_collection_metadata_part(collection_uri) }}
+            {{ build_collection_editorial_part(collection_uri) }}
+        </section>
+    {% endcall %}
+{% endmacro %}
+
+{% macro build_collection_editorial_part(collection_uri) %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
+select ?definition ?scopeNote ?example ?editorialNote ?historyNote ?changeNote
+{
+  values ?collection {<"~collection_uri~">}
+   {
+    ?collection skos:definition ?definition
+  }
+}" %}
+
+
+
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call mc.render_fetch_results(content, error) %}
+        {% if not content.dropna(how="all").empty %}
+            {{ mc.build_description_item_plain_literal (content,"definition","Definition") }}
+        {% endif %}
+    {% endcall %}
+
+
+{% endmacro %}
+
+{% macro build_collection_metadata_part(collection_uri) %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+
+select ?created ?order ?notation ?member
+{
+  values ?collection {<"~collection_uri~">}
+   {
+    ?collection dct:created ?created
+  }
+  union
+{
+  ?collection euvoc:order ?order .
+  }
+    union
+{
+  ?collection skos:notation ?notation .
+  }
+  union
+  {
+  ?collection skos:member ?member .
+  }
+}" %}
+
+
+
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call mc.render_fetch_results(content, error) %}
+        {% if not content.dropna(how="all").empty %}
+            {{ mc.build_description_item_local_iri (content,"member","Members") }}
+            {{ mc.build_description_item_plain_literal (content,"created","Created Date") }}
+            {{ mc.build_description_item_plain_literal (content,"notation","Notation") }}
+            {{ mc.build_description_item_plain_literal (content,"order","Order") }}
+        {% endif %}
+    {% endcall %}
+
+
+{% endmacro %}

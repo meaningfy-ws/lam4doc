@@ -1,0 +1,114 @@
+{% import "common/macros.html" as mc %}
+
+{% macro build_concept_view (concept_uri, concept_label, level) %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+select ?prefLabel
+{
+  values ?concept {<"~concept_uri~">}
+    optional {
+    ?concept skos:prefLabel ?prefLabel
+  }
+}" %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call mc.render_fetch_results(content, error) %}
+        <h{{ level }} id="{{ concept_uri }}">
+            {{ concept_label }} <sup title="Concept">[Concept]</sup>
+        </h{{ level }}>
+        <section>
+            <dl>
+                <dt>IRI</dt>
+                <dd><a href="#{{ concept_uri }}">{{ concept_uri }}</a></dd>
+            </dl>
+            {{ build_concept_metadata_part(concept_uri) }}
+            {{ build_concept_editorial_part(concept_uri) }}
+        </section>
+    {% endcall %}
+{% endmacro %}
+
+{% macro build_concept_editorial_part(concept_uri) %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
+select ?definition ?scopeNote ?example ?editorialNote ?historyNote ?changeNote
+{
+  values ?concept {<"~concept_uri~">}
+   {
+    ?concept skos:definition ?definition
+  }
+    union {
+    ?concept skos:scopeNote ?scopeNote
+  }
+   union {
+    ?concept skos:example ?example
+  }
+     union {
+    ?concept skos:editorialNote ?editorialNote
+  }
+     union {
+    ?concept skos:historyNote ?historyNote
+  }
+       union {
+    ?concept skos:changeNote ?changeNote
+  }
+}" %}
+
+
+
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call mc.render_fetch_results(content, error) %}
+        {% if not content.dropna(how="all").empty %}
+            {{ mc.build_description_item_plain_literal (content,"definition","Definition") }}
+            {{ mc.build_description_item_plain_literal (content,"scopeNote","Scope note") }}
+            {{ mc.build_description_item_plain_literal (content,"example","Example") }}
+            {{ mc.build_description_item_plain_literal (content,"editorialNote","Editorial note") }}
+            {{ mc.build_description_item_plain_literal (content,"historyNote","History note") }}
+            {{ mc.build_description_item_plain_literal (content,"changeNote","Change note") }}
+        {% endif %}
+    {% endcall %}
+
+
+{% endmacro %}
+
+{% macro build_concept_metadata_part(concept_uri) %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
+select ?prefLabel ?altLabel ?notation ?created ?identifier
+{
+  values ?concept {<"~concept_uri~">}
+   {
+    ?concept skos:altLabel ?altLabel
+  }
+    union {
+    ?concept skos:prefLabel ?prefLabel
+  }
+   union {
+    ?concept skos:notation ?notation
+  }
+     union {
+    ?concept dct:created ?created
+  }
+     union {
+    ?concept dct:identifier ?identifier
+  }
+}" %}
+
+
+
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call mc.render_fetch_results(content, error) %}
+        {% if not content.dropna(how="all").empty %}
+            {{ mc.build_description_item_plain_literal (content,"altLabel","Alternative label") }}
+            {{ mc.build_description_item_plain_literal (content,"notation","Notation") }}
+            {{ mc.build_description_item_plain_literal (content,"created","Created Date") }}
+            {{ mc.build_description_item_plain_literal (content,"identifier","Identifier") }}
+        {% endif %}
+    {% endcall %}
+
+
+{% endmacro %}

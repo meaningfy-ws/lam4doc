@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+
+
+{% block content %}
+    {# Read the and invert the namespace/prefix definitions for substitution #}
+    {% set prefixes, error = from_file(conf.template_path+'/prefixes.json').fetch_tree() %}
+    {% set inverted_prefixes = invert_dict(prefixes) %}
+
+
+    {% include "lam_proprieties/all_collections_view.html" with context%}
+
+{% endblock %}
