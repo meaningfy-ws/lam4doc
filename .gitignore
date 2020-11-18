@@ -140,3 +140,6 @@ junit_report.xml
 
 # VScode
 .vscode
+
+# Misc
+.~lock*.*
