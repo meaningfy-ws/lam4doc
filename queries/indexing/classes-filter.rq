@@ -9,9 +9,6 @@ PREFIX lamd: <http://publications.europa.eu/resources/authority/lam/>
 select
 ?classURI
 (group_concat(distinct ?rdfType; separator=", ") as ?types)
-(group_concat(distinct ?label; separator=", ") as ?labels)
-(group_concat(distinct ?note; separator=", ") as ?notes)
-(group_concat(distinct ?example; separator=", ") as ?examples)
 (group_concat(distinct ?authorConfigValue; separator=", ") as ?authors)
 (group_concat(distinct ?resourceTypeConfigValue; separator=", ") as ?resourceTypes)
 (group_concat(distinct ?collectionURI; separator=", ") as ?collections)
@@ -56,15 +53,6 @@ select
   }
   optional {
     ?classURI rdf:type ?rdfType .
-  }
-  optional {
-    ?classURI skos:prefLabel | skos:altLabel ?label .
-  }
-  optional {
-    ?classURI skos:editorialNote ?note .
-  }
-  optional {
-    ?classURI skos:example ?example .
   }
 }
 group by

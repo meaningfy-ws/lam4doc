@@ -6,15 +6,23 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 select
 ?celexURI
+(group_concat(distinct ?prefLabel; separator=", ") as ?labels)
+(group_concat(distinct ?note; separator=", ") as ?notes)
+(group_concat(distinct ?example; separator=", ") as ?examples)
 (group_concat(?editorialNote; separator=", ") as ?editorialNotes)
-(group_concat(?broaderConcept; separator=", ") as ?broaderConcepts)
 {
   ?celexURI a skos:Concept .
   optional{
     ?celexURI skos:editorialNote ?editorialNote
   }
   optional {
-    ?celexURI skos:broader ?broaderConcept
+    ?celexURI skos:prefLabel ?prefLabel .
+  }
+  optional {
+    ?celexURI skos:editorialNote ?note .
+  }
+  optional {
+    ?celexURI skos:example ?example .
   }
 }
 group by

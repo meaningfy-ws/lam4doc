@@ -9,9 +9,6 @@ PREFIX lamd: <http://publications.europa.eu/resources/authority/lam/>
 SELECT
 ?celexURI
 (group_concat(distinct ?rdfType; separator=", ") as ?rdfTypes)
-(group_concat(distinct ?prefLabel; separator=", ") as ?labels)
-(group_concat(distinct ?note; separator=", ") as ?notes)
-(group_concat(distinct ?example; separator=", ") as ?examples)
 (group_concat(distinct ?broaderConcept; separator=", ") as ?broaderConcepts)
 (group_concat(distinct ?broaderLabel; separator=", ") as ?broaderLabels)
 (group_concat(distinct ?collectionURI; separator=", ") as ?collectionURIS)
@@ -24,15 +21,6 @@ SELECT
   ?celexURI a skos:Concept .
   optional {
     ?celexURI rdf:type ?rdfType .
-  }
-  optional {
-    ?celexURI skos:prefLabel ?prefLabel .
-  }
-  optional {
-    ?celexURI skos:editorialNote ?note .
-  }
-  optional {
-    ?celexURI skos:example ?example .
   }
   optional {
     ?celexURI skos:broader ?broaderConcept .
