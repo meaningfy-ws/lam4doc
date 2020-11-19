@@ -1,5 +1,7 @@
 {% import "common/macros.html" as mc %}
-{% import "common/concept_macros.html" as cv %}
+{% import "common/concept_macros.html" as cm %}
+{% import "common/property_configuration_macros.html" as pcm %}
+{% import "common/defining_configuration_macros.html" as dcm %}
 
 <h1>LAM concepts</h1>
 
@@ -17,7 +19,10 @@ select ?concept ?prefLabel
 
     {% set level = 2 %}
     {% for idx, row in content.iterrows() %}
-        {{ cv.build_concept_view(row["concept"], row["prefLabel"], level) }}
+        {{ cm.build_concept_view(row["concept"], row["prefLabel"], level) }}
+        {{ dcm.build_concept_defining_configuration_list(row["concept"]) }}
+        {{ pcm.build_concept_property_configuration_list(row["concept"]) }}
+
     {% endfor %}
 {% endcall %}
 
