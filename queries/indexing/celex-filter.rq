@@ -1,0 +1,57 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+PREFIX lamd: <http://publications.europa.eu/resources/authority/lam/>
+
+SELECT
+?celexURI
+(group_concat(distinct ?rdfType; separator=", ") as ?rdfTypes)
+(group_concat(distinct ?broaderConcept; separator=", ") as ?broaderConcepts)
+(group_concat(distinct ?broaderLabel; separator=", ") as ?broaderLabels)
+(group_concat(distinct ?collectionURI; separator=", ") as ?collectionURIS)
+(group_concat(distinct ?collectionLabel; separator=", ") as ?collectionLabels)
+(group_concat(distinct ?dttValue; separator=", ") as ?dttValues)
+(group_concat(distinct ?dtsValue; separator=", ") as ?dtsValues)
+(group_concat(distinct ?dtaValue; separator=", ") as ?dtaValues)
+(group_concat(distinct ?dtnValue; separator=", ") as ?dtnValues)
+{
+  ?celexURI a skos:Concept .
+  optional {
+    ?celexURI rdf:type ?rdfType .
+  }
+  optional {
+    ?celexURI skos:broader ?broaderConcept .
+    ?broaderConcept skos:prefLabel ?broaderLabel .
+  }
+  optional {
+    ?collectionURI skos:member ?celexURI .
+  }
+  optional {
+    ?collectionURI skos:prefLabel ?collectionLabel .
+  }
+  optional {
+    ?celexURI lam:hasPropertyConfiguration ?hasPropertyConfigurationDtt .
+    ?hasPropertyConfigurationDtt lam:path lam:dtt;
+                              sh:value ?dttValue .
+  }
+  optional{
+    ?celexURI lam:hasPropertyConfiguration ?hasPropertyConfigurationDts .
+    ?hasPropertyConfigurationDts lam:path lam:dts;
+                              sh:value ?dtsValue .
+  }
+  optional{
+    ?celexURI lam:hasPropertyConfiguration ?hasPropertyConfigurationDta .
+    ?hasPropertyConfigurationDta lam:path lam:dta;
+                              sh:value ?dtaValue .
+  }
+  optional{
+    ?celexURI lam:hasPropertyConfiguration ?hasPropertyConfigurationDtn .
+    ?hasPropertyConfigurationDtn lam:path lam:dtn;
+                              sh:value ?dtnValue .
+  }
+}
+group by
+?celexURI
