@@ -17,6 +17,9 @@ SELECT
 (group_concat(distinct ?dtsValue; separator=", ") as ?dtsValues)
 (group_concat(distinct ?dtaValue; separator=", ") as ?dtaValues)
 (group_concat(distinct ?dtnValue; separator=", ") as ?dtnValues)
+
+FROM <http://publications.europa.eu/resources/authority/celex/CelexLegalDocument>
+
 {
   ?celexURI a skos:Concept .
   optional {

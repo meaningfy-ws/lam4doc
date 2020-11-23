@@ -10,6 +10,9 @@ select
 (group_concat(?label; separator=", ") as ?labels)
 (group_concat(?note; separator=", ") as ?notes)
 (group_concat(?example; separator=", ") as ?examples)
+
+FROM <http://publications.europa.eu/resources/authority/lam/LAMLegalDocument>
+
 {
   ?classURI a skos:Concept .
   optional {

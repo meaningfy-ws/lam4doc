@@ -10,6 +10,9 @@ select
 (group_concat(distinct ?note; separator=", ") as ?notes)
 (group_concat(distinct ?example; separator=", ") as ?examples)
 (group_concat(?editorialNote; separator=", ") as ?editorialNotes)
+
+FROM <http://publications.europa.eu/resources/authority/celex/CelexLegalDocument>
+
 {
   ?celexURI a skos:Concept .
   optional{

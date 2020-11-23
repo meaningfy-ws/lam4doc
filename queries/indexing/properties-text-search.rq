@@ -13,6 +13,9 @@ select
 (group_concat(?scopeNote; separator=", ") as ?scopeNotes)
 (group_concat(?notation; separator=", ") as ?notations)
 (group_concat(?label; separator=", ") as ?labels)
+
+FROM <http://publications.europa.eu/resources/authority/lam/DocumentProperty>
+
 {
   ?propertyURI a skos:Concept .  
   optional {

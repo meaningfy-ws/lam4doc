@@ -10,6 +10,9 @@ SELECT
 (group_concat(distinct ?propertyCollection; separator=", ") as ?propertyCollections)
 (group_concat(distinct ?propertyCollectionLabel; separator=", ") as ?propertyCollectionLabels)
 (group_concat(distinct ?propertyType; separator=", ") as ?propertyTypes)
+
+FROM <http://publications.europa.eu/resources/authority/lam/DocumentProperty>
+
 {
   ?propertyURI a skos:Concept .
   optional {

@@ -16,6 +16,9 @@ select
 (group_concat(distinct ?dcValue; separator=", ") as ?dc)
 (group_concat(distinct ?ctValue; separator=", ") as ?ct)
 (group_concat(distinct ?ccValue; separator=", ") as ?cc)
+
+FROM <http://publications.europa.eu/resources/authority/lam/LAMLegalDocument>
+
 {
   ?classURI a skos:Concept .
   optional {
