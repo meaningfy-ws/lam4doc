@@ -4,8 +4,12 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 
-select
-?propertyURI 
+SELECT
+?propertyURI
+(group_concat(distinct ?rdfType; separator=", ") as ?types)
+(group_concat(distinct ?propertyCollection; separator=", ") as ?propertyCollections)
+(group_concat(distinct ?propertyCollectionLabel; separator=", ") as ?propertyCollectionLabels)
+(group_concat(distinct ?propertyType; separator=", ") as ?propertyTypes)
 (group_concat(?skosDefinition; separator=", ") as ?skosDefinitions)
 (group_concat(?editorialNote; separator=", ") as ?editorialNotes)
 (group_concat(?example; separator=", ") as ?examples)
@@ -13,10 +17,25 @@ select
 (group_concat(?scopeNote; separator=", ") as ?scopeNotes)
 (group_concat(?notation; separator=", ") as ?notations)
 (group_concat(?label; separator=", ") as ?labels)
+
+FROM <http://publications.europa.eu/resources/authority/lam/DocumentProperty>
+
 {
-  ?propertyURI a skos:Concept .  
+  ?propertyURI a skos:Concept .
   optional {
-    ?propertyURI skos:definition ?skosDefinition 
+    ?propertyURI rdf:type ?rdfType .
+  }
+  optional {
+    ?propertyCollection skos:member ?propertyURI .
+  }
+  optional {
+    ?propertyCollection skos:prefLabel ?propertyCollectionLabel . # same issue as for CELEX ?
+  }
+  optional {
+    ?propertyURI dct:type ?propertyType .
+  }
+  optional {
+    ?propertyURI skos:definition ?skosDefinition
   }
   optional {
       ?propertyURI skos:editorialNote ?editorialNote
@@ -36,5 +55,6 @@ select
   optional {
     ?propertyURI skos:prefLabel | skos:altLabel ?label.
   }
-} group by
+}
+group by
 ?propertyURI

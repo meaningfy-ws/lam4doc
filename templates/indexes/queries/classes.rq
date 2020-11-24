@@ -16,6 +16,12 @@ select
 (group_concat(distinct ?dcValue; separator=", ") as ?dc)
 (group_concat(distinct ?ctValue; separator=", ") as ?ct)
 (group_concat(distinct ?ccValue; separator=", ") as ?cc)
+(group_concat(?label; separator=", ") as ?labels)
+(group_concat(?note; separator=", ") as ?notes)
+(group_concat(?example; separator=", ") as ?examples)
+
+FROM <http://publications.europa.eu/resources/authority/lam/LAMLegalDocument>
+
 {
   ?classURI a skos:Concept .
   optional {
@@ -53,6 +59,15 @@ select
   }
   optional {
     ?classURI rdf:type ?rdfType .
+  }
+  optional {
+    ?classURI skos:prefLabel | skos:altLabel ?label .
+  }
+  optional {
+    ?classURI skos:editorialNote ?note
+  }
+  optional {
+    ?classURI skos:example ?example
   }
 }
 group by

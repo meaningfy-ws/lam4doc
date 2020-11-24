@@ -17,6 +17,12 @@ SELECT
 (group_concat(distinct ?dtsValue; separator=", ") as ?dtsValues)
 (group_concat(distinct ?dtaValue; separator=", ") as ?dtaValues)
 (group_concat(distinct ?dtnValue; separator=", ") as ?dtnValues)
+(group_concat(distinct ?prefLabel; separator=", ") as ?labels)
+(group_concat(distinct ?example; separator=", ") as ?examples)
+(group_concat(?editorialNote; separator=", ") as ?editorialNotes)
+
+FROM <http://publications.europa.eu/resources/authority/celex/CelexLegalDocument>
+
 {
   ?celexURI a skos:Concept .
   optional {
@@ -51,6 +57,15 @@ SELECT
     ?celexURI lam:hasPropertyConfiguration ?hasPropertyConfigurationDtn .
     ?hasPropertyConfigurationDtn lam:path lam:dtn;
                               sh:value ?dtnValue .
+  }
+    optional{
+    ?celexURI skos:editorialNote ?editorialNote
+  }
+  optional {
+    ?celexURI skos:prefLabel ?prefLabel .
+  }
+  optional {
+    ?celexURI skos:example ?example .
   }
 }
 group by
