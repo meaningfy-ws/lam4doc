@@ -1,0 +1,5 @@
+{% import "macros.json" as mc %}
+{% set content, error = from_endpoint(conf.endpoint).with_query_from_file(conf.sparql_query_file).fetch_tabular() %}
+{% call mc.render_fetch_results(content, error) %}
+    {{ content.to_json() }}
+{% endcall %}

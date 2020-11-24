@@ -32,6 +32,22 @@ stop-services:
 	@ echo -e '$(BUILD_PRINT)(dev) Stopping the containers'
 	@ docker-compose --file docker/docker-compose.yml --env-file docker/.env stop
 
+generate-indexes:
+	@ echo -e '$(BUILD_PRINT)(dev) Generating indices for CELEX...'
+	@ mkreport --target ./templates/indexes/ --config celex.json --output ./output/celex/
+	@ mv ./output/celex/template.json ./output/celex.json
+	@ echo -e '$(BUILD_PRINT)(dev) Generating indices for CLASSES...'
+	@ mkreport --target ./templates/indexes/ --config classes.json --output ./output/classes/
+	@ mv ./output/classes/template.json ./output/classes.json
+	@ echo -e '$(BUILD_PRINT)(dev) Generating indices for PROPERTIES...'
+	@ mkreport --target ./templates/indexes/ --config properties.json --output ./output/properties/
+	@ mv ./output/properties/template.json ./output/properties.json
+	@ echo -e '$(BUILD_PRINT)(dev) Cleaning up...'
+	@ rm -rf ./output/celex/
+	@ rm -rf ./output/classes/
+	@ rm -rf ./output/properties/
+
+
 
 #-----------------------------------------------------------------------------
 # Gherkin feature and acceptance test generation commands
