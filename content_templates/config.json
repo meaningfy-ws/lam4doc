@@ -2,10 +2,12 @@
     "template": "main.html",
     "conf":
     {
-        "default_endpoint" : "http://localhost:3030/lam-class/query",
-        "title": "Celex",
+        "default_endpoint" : "http://dev.meaningfy.ws:3030/lam/query",
+        "title": "Properties",
         "type": "report",
         "author": "Meaningfy",
-        "ns_file": "data/prefix.csv"
+        "graphs": {
+            "document_property": "http://publications.europa.eu/resources/authority/lam/DocumentProperty"
+        }
     }
 }
