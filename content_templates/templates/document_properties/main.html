@@ -1,15 +1,16 @@
 {% import "common/macros.html" as macros %}
-{% import "common/collection_macros.html" as collection_macros %}
+{% import "common/instance_view_builder.html" as instance_builder %}
 {% import "document_properties/macros.html" as properties_macros %}
 
 <h1>Document Properties</h1>
+{% set graph = conf.graphs.document_property %}
 
 {% set select_query =
 "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
 
 SELECT ?collection ?prefLabel
-FROM <"~conf.graphs.document_property~">
+FROM <"~graph~">
 {
   ?collection a skos:Collection .
   optional {
@@ -26,9 +27,10 @@ FROM <"~conf.graphs.document_property~">
 {% call macros.render_fetch_results(content, error) %}
     {% set level = 2 %}
     {% for row in content.itertuples() %}
-        {{ collection_macros.build_collection_view(row.collection, row.prefLabel, level) }}
-        {{ properties_macros.build_document_properties_child_collections(row.collection, level + 1) }}
-        {{ properties_macros.build_document_properties_child_concepts(row.collection, level + 1) }}
+        <p class="debug">top level collection: <strong>{{ row.prefLabel }}</strong></p>
+        {{ instance_builder.build_instance_view(graph, row.collection, row.prefLabel, level) }}
+        {{ properties_macros.build_document_properties_child_collections(graph, row.collection, level + 1) }}
+        {{ properties_macros.build_document_properties_child_concepts(graph, row.collection, level + 1) }}
     {% endfor %}
 {% endcall %}
 

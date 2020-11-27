@@ -1,10 +1,9 @@
 {% import "common/macros.html" as macros %}
-{% import "common/collection_macros.html" as collection_macros %}
+{% import "common/instance_view_builder.html" as view_builder %}
 {% import "common/concept_macros.html" as concept_macros %}
 
-{% macro build_document_properties_child_collections(collection_uri, level) %}
+{% macro build_document_properties_child_collections(graph, collection_uri, level) %}
     <p class="debug-children">build_child_collections | level: {{ level }} | collection_uri: {{ collection_uri }}</p>
-    {% set graph = conf.graphs.document_property %}
     {% set select_query =
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -24,7 +23,7 @@
             <p class="debug">collection's not empty {{ collection_uri }}</p>
             {% for row in content.itertuples() %}
                 <p class="debug">building {{ row.prefLabel }}</p>
-                {{ collection_macros.build_collection_view(graph, row.member, row.prefLabel, level) }}
+                {{ view_builder.build_instance_view(graph, row.member, row.prefLabel, level) }}
                 {{ build_document_properties_child_collections(row.member, level + 1) }}
                 {{ build_document_properties_child_concepts(row.member, level + 1) }}
             {% endfor %}
@@ -33,9 +32,8 @@
 {% endmacro %}
 
 
-{% macro build_document_properties_child_concepts(collection_uri, level) %}
+{% macro build_document_properties_child_concepts(graph, collection_uri, level) %}
     <p class="debug-children">build_child_concepts | level: {{ level }} | collection_uri: {{ collection_uri }}</p>
-    {% set graph = conf.graphs.document_property %}
     {% set select_query =
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -55,7 +53,7 @@
             <p class="debug">concept's not empty {{ collection_uri }}</p>
             {% for row in content.itertuples() %}
                 <p class="debug">building {{ row.prefLabel }}</p>
-                {{ concept_macros.build_concept_view(graph, row.member, row.prefLabel, level) }}
+                {{ view_builder.build_instance_view(graph, row.member, row.prefLabel, level, true) }}
             {% endfor %}
         {% endif %}
     {% endcall %}

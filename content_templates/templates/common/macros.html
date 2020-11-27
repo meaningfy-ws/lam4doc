@@ -61,6 +61,7 @@
 {%- endmacro %}
 
 {% macro render_description_item_plain_literal(result_set, property_id, property_label) -%}
+    <p class="debug-render">render_description_item_plain_literal: {{ property_id }}</p>
     {% if not result_set.empty and property_id in result_set.columns %}
         {% set values =  result_set[property_id].dropna() %}
         {% if not values.empty %}
@@ -78,6 +79,8 @@
 
 
 {% macro render_description_item_local_iri(result_set, property_id, property_label, link_label_property_id=None) -%}
+    <p class="debug-render">render_description_item_local_iri: {{ property_id }}</p>
+
     {% if not result_set.empty and property_id in result_set.columns %}
         {% set values =  result_set[property_id].dropna() %}
         {% if not values.empty %}
