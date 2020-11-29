@@ -10,6 +10,7 @@ install-dev:
 	@ echo "$(BUILD_PRINT)Installing the local requirements"
 	@ pip install --upgrade pip
 	@ pip install -r requirements/dev.txt
+	@ sudo ./requirements/install_chrome_and_driver.sh
 
 install-prod:
 	@ echo "$(BUILD_PRINT)Installing the production requirements"
@@ -18,7 +19,7 @@ install-prod:
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"
-	@ pytest
+	@ pytest -s
 
 build-services:
 	@ echo -e '$(BUILD_PRINT)Building the containers'
@@ -46,8 +47,6 @@ generate-indexes:
 	@ rm -rf ./output/celex/
 	@ rm -rf ./output/classes/
 	@ rm -rf ./output/properties/
-
-
 
 #-----------------------------------------------------------------------------
 # Gherkin feature and acceptance test generation commands

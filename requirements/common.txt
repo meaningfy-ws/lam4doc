@@ -4,3 +4,6 @@ Flask==1.1.2  # https://flask.palletsprojects.com/en/1.1.x/e
 Flask-Wtf==0.14.3  # https://flask-wtf.readthedocs.io/en/stable/
 eds4jinja2
 openpyxl
+selenium
+pytest~=6.1.2
+pytest-bdd~=4.0.1
