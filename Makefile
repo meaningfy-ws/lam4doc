@@ -19,7 +19,7 @@ install-prod:
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"
-	@ pytest -s
+	@ pytest
 
 build-services:
 	@ echo -e '$(BUILD_PRINT)Building the containers'

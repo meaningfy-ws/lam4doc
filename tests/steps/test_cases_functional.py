@@ -6,6 +6,7 @@
 # coding=utf-8
 """Functional test cases for LAM - steps implementation"""
 import logging
+from time import sleep
 
 from pytest_bdd import (
     given,
@@ -15,12 +16,27 @@ from pytest_bdd import (
     parsers
 )
 
-
 logger = logging.getLogger(__name__)
+
 
 @scenario('../features/functional_test_cases.feature', 'TC.01 – Access LAM online tool')
 def test_tc01__access_lam_online_tool():
     """TC.01 – Access LAM online tool."""
+
+
+@scenario('../features/functional_test_cases.feature', 'TC.03 – TOC for Properties - Selected entry is highlighted')
+def test_tc03_toc_for_properties_selected_entry_is_highlighted():
+    """Pipelines storage not failing."""
+
+
+@scenario('../features/functional_test_cases.feature', 'TC.03 – TOC for Properties - Selected entry is highlighted')
+def test_tc03_toc_for_properties_selected_entry_is_highlighted():
+    """TC.03 – TOC for Properties - Selected entry is highlighted"""
+
+
+@scenario('../features/functional_test_cases.feature', 'TC.03 – TOC for Properties - Expands and collapses')
+def test_tc03_toc_for_properties_expands_and_collapses():
+    """TC.03 – TOC for Properties - Expands and collapses"""
 
 
 # @scenario('../features/functional_test_cases.feature', 'TC.02 – Access LAM online tool – automatized/ad-hoc update')
@@ -33,14 +49,10 @@ def test_tc01__access_lam_online_tool():
 #     """Pipelines storage not failing."""
 #
 #
-# @scenario('../features/functional_test_cases.feature', 'TC.03 – TOC for Properties - Expands and collapses')
-# def test_tc03_toc_for_properties_expands_and_collapses():
-#     """Pipelines storage not failing."""
 #
 #
-# @scenario('../features/functional_test_cases.feature', 'TC.03 – TOC for Properties - Selected entry is highlighted')
-# def test_tc03_toc_for_properties_selected_entry_is_highlighted():
-#     """Pipelines storage not failing."""
+
+
 #
 #
 # @scenario('../features/functional_test_cases.feature', 'TC.04 – TOC for Templates - Expanded by default')
@@ -101,7 +113,6 @@ def the_result_page_contains(browser, scenario_context, content, field_id):
 @then(parsers.cfparse('the page has the title {title:String}',
                       extra_types=dict(String=str)))
 def the_result_page_contains(browser, scenario_context, title):
-    logger.info("XXX " + browser.title)
     page_title = browser.title
     assert page_title == title
 
@@ -129,16 +140,34 @@ def step_impl(browser, scenario_context, field_id):
     assert browser.find_element_by_id(field_id).is_displayed() is True
 
 
+@then(parsers.cfparse('the field with XPath {field_xpath:String} is not visible', extra_types=dict(String=str)))
+def step_impl(browser, scenario_context, field_xpath):
+    sleep(1)
+    assert browser.find_element_by_xpath(field_xpath).is_displayed() is False
+
+
 @then(parsers.cfparse('the field with id {field_id:String} has CSS class {css_class:String}',
                       extra_types=dict(String=str)))
 def step_impl(browser, scenario_context, field_id, css_class):
     assert browser.find_element_by_id(field_id).is_displayed() is True
 
 
+@then(parsers.cfparse('the field with XPath {field_xpath:String} has CSS class {css_class:String}',
+                      extra_types=dict(String=str)))
+def step_impl(browser, scenario_context, field_xpath, css_class):
+    assert browser.find_element_by_xpath(field_xpath).is_displayed() is True
+
+
 @when(parsers.cfparse('I click on the button with id {control_id:String}', extra_types=dict(String=str)))
 def i_click_on_the_button_with_id_validate_button_id(browser, scenario_context, control_id):
     button = browser.find_element_by_id(control_id)
     button.click()
+
+
+@when(parsers.cfparse('I switch to the iframe with ID {iframe_id:String}', extra_types=dict(String=str)))
+def i_click_on_the_element_with_x_path(browser, scenario_context, iframe_id):
+    iframe = browser.find_element_by_id(iframe_id)
+    browser.switch_to_frame(iframe)
 
 
 @when(parsers.cfparse('I click on the element with XPath {xpath:String}', extra_types=dict(String=str)))
