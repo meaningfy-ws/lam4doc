@@ -24,8 +24,8 @@
             {% for row in content.itertuples() %}
                 <p class="debug">building {{ row.prefLabel }}</p>
                 {{ view_builder.build_instance_view(graph, row.member, row.prefLabel, level) }}
-                {{ build_document_properties_child_collections(row.member, level + 1) }}
-                {{ build_document_properties_child_concepts(row.member, level + 1) }}
+                {{ build_document_properties_child_collections(graph, row.member, level + 1) }}
+                {{ build_document_properties_child_concepts(graph, row.member, level + 1) }}
             {% endfor %}
         {% endif %}
     {% endcall %}

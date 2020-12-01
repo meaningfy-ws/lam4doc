@@ -34,6 +34,33 @@ FROM <"~graph~">
     {% endfor %}
 {% endcall %}
 
+<h1>LAM Classes</h1>
 
+{% set select_query =
+"PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
 
+SELECT ?collection ?prefLabel
+FROM <"~conf.graphs.lam_classes~">
+{
+  ?collection a skos:Collection .
+  optional {
+    ?collection skos:prefLabel ?prefLabel
+  }
+  ?collection euvoc:order ?order .
 
+  FILTER NOT EXISTS {
+    ?parent skos:member ?collection
+  }
+} ORDER by ?order"
+%}
+{% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+{% call macros.render_fetch_results(content, error) %}
+    {% set level = 2 %}
+    {% for row in content.itertuples() %}
+        <p class="debug">top level collection: <strong>{{ row.prefLabel }}</strong></p>
+        {{ instance_builder.build_instance_view(conf.graphs.lam_classes, row.collection, row.prefLabel, level) }}
+        {{ properties_macros.build_document_properties_child_collections(conf.graphs.lam_classes, row.collection, level + 1) }}
+        {{ properties_macros.build_document_properties_child_concepts(conf.graphs.lam_classes, row.collection, level + 1) }}
+    {% endfor %}
+{% endcall %}
