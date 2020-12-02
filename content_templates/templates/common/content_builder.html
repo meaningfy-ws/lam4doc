@@ -1,8 +1,7 @@
 {% import "common/macros.html" as macros %}
 {% import "common/instance_view_builder.html" as view_builder %}
-{% import "common/concept_macros.html" as concept_macros %}
 
-{% macro build_document_properties_child_collections(graph, collection_uri, level) %}
+{% macro build_child_collections(graph, collection_uri, level) %}
     <p class="debug-children">build_child_collections | level: {{ level }} | collection_uri: {{ collection_uri }}</p>
     {% set select_query =
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -24,15 +23,15 @@
             {% for row in content.itertuples() %}
                 <p class="debug">building {{ row.prefLabel }}</p>
                 {{ view_builder.build_instance_view(graph, row.member, row.prefLabel, level) }}
-                {{ build_document_properties_child_collections(graph, row.member, level + 1) }}
-                {{ build_document_properties_child_concepts(graph, row.member, level + 1) }}
+                {{ build_child_collections(graph, row.member, level + 1) }}
+                {{ build_child_concepts(graph, row.member, level + 1) }}
             {% endfor %}
         {% endif %}
     {% endcall %}
 {% endmacro %}
 
 
-{% macro build_document_properties_child_concepts(graph, collection_uri, level) %}
+{% macro build_child_concepts(graph, collection_uri, level) %}
     <p class="debug-children">build_child_concepts | level: {{ level }} | collection_uri: {{ collection_uri }}</p>
     {% set select_query =
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>

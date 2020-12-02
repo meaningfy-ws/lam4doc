@@ -2,7 +2,7 @@
 {% import "common/instance_view_builder.html" as instance_builder %}
 {% import "common/content_builder.html" as content_builder %}
 
-<h1>Document Properties</h1>
+<h1>LAM Classes</h1>
 {% set graph = conf.graphs.document_property %}
 
 {% set select_query =
@@ -21,7 +21,8 @@ FROM <"~graph~">
   FILTER NOT EXISTS {
     ?parent skos:member ?collection
   }
-} ORDER by ?order" %}
+} ORDER by ?order"
+%}
 {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
 {% call macros.render_fetch_results(content, error) %}
     {% set level = 2 %}
