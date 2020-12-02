@@ -3,7 +3,7 @@
     "conf":
     {
         "default_endpoint" : "http://dev.meaningfy.ws:3030/lam/query",
-        "title": "Properties",
+        "title": "LAM Report",
         "type": "report",
         "author": "Meaningfy",
         "graphs": {
