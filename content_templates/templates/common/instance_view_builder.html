@@ -92,7 +92,7 @@
     PREFIX dct: <http://purl.org/dc/terms/>
     PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
 
-    select ?definition ?scopeNote ?example ?changeNote ?historyNote ?editorialNote ?note ?member ?shName ?shDescription
+    select ?definition ?scopeNote ?example ?changeNote ?historyNote ?editorialNote ?note ?member ?broaderConcept ?shName ?shDescription
     FROM <"~graph~">
     {
       values ?instance {<"~instance_uri~">}
@@ -121,6 +121,9 @@
         ?instance skos:member ?member .
       }
       union {
+        ?broaderConcept skos:broader ?instance .
+      }
+      union {
         ?instance sh:name ?shName .
       }
       union {
@@ -140,6 +143,7 @@
             {{ macros.render_description_item_plain_literal (content, "editorialNote", "Editorial note") }}
             {{ macros.render_description_item_plain_literal (content, "note", "Note") }}
             {{ macros.render_description_item_local_iri (content, "member", "Members") }}
+            {{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts") }}
             <p class="debug-render">sh editorial part for <strong>{{ instance_uri }}</strong></p>
             {{ macros.render_description_item_plain_literal (content, "shName", "Name") }}
             {{ macros.render_description_item_plain_literal (content, "shDescription", "Description") }}
@@ -312,7 +316,7 @@
         {% if not content.dropna(how="all").empty %}
             {{ macros.render_description_item_local_iri (content, "path", "Path") }}
             {{ macros.render_description_item_plain_literal (content, "flags", "Flags") }}
-            {{ macros.render_description_item_plain_literal (content, "patter", "Pattern") }}
+            {{ macros.render_description_item_plain_literal (content, "pattern", "Pattern") }}
             {{ macros.render_description_item_plain_literal (content, "class", "Class") }}
             {{ macros.render_description_item_plain_literal (content, "value", "Value") }}
             {{ macros.render_description_item_plain_literal (content, "minCount", "Min Count") }}

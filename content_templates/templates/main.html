@@ -5,8 +5,8 @@
     {% set prefixes, error = from_file(conf.template_path+'/prefixes.json').fetch_tree() %}
     {% set inverted_prefixes = invert_dict(prefixes) %}
 
-    {% include "document_properties/main.html" with context%}
-    {% include "lam_classes/main.html" with context%}
-    {% include "celex_classes/main.html" with context%}
+    {% include "document_properties/main.html" with context %}
+    {% include "lam_classes/main.html" with context %}
+    {% include "celex_classes/main.html" with context %}
 
 {% endblock %}

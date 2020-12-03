@@ -1,6 +1,6 @@
 {% import "common/macros.html" as macros %}
 {% import "common/instance_view_builder.html" as instance_builder %}
-{% import "common/content_builder.html" as content_builder %}
+{% import "common/child_content_builder.html" as child_content_builder %}
 
 <h1>Document Properties</h1>
 {% set graph = conf.graphs.document_property %}
@@ -28,7 +28,7 @@ FROM <"~graph~">
     {% for row in content.itertuples() %}
         <p class="debug">top level collection: <strong>{{ row.prefLabel }}</strong></p>
         {{ instance_builder.build_instance_view(graph, row.collection, row.prefLabel, level) }}
-        {{ content_builder.build_child_collections(graph, row.collection, level + 1) }}
-        {{ content_builder.build_child_concepts(graph, row.collection, level + 1) }}
+        {{ child_content_builder.build_child_collections(graph, row.collection, level + 1) }}
+        {{ child_content_builder.build_child_concepts(graph, row.collection, level + 1) }}
     {% endfor %}
 {% endcall %}
