@@ -16,8 +16,78 @@
         {{ build_instance_editorial_part(graph, instance_uri) }}
         {{ build_lam_property_configuration_list(graph, instance_uri, level + 1) }}
         {{ build_lam_classification_hint_list(graph, instance_uri, level + 1) }}
+        {{ build_useful_links(instance_uri) }}
     </section>
 {% endmacro %}
+
+
+{% macro build_useful_links(instance_uri) %}
+    <p class="debug">build_useful_links <strong>{{ instance_uri }}</strong></p>
+
+    {% set graph = conf.graphs.lam_classes %}
+
+    {{ build_used_in_classify_with_or_has_property_configuration(graph, instance_uri) }}
+    {{ build_constraints(graph, instance_uri) }}
+
+{% endmacro %}
+
+
+{% macro build_used_in_classify_with_or_has_property_configuration(graph, instance_uri) %}
+    <p class="debug">build_used_in_classify_with_or_has_property_configuration <strong>{{ instance_uri }}</strong></p>
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+
+    select distinct ?link ?linkLabel
+    {
+      values ?instanceUri {<"~instance_uri~">}
+      graph <"~graph~">
+      {
+        ?propConfig lam:path ?instanceUri .
+        optional {
+          ?link lam:classifyWith | lam:hasPropertyConfiguration ?propConfig.
+          optional {
+            ?link skos:prefLabel ?linkLabel .
+          }
+        }
+      }
+    }" %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call macros.render_fetch_results(content, error) %}
+        {% if not content.dropna(how="all").empty %}
+            <dt>Useful links: Classified With | Property Configuration</dt>
+            {% for row in content.itertuples() %}
+                <dd><a href="#{{ row.link }}">{{ row.linkLabel }}</a></dd>
+            {% endfor %}
+        {% endif %}
+    {% endcall %}
+{% endmacro %}
+
+
+{% macro build_constraints(graph, instance_uri) %}
+    <p class="debug">build_constraints <strong>{{ instance_uri }}</strong></p>
+    {% set select_query =
+    "PREFIX sh: <http://www.w3.org/ns/shacl#>
+    prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+    prefix lamd: <http://publications.europa.eu/resources/authority/lam/>
+
+    select distinct ?constraintValue
+    {
+      values ?instanceUri {<"~instance_uri~">}
+      graph <"~graph~">
+      {
+        ?instancePath lam:path ?instanceUri .
+        ?instancePath sh:value ?constraintValue .
+      }
+    }" %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call macros.render_fetch_results(content, error) %}
+        {% if not content.dropna(how="all").empty %}
+            {{ macros.render_description_item_plain_literal (content, "constraintValue", "Constraints") }}
+        {% endif %}
+    {% endcall %}
+{% endmacro %}
+
 
 {% macro build_instance_metadata_part(graph, instance_uri) %}
     <p class="debug">build_instance_metadata_part <strong>{{ instance_uri }}</strong></p>
@@ -228,7 +298,8 @@
             {{ macros.render_description_item_plain_literal (content, "maxCount", "Max Count") }}
             {% set values =  content["configurations"].dropna() %}
             {% if not values.empty %}
-                <p class="debug">build_lam_property_configuration for hasAnnotationConfiguration <strong>{{ instance_uri }}</strong></p>
+                <p class="debug">build_lam_property_configuration for hasAnnotationConfiguration
+                    <strong>{{ instance_uri }}</strong></p>
                 {% for _, item in values.iteritems() %}
                     {{ build_lam_property_configuration(graph, item, level + 1) }}
                 {% endfor %}
@@ -323,7 +394,8 @@
             {{ macros.render_description_item_plain_literal (content, "maxCount", "Max Count") }}
             {% set values =  content["configurations"].dropna() %}
             {% if not values.empty %}
-                <p class="debug">build_lam_property_configuration for hasAnnotationConfiguration <strong>{{ instance_uri }}</strong></p>
+                <p class="debug">build_lam_property_configuration for hasAnnotationConfiguration
+                    <strong>{{ instance_uri }}</strong></p>
                 {% for idx, item in values.iteritems() %}
                     {{ build_lam_property_configuration(graph, item, level + 1) }}
                 {% endfor %}
