@@ -26,7 +26,9 @@ FROM <"~graph~">
 {% call macros.render_fetch_results(content, error) %}
     {% set level = 2 %}
     {% for row in content.itertuples() %}
-        <p class="debug">top level collection: <strong>{{ row.prefLabel }}</strong></p>
+        {% if conf.debug %}
+            <p class="debug">top level collection: <strong>{{ row.prefLabel }}</strong></p>
+        {% endif %}
         {{ instance_builder.build_instance_view(graph, row.collection, row.prefLabel, level) }}
         {{ child_content_builder.build_child_collections(graph, row.collection, level + 1) }}
         {{ child_content_builder.build_child_concepts(graph, row.collection, level + 1) }}

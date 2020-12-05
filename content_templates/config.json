@@ -10,6 +10,7 @@
             "document_property": "http://publications.europa.eu/resources/authority/lam/DocumentProperty",
             "lam_classes": "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument",
             "celex_classes": "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument"
-        }
+        },
+        "debug": false
     }
 }

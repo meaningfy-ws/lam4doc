@@ -1,8 +1,9 @@
 {% import "common/macros.html" as macros %}
 
 {% macro build_instance_view (graph, instance_uri, instance_label, level, is_concept=false) %}
-    <p class="debug">build_instance_view <strong>{{ instance_label }} level:{{ level }}</strong></p>
-
+    {% if conf.debug %}
+        <p class="debug">build_instance_view <strong>{{ instance_label }} level:{{ level }}</strong></p>
+    {% endif %}
     <h{{ level }} id="{{ instance_uri }}">
         {{ instance_label }}
         {% if is_concept %}
@@ -14,58 +15,17 @@
     <section>
         {{ build_instance_metadata_part(graph, instance_uri) }}
         {{ build_instance_editorial_part(graph, instance_uri) }}
-        {{ build_lam_property_configuration_list(graph, instance_uri, level + 1) }}
-        {{ build_lam_classification_hint_list(graph, instance_uri, level + 1) }}
+        {{ build_lam_property_configuration_list(graph, instance_uri) }}
+        {{ build_lam_classification_hint_list(graph, instance_uri) }}
         {{ build_useful_links(instance_uri) }}
     </section>
 {% endmacro %}
 
 
-{% macro build_useful_links(instance_uri) %}
-    <p class="debug">build_useful_links <strong>{{ instance_uri }}</strong></p>
-
-    {% set graph = conf.graphs.lam_classes %}
-
-    {{ build_used_in_classify_with_or_has_property_configuration(graph, instance_uri) }}
-    {{ build_constraints(graph, instance_uri) }}
-
-{% endmacro %}
-
-
-{% macro build_used_in_classify_with_or_has_property_configuration(graph, instance_uri) %}
-    <p class="debug">build_used_in_classify_with_or_has_property_configuration <strong>{{ instance_uri }}</strong></p>
-    {% set select_query =
-    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-    prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
-
-    select distinct ?link ?linkLabel
-    {
-      values ?instanceUri {<"~instance_uri~">}
-      graph <"~graph~">
-      {
-        ?propConfig lam:path ?instanceUri .
-        optional {
-          ?link lam:classifyWith | lam:hasPropertyConfiguration ?propConfig.
-          optional {
-            ?link skos:prefLabel ?linkLabel .
-          }
-        }
-      }
-    }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
-    {% call macros.render_fetch_results(content, error) %}
-        {% if not content.dropna(how="all").empty %}
-            <dt>Useful links: Classified With | Property Configuration</dt>
-            {% for row in content.itertuples() %}
-                <dd><a href="#{{ row.link }}">{{ row.linkLabel }}</a></dd>
-            {% endfor %}
-        {% endif %}
-    {% endcall %}
-{% endmacro %}
-
-
 {% macro build_constraints(graph, instance_uri) %}
-    <p class="debug">build_constraints <strong>{{ instance_uri }}</strong></p>
+    {% if conf.debug %}
+        <p class="debug">build_constraints <strong>{{ instance_uri }}</strong></p>
+    {% endif %}
     {% set select_query =
     "PREFIX sh: <http://www.w3.org/ns/shacl#>
     prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
@@ -90,8 +50,9 @@
 
 
 {% macro build_instance_metadata_part(graph, instance_uri) %}
-    <p class="debug">build_instance_metadata_part <strong>{{ instance_uri }}</strong></p>
-
+    {% if conf.debug %}
+        <p class="debug">build_instance_metadata_part <strong>{{ instance_uri }}</strong></p>
+    {% endif %}
     {% set select_query =
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
     PREFIX sh: <http://www.w3.org/ns/shacl#>
@@ -146,7 +107,9 @@
             {{ macros.render_description_item_plain_literal (content, "notation", "Notation") }}
             {{ macros.render_description_item_plain_literal (content, "identifier", "Identifier") }}
             {{ macros.render_description_item_plain_literal (content, "order", "Order") }}
-            <p class="debug-render">skos concept part for</p>
+            {% if conf.debug %}
+                <p class="debug-render">skos concept part for</p>
+            {% endif %}
             {{ macros.render_description_item_plain_literal (content, "class", "Class") }}
             {{ macros.render_description_item_plain_literal (content, "path", "Path") }}
         {% endif %}
@@ -154,8 +117,9 @@
 {% endmacro %}
 
 {% macro build_instance_editorial_part(graph, instance_uri) %}
-    <p class="debug">build_instance_editorial_part <strong>{{ instance_uri }}</strong></p>
-
+    {% if conf.debug %}
+        <p class="debug">build_instance_editorial_part <strong>{{ instance_uri }}</strong></p>
+    {% endif %}
     {% set select_query =
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
     PREFIX sh: <http://www.w3.org/ns/shacl#>
@@ -204,7 +168,9 @@
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.dropna(how="all").empty %}
-            <p class="debug-render">skos editorial part for <strong>{{ instance_uri }}</strong></p>
+            {% if conf.debug %}
+                <p class="debug-render">skos editorial part for <strong>{{ instance_uri }}</strong></p>
+            {% endif %}
             {{ macros.render_description_item_plain_literal (content,"definition", "Definition") }}
             {{ macros.render_description_item_plain_literal (content, "scopeNote", "Scope note") }}
             {{ macros.render_description_item_plain_literal (content, "example", "Example") }}
@@ -214,15 +180,20 @@
             {{ macros.render_description_item_plain_literal (content, "note", "Note") }}
             {{ macros.render_description_item_local_iri (content, "member", "Members") }}
             {{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts") }}
-            <p class="debug-render">sh editorial part for <strong>{{ instance_uri }}</strong></p>
+            {% if conf.debug %}
+                <p class="debug-render">sh editorial part for <strong>{{ instance_uri }}</strong></p>
+            {% endif %}
             {{ macros.render_description_item_plain_literal (content, "shName", "Name") }}
             {{ macros.render_description_item_plain_literal (content, "shDescription", "Description") }}
         {% endif %}
     {% endcall %}
 {% endmacro %}
 
-{% macro build_lam_property_configuration_list(graph, instance_uri, level) %}
-    <p class="debug">build_lam_property_configuration_list <strong>{{ instance_uri }}</strong></p>
+
+{% macro build_lam_property_configuration_list(graph, instance_uri) %}
+    {% if conf.debug %}
+        <p class="debug">build_lam_property_configuration_list <strong>{{ instance_uri }}</strong></p>
+    {% endif %}
     {% set select_query =
     "PREFIX sh: <http://www.w3.org/ns/shacl#>
     PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
@@ -235,82 +206,20 @@
     }" %}
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
-        {% for row in content.itertuples() %}
-            {{ build_lam_property_configuration(graph, row.propertyConfiguration, level) }}
-        {% endfor %}
-    {% endcall %}
-{% endmacro %}
-
-
-{% macro build_lam_property_configuration(graph, instance_uri, level) %}
-    <p class="debug">build_lam_property_configuration <strong>{{ instance_uri }}</strong></p>
-
-    {% set select_query =
-    "PREFIX sh: <http://www.w3.org/ns/shacl#>
-
-    select ?name
-    FROM <"~graph~">
-    {
-      values ?instance {<"~instance_uri~">}
-      ?instance sh:name ?name .
-    }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
-    {% call macros.render_fetch_results(content, error) %}
         {% if not content.empty %}
+            <dt>Property configurations</dt>
             {% for row in content.itertuples() %}
-                <h{{ level }}>
-                    {{ row.name }}<sup title="concept">[concept]</sup>
-                </h{{ level }}>
+                {{ build_lam_classification_hint_or_property_configuration(graph, row.propertyConfiguration) }}
             {% endfor %}
         {% endif %}
     {% endcall %}
-    {% set select_query =
-    "PREFIX sh: <http://www.w3.org/ns/shacl#>
-    PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
-
-    select ?path ?class ?value ?minCount ?maxCount ?configurations
-    FROM <"~graph~">
-    {
-      values ?instance {<"~instance_uri~">}
-      {
-        ?instance lam:path ?path .
-      }
-      union {
-        ?instance sh:class ?class
-      }
-      union {
-        ?instance sh:hasValue ?value
-      }
-      union {
-        ?instance sh:minCount ?minCount
-      }
-      union {
-        ?instance lam:hasAnnotationConfiguration ?configurations
-      }
-    }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
-    {% call macros.render_fetch_results(content, error) %}
-        {% if not content.dropna(how="all").empty %}
-            {{ macros.render_description_item_local_iri (content, "path", "Path") }}
-            {{ macros.render_description_item_plain_literal (content, "class", "Class") }}
-            {{ macros.render_description_item_plain_literal (content, "value", "Value") }}
-            {{ macros.render_description_item_plain_literal (content, "minCount", "Min Count") }}
-            {{ macros.render_description_item_plain_literal (content, "maxCount", "Max Count") }}
-            {% set values =  content["configurations"].dropna() %}
-            {% if not values.empty %}
-                <p class="debug">build_lam_property_configuration for hasAnnotationConfiguration
-                    <strong>{{ instance_uri }}</strong></p>
-                {% for _, item in values.iteritems() %}
-                    {{ build_lam_property_configuration(graph, item, level + 1) }}
-                {% endfor %}
-            {% endif %}
-        {% endif %}
-    {% endcall %}
 {% endmacro %}
 
 
-{% macro build_lam_classification_hint_list(graph, instance_uri, level) %}
-    <p class="debug">build_lam_property_configuration_list <strong>{{ instance_uri }}</strong></p>
+{% macro build_lam_classification_hint_list(graph, instance_uri) %}
+    {% if conf.debug %}
+        <p class="debug">build_lam_property_configuration_list <strong>{{ instance_uri }}</strong></p>
+    {% endif %}
     {% set select_query =
     "PREFIX sh: <http://www.w3.org/ns/shacl#>
     PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
@@ -323,44 +232,32 @@
     }" %}
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
-        {% for row in content.itertuples() %}
-            {{ build_lam_classification_hint(graph, row.classificationHint, level) }}
-        {% endfor %}
+        {% if not content.empty %}
+            <dt>Defining configurations</dt>
+            {% for row in content.itertuples() %}
+                {{ build_lam_classification_hint_or_property_configuration(graph, row.classificationHint) }}
+            {% endfor %}
+        {% endif %}
     {% endcall %}
 {% endmacro %}
 
 
-{% macro build_lam_classification_hint(graph, instance_uri, level) %}
-    <p class="debug">build_lam_classification_hint <strong>{{ instance_uri }}</strong></p>
-
-    {% set select_query =
-    "PREFIX sh: <http://www.w3.org/ns/shacl#>
-
-    select ?name
-    FROM <"~graph~">
-    {
-      values ?instance {<"~instance_uri~">}
-      ?instance sh:name ?name .
-    }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
-    {% call macros.render_fetch_results(content, error) %}
-        {% if not content.empty %}
-            {% for row in content.itertuples() %}
-                <h{{ level }}>
-                    {{ row.name }}<sup title="concept">[concept]</sup>
-                </h{{ level }}>
-            {% endfor %}
-        {% endif %}
-    {% endcall %}
+{% macro build_lam_classification_hint_or_property_configuration(graph, instance_uri) %}
+    {% if conf.debug %}
+        <p class="debug">build_lam_classification_hint <strong>{{ instance_uri }}</strong></p>
+    {% endif %}
     {% set select_query =
     "PREFIX sh: <http://www.w3.org/ns/shacl#>
     PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
 
-    select ?path ?flags ?pattern ?class ?value ?minCount ?maxCount ?configurations
+    select ?name ?path ?flags ?pattern ?class ?value ?minCount ?maxCount ?configurations
     FROM <"~graph~">
     {
       values ?instance {<"~instance_uri~">}
       {
+        ?instance sh:name ?name .
+      }
+      union {
         ?instance lam:path ?path .
       }
       union {
@@ -373,10 +270,13 @@
         ?instance sh:class ?class
       }
       union {
-        ?instance sh:hasValue ?value
+        ?instance sh:value ?value
       }
       union {
         ?instance sh:minCount ?minCount
+      }
+      union {
+        ?instance sh:maxCount ?maxCount
       }
       union {
         ?instance lam:hasAnnotationConfiguration ?configurations
@@ -384,22 +284,81 @@
     }" %}
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
-        {% if not content.dropna(how="all").empty %}
-            {{ macros.render_description_item_local_iri (content, "path", "Path") }}
-            {{ macros.render_description_item_plain_literal (content, "flags", "Flags") }}
-            {{ macros.render_description_item_plain_literal (content, "pattern", "Pattern") }}
-            {{ macros.render_description_item_plain_literal (content, "class", "Class") }}
-            {{ macros.render_description_item_plain_literal (content, "value", "Value") }}
-            {{ macros.render_description_item_plain_literal (content, "minCount", "Min Count") }}
-            {{ macros.render_description_item_plain_literal (content, "maxCount", "Max Count") }}
-            {% set values =  content["configurations"].dropna() %}
-            {% if not values.empty %}
+        {{ render_lam_classification_hint_or_property_configuration(content.dropna(how="all")) }}
+
+        {% set values = content["configurations"].dropna() %}
+        {% if not values.empty %}
+            {% if conf.debug %}
                 <p class="debug">build_lam_property_configuration for hasAnnotationConfiguration
                     <strong>{{ instance_uri }}</strong></p>
-                {% for idx, item in values.iteritems() %}
-                    {{ build_lam_property_configuration(graph, item, level + 1) }}
-                {% endfor %}
             {% endif %}
+            {% for idx, item in values.iteritems() %}
+                <em>{{ build_lam_classification_hint_or_property_configuration(graph, item) }}</em>
+            {% endfor %}
+        {% endif %}
+    {% endcall %}
+{% endmacro %}
+
+
+{% macro render_lam_classification_hint_or_property_configuration(content) %}
+    {% if conf.debug %}
+        <p class="debug-render">render_lam_classification_hint</p>
+    {% endif %}
+    {% if not content.empty %}
+        {% set _ = replace_strings_in_tabular(content, target_columns=['path'], value_mapping_dict=inverted_prefixes) %}
+        <dd>
+            {{ macros.render_inline_link(content, 'path', 'property') }}
+            {{ macros.render_inline_values(content, 'minCount', 'min', '0') }}
+            {{ macros.render_inline_values(content, 'maxCount', 'max', '*') }}
+            {{ macros.render_inline_values(content, "flags", "flags") }}
+            {{ macros.render_inline_values(content, "pattern", "pattern") }}
+            {{ macros.render_inline_values(content, "class", "class") }}
+            {{ macros.render_inline_link(content, "value", "value", True) }}
+        </dd>
+    {% endif %}
+{% endmacro %}
+
+
+{% macro build_useful_links(instance_uri) %}
+    {% if conf.debug %}
+        <p class="debug">build_useful_links <strong>{{ instance_uri }}</strong></p>
+    {% endif %}
+    {% set graph = conf.graphs.lam_classes %}
+
+    {{ build_links_from_classify_with_or_has_property_configuration(graph, instance_uri) }}
+    {{ build_constraints(graph, instance_uri) }}
+{% endmacro %}
+
+{% macro build_links_from_classify_with_or_has_property_configuration(graph, instance_uri) %}
+    {% if conf.debug %}
+        <p class="debug">build_used_in_classify_with_or_has_property_configuration <strong>{{ instance_uri }}</strong>
+        </p>
+    {% endif %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+
+    select distinct ?link ?linkLabel
+    {
+      values ?instanceUri {<"~instance_uri~">}
+      graph <"~graph~">
+      {
+        ?propConfig lam:path ?instanceUri .
+        optional {
+          ?link lam:classifyWith | lam:hasPropertyConfiguration ?propConfig.
+          optional {
+            ?link skos:prefLabel ?linkLabel .
+          }
+        }
+      }
+    }" %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+    {% call macros.render_fetch_results(content, error) %}
+        {% if not content.dropna(how="all").empty %}
+            <dt>Useful links: Classified With | Property Configuration</dt>
+            {% for row in content.itertuples() %}
+                <dd><a href="#{{ row.link }}">{{ row.linkLabel }}</a></dd>
+            {% endfor %}
         {% endif %}
     {% endcall %}
 {% endmacro %}
