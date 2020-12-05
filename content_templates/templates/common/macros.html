@@ -60,9 +60,12 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro build_description_item_plain_literal(result_set, property_id, property_label) -%}
+{% macro render_description_item_plain_literal(result_set, property_id, property_label) -%}
+    {% if conf.debug %}
+        <p class="debug-render">render_description_item_plain_literal: {{ property_id }}</p>
+    {% endif %}
     {% if not result_set.empty and property_id in result_set.columns %}
-        {% set values =  result_set[property_id].dropna() %}
+        {% set values = result_set[property_id].dropna() %}
         {% if not values.empty %}
             <dl>
                 <dt title="{{ property_id }}">{{ property_label }}</dt>
@@ -77,7 +80,10 @@
 {%- endmacro %}
 
 
-{% macro build_description_item_local_iri(result_set, property_id, property_label, link_label_property_id=None) -%}
+{% macro render_description_item_local_iri(result_set, property_id, property_label, link_label_property_id=None) -%}
+    {% if conf.debug %}
+        <p class="debug-render">render_description_item_local_iri: {{ property_id }}</p>
+    {% endif %}
     {% if not result_set.empty and property_id in result_set.columns %}
         {% set values =  result_set[property_id].dropna() %}
         {% if not values.empty %}
@@ -96,3 +102,32 @@
         {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
     {% endif %}
 {%- endmacro %}
+
+
+{% macro render_inline_values(result_set, property_id, label, default_value=None, separator=',') %}
+    {% if not result_set.empty and property_id in result_set.columns %}
+        {% set values = result_set[property_id].dropna() %}
+        {% if not values.empty %}
+            {{ label + " " + ", ".join(values.astype('str').tolist()) }}
+        {% elif default_value %}
+            {{ label + " " + default_value }}
+        {% endif %}
+    {% else %}
+        {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
+    {% endif %}
+{% endmacro %}
+
+
+{% macro render_inline_link(result_set, property_id, label, external=False) %}
+    {% if not result_set.empty and property_id in result_set.columns %}
+        {% set values = result_set[property_id].dropna() %}
+        {% if not values.empty %}
+            {{ label + " " }}
+            {% for idx, item in values.iteritems() %}
+                <a href="{{ '' if external else '#' }}{{ item }}">{{ item|e|replace("\n","<br/>") }}</a>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
+    {% endif %}
+{% endmacro %}
