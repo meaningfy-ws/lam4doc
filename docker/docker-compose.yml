@@ -27,6 +27,20 @@ services:
     networks:
       - mydefault
 
+  nginx:
+    container_name: nginx
+    build:
+      context: ..
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 90:80
+    volumes:
+      - ./nginx:/usr/share/nginx/html
+    env_file: .env
+    restart: always
+    networks:
+      - mydefault
+
 networks:
   mydefault:
     name: globalnet
