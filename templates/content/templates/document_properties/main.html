@@ -3,14 +3,13 @@
 {% import "common/child_content_builder.html" as child_content_builder %}
 
 <h1>Document Properties</h1>
-{% set graph = conf.graphs.document_property %}
 
 {% set select_query =
 "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
 
 SELECT ?collection ?prefLabel
-FROM <"~graph~">
+FROM <~graph~>
 {
   ?collection a skos:Collection .
   optional {
@@ -22,15 +21,15 @@ FROM <"~graph~">
     ?parent skos:member ?collection
   }
 } ORDER by ?order" %}
-{% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query).fetch_tabular() %}
+{% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **conf.documents).fetch_tabular() %}
 {% call macros.render_fetch_results(content, error) %}
     {% set level = 2 %}
     {% for row in content.itertuples() %}
         {% if conf.debug %}
             <p class="debug">top level collection: <strong>{{ row.prefLabel }}</strong></p>
         {% endif %}
-        {{ instance_builder.build_instance_view(graph, row.collection, row.prefLabel, level) }}
-        {{ child_content_builder.build_child_collections(graph, row.collection, level + 1) }}
-        {{ child_content_builder.build_child_concepts(graph, row.collection, level + 1) }}
+        {{ instance_builder.build_instance_view(conf.documents, row.collection, row.prefLabel, level) }}
+        {{ child_content_builder.build_child_collections(conf.documents, row.collection, level + 1) }}
+        {{ child_content_builder.build_child_concepts(conf.documents, row.collection, level + 1) }}
     {% endfor %}
 {% endcall %}

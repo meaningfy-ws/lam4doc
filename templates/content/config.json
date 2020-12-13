@@ -11,6 +11,18 @@
             "lam_classes": "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument",
             "celex_classes": "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument"
         },
-        "debug": false
+        "debug": false,
+        "documents":
+        {
+            "graph": "http://publications.europa.eu/resources/authority/lam/DocumentProperty"
+        },
+        "lam_classes":
+        {
+            "graph": "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument"
+        },
+        "celexes":
+        {
+            "graph": "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument"
+        }
     }
 }

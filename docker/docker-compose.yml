@@ -33,7 +33,7 @@ services:
       context: ..
       dockerfile: ./docker/nginx/Dockerfile
     ports:
-      - 90:80
+      - 9090:80
     volumes:
       - ./nginx:/usr/share/nginx/html
     env_file: .env
