@@ -10,7 +10,7 @@
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
     SELECT ?member ?prefLabel
-    FROM <~graph~>
+    FROM <~graph>
     {
       values ?collection {<"~collection_uri~">}
       ?member a skos:Collection .
@@ -19,7 +19,7 @@
         ?member skos:prefLabel ?prefLabel
       }
     }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **parameters).fetch_tabular() %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.empty %}
             {% if conf.debug %}
@@ -46,7 +46,7 @@
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
     SELECT ?member ?prefLabel
-    FROM <~graph~>
+    FROM <~graph>
     {
       values ?collection {<"~collection_uri~">}
       ?member a skos:Concept .
@@ -55,7 +55,7 @@
         ?member skos:prefLabel ?prefLabel
       }
     }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **parameters).fetch_tabular() %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.empty %}
             {% if conf.debug %}

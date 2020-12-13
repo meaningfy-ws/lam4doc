@@ -34,13 +34,13 @@
     select distinct ?constraintValue
     {
       values ?instanceUri {<"~instance_uri~">}
-      graph <~graph~>
+      graph <~graph>
       {
         ?instancePath lam:path ?instanceUri .
         ?instancePath sh:value ?constraintValue .
       }
     }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **parameters).fetch_tabular() %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.dropna(how="all").empty %}
             {{ macros.render_description_item_plain_literal (content, "constraintValue", "Constraints") }}
@@ -62,7 +62,7 @@
     PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
 
     SELECT ?deprecated ?altLabel ?created ?modified ?notation ?identifier ?order ?class ?path
-    FROM <~graph~>
+    FROM <~graph>
     {
       values ?instance {<"~instance_uri~">}
       {
@@ -93,7 +93,7 @@
         ?instance sh:path ?path .
       }
     }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **parameters).fetch_tabular() %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.dropna(how="all").empty %}
             <dl>
@@ -127,7 +127,7 @@
     PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
 
     select ?definition ?scopeNote ?example ?changeNote ?historyNote ?editorialNote ?note ?member ?broaderConcept ?shName ?shDescription
-    FROM <~graph~>
+    FROM <~graph>
     {
       values ?instance {<"~instance_uri~">}
       {
@@ -165,7 +165,7 @@
       }
     }" %}
 
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **parameters).fetch_tabular() %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.dropna(how="all").empty %}
             {% if conf.debug %}
@@ -199,12 +199,12 @@
     PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
 
     select ?propertyConfiguration
-    FROM <~graph~>
+    FROM <~graph>
     {
       values ?instance {<"~instance_uri~">}
       ?instance lam:hasPropertyConfiguration ?propertyConfiguration .
     }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **parameters).fetch_tabular() %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.empty %}
             <dt>Property configurations</dt>
@@ -225,12 +225,12 @@
     PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
 
     select ?classificationHint
-    FROM <~graph~>
+    FROM <~graph>
     {
       values ?instance {<"~instance_uri~">}
       ?instance lam:classifyWith ?classificationHint .
     }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **parameters).fetch_tabular() %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.empty %}
             <dt>Defining configurations</dt>
@@ -251,7 +251,7 @@
     PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
 
     select ?name ?path ?flags ?pattern ?class ?value ?minCount ?maxCount ?configurations
-    FROM <~graph~>
+    FROM <~graph>
     {
       values ?instance {<"~instance_uri~">}
       {
@@ -282,7 +282,7 @@
         ?instance lam:hasAnnotationConfiguration ?configurations
       }
     }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **parameters).fetch_tabular() %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {{ render_lam_classification_hint_or_property_configuration(content.dropna(how="all")) }}
 
@@ -323,9 +323,7 @@
     {% if conf.debug %}
         <p class="debug">build_useful_links <strong>{{ instance_uri }}</strong></p>
     {% endif %}
-    {% set graph = conf.graphs.lam_classes %}
-{# WARNING   {% set graph = parameters.graph %}#}
-
+{#    {% set graph = parameters.graph %}#}
 
     {{ build_links_from_classify_with_or_has_property_configuration(parameters, instance_uri) }}
     {{ build_constraints(parameters, instance_uri) }}
@@ -343,7 +341,7 @@
     select distinct ?link ?linkLabel
     {
       values ?instanceUri {<"~instance_uri~">}
-      graph <~graph~>
+      graph <~graph>
       {
         ?propConfig lam:path ?instanceUri .
         optional {
@@ -354,7 +352,7 @@
         }
       }
     }" %}
-    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **parameters).fetch_tabular() %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.dropna(how="all").empty %}
             <dt>Useful links: Classified With | Property Configuration</dt>

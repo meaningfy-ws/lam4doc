@@ -6,13 +6,8 @@
         "title": "LAM Report",
         "type": "report",
         "author": "Meaningfy",
-        "graphs": {
-            "document_property": "http://publications.europa.eu/resources/authority/lam/DocumentProperty",
-            "lam_classes": "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument",
-            "celex_classes": "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument"
-        },
         "debug": false,
-        "documents":
+        "lam_properties":
         {
             "graph": "http://publications.europa.eu/resources/authority/lam/DocumentProperty"
         },
@@ -20,7 +15,7 @@
         {
             "graph": "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument"
         },
-        "celexes":
+        "celex_classes":
         {
             "graph": "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument"
         }

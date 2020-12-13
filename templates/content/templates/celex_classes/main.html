@@ -9,7 +9,7 @@
 PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
 
 SELECT ?collection ?prefLabel
-FROM <~graph~>
+FROM <~graph>
 {
   ?collection a skos:Collection .
   optional {
@@ -21,15 +21,15 @@ FROM <~graph~>
     ?parent skos:member ?collection
   }
 } ORDER by ?order" %}
-{% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **conf.celexes).fetch_tabular() %}
+{% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, conf.celex_classes).fetch_tabular() %}
 {% call macros.render_fetch_results(content, error) %}
     {% set level = 2 %}
     {% for row in content.itertuples() %}
         {% if conf.debug %}
             <p class="debug">top level collection: <strong>{{ row.prefLabel }}</strong></p>
         {% endif %}
-        {{ instance_builder.build_instance_view(conf.celexes, row.collection, row.prefLabel, level) }}
-        {{ child_content_builder.build_child_collections(conf.celexes, row.collection, level + 1) }}
-        {{ child_content_builder.build_child_concepts(conf.celexes, row.collection, level + 1) }}
+        {{ instance_builder.build_instance_view(conf.celex_classes, row.collection, row.prefLabel, level) }}
+        {{ child_content_builder.build_child_collections(conf.celex_classes, row.collection, level + 1) }}
+        {{ child_content_builder.build_child_concepts(conf.celex_classes, row.collection, level + 1) }}
     {% endfor %}
 {% endcall %}

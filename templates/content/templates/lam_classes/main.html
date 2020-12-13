@@ -9,7 +9,7 @@
 PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
 
 SELECT ?collection ?prefLabel
-FROM <~graph~>
+FROM <~graph>
 {
   ?collection a skos:Collection .
   optional {
@@ -21,7 +21,7 @@ FROM <~graph~>
     ?parent skos:member ?collection
   }
 } ORDER by ?order" %}
-{% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, **conf.lam_classes).fetch_tabular() %}
+{% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, conf.lam_classes).fetch_tabular() %}
 {% call macros.render_fetch_results(content, error) %}
     {% set level = 2 %}
     {% for row in content.itertuples() %}
