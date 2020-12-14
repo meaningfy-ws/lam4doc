@@ -60,19 +60,38 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro render_description_item_plain_literal(result_set, property_id, property_label) -%}
+{% macro render_description_item_plain_literal(result_set, property_id, property_label, accordion_style=False) -%}
     {% if conf.debug %}
         <p class="debug-render">render_description_item_plain_literal: {{ property_id }}</p>
     {% endif %}
     {% if not result_set.empty and property_id in result_set.columns %}
         {% set values = result_set[property_id].dropna() %}
         {% if not values.empty %}
-            <dl>
-                <dt title="{{ property_id }}">{{ property_label }}</dt>
-                {% for idx, item in values.iteritems() %}
-                    <dd title="{{ property_id }}">{{ item|e|replace("\n","<br/>") }}</dd>
-                {% endfor %}
-            </dl>
+            {% if accordion_style %}
+                <div class="card">
+                    <div class="card-header">
+                         <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        <a class="text-dark font-weight-bold" onclick="showContent()">
+                            {{ property_label }}
+                        </a>
+                    </div>
+
+                    <div class="collapse">
+                        <div class="card-body">
+                            {% for idx, item in values.iteritems() %}
+                                <p>{{ item|e|replace("\n","<br/>") }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <dl>
+                    <dt title="{{ property_id }}">{{ property_label }}</dt>
+                    {% for idx, item in values.iteritems() %}
+                        <dd title="{{ property_id }}">{{ item|e|replace("\n","<br/>") }}</dd>
+                    {% endfor %}
+                </dl>
+                {% endif %}
         {% endif %}
     {% else %}
         {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
@@ -80,23 +99,46 @@
 {%- endmacro %}
 
 
-{% macro render_description_item_local_iri(result_set, property_id, property_label, link_label_property_id=None) -%}
+{% macro render_description_item_local_iri(result_set, property_id, property_label, link_label_property_id=None, accordion_style=False) -%}
     {% if conf.debug %}
         <p class="debug-render">render_description_item_local_iri: {{ property_id }}</p>
     {% endif %}
     {% if not result_set.empty and property_id in result_set.columns %}
         {% set values =  result_set[property_id].dropna() %}
         {% if not values.empty %}
-            <dl>
-                <dt>{{ property_label }}</dt>
-                {% for idx, item in values.iteritems() %}
-                    {% if link_label_property_id is none %}
-                        <dd><a href="#{{ item }}">{{ item|e|replace("\n","<br/>") }}</a></dd>
-                    {% else %}
-                        <dd><a href="#{{ item }}">{{ link_label_property_id }}</a></dd>
-                    {% endif %}
-                {% endfor %}
-            </dl>
+            {% if accordion_style %}
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        <a class="text-dark font-weight-bold" onclick="showContent()">
+                            {{ property_label }}
+                        </a>
+                    </div>
+
+                    <div class="collapse">
+                        <div class="card-body">
+                            {% for idx, item in values.iteritems() %}
+                                {% if link_label_property_id is none %}
+                                    <a href="#{{ item }}">{{ item|e|replace("\n","<br/>") }}</a>
+                                {% else %}
+                                    <a href="#{{ item }}">{{ link_label_property_id }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <dl>
+                    <dt>{{ property_label }}</dt>
+                    {% for idx, item in values.iteritems() %}
+                        {% if link_label_property_id is none %}
+                            <dd><a href="#{{ item }}">{{ item|e|replace("\n","<br/>") }}</a></dd>
+                        {% else %}
+                            <dd><a href="#{{ item }}">{{ link_label_property_id }}</a></dd>
+                        {% endif %}
+                    {% endfor %}
+                </dl>
+            {% endif %}
         {% endif %}
     {% else %}
         {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
