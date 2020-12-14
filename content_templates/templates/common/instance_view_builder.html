@@ -328,7 +328,7 @@
     {% endif %}
     {% if not content.empty %}
         {% set _ = replace_strings_in_tabular(content, target_columns=['path'], value_mapping_dict=inverted_prefixes) %}
-        <dd>
+
             {{ macros.render_inline_link(content, 'path', 'property') }}
             {{ macros.render_inline_values(content, 'minCount', 'min', '0') }}
             {{ macros.render_inline_values(content, 'maxCount', 'max', '*') }}
@@ -336,7 +336,7 @@
             {{ macros.render_inline_values(content, "pattern", "pattern") }}
             {{ macros.render_inline_values(content, "class", "class") }}
             {{ macros.render_inline_link(content, "value", "value", True) }}
-        </dd>
+        <br>
     {% endif %}
 {% endmacro %}
 
@@ -387,7 +387,7 @@
                 <div class="collapse">
                     <div class="card-body">
                         {% for row in content.itertuples() %}
-                            <dd><a href="#{{ row.link }}">{{ row.linkLabel }}</a></dd>
+                            <a href="#{{ row.link }}">{{ row.linkLabel }}</a><br>
                         {% endfor %}
                     </div>
                 </div>

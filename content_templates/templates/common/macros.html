@@ -119,7 +119,7 @@
                         <div class="card-body">
                             {% for idx, item in values.iteritems() %}
                                 {% if link_label_property_id is none %}
-                                    <a href="#{{ item }}">{{ item|e|replace("\n","<br/>") }}</a>
+                                    <a href="#{{ item }}">{{ item|e|replace("\n","<br/>") }}</a><br>
                                 {% else %}
                                     <a href="#{{ item }}">{{ link_label_property_id }}</a>
                                 {% endif %}
