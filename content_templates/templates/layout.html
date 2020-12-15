@@ -9,13 +9,15 @@
     <meta name=viewport content="width=device-width, initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
 
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tocify/1.9.0/stylesheets/jquery.tocify.min.css"
           rel="stylesheet"
           type="text/css">
     <link href="https://code.jquery.com/ui/1.11.4/themes/redmond/jquery-ui.css" rel="stylesheet" type="text/css">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
+
         .debug {
             color: #ef9a9a;
         }
@@ -112,6 +114,83 @@
         #tocButton {
             display: none;
         }
+        .iri_monospace {
+            color: #bd2130;
+            font-family: monospace !important;
+        }
+        .card-header {
+            padding: 0.5rem;
+        }
+
+        .card-header a:hover {
+            text-decoration: none !important;
+            cursor: pointer;
+        }
+        .card-header a {
+            width: 100%;
+            position: absolute;
+            margin-left: 0.3rem;
+        }
+        h1,h2,h3,h4,h5,h6{
+            margin-top: 0.5rem;
+        }
+
+
+        /* numbering headings */
+        #content {
+            counter-reset: H1;
+        }
+
+        /* Create the counter for H1 */
+        h1:not(.counter-skip):before {
+            content: counter(H1) ". "; /* Print the H1 number */
+            counter-increment: H1; /* Add 1 to next H1 */
+        }
+
+        h1 {
+            counter-reset: H2;
+        }
+
+        h2:before {
+            content: counter(H1) "." counter(H2) " ";
+            counter-increment: H2;
+        }
+
+        h2 {
+            counter-reset: H3;
+        }
+
+        h3:before {
+            content: counter(H1) "." counter(H2) "." counter(H3) " ";
+            counter-increment: H3;
+        }
+
+        h3 {
+            counter-reset: H4;
+        }
+
+        h4:before {
+            content: counter(H1) "." counter(H2) "." counter(H3) "." counter(H4) " ";
+            counter-increment: H4;
+        }
+
+        h4 {
+            counter-reset: H5;
+        }
+
+        h5:before {
+            content: counter(H1) "." counter(H2) "." counter(H3) "." counter(H4) "." counter(H5) " ";
+            counter-increment: H5;
+        }
+
+        h5 {
+            counter-reset: H6;
+        }
+
+        h6:before {
+            content: counter(H1) "." counter(H2) "." counter(H3) "." counter(H4) "." counter(H5) "." counter(H6) " ";
+            counter-increment: H6;
+        }
 
         @media only screen and (max-width: 768px) {
 
@@ -150,10 +229,12 @@
                 <div id="toc"></div>
             </div>
             <div class="col-sm-12 col-md-9">
-                <h1 class="text-center" id="skip-toc">{{ conf.title }}</h1>
+                <h1 class="text-center counter-skip" id="skip-toc">{{ conf.title }}</h1>
+                <div id="content">
                 {% block content %}
                     < empty >
                 {% endblock %}
+                <div>
             </div>
         </div>
     </div>
@@ -201,4 +282,8 @@
         $("#toc").slideToggle("2000","swing");
     }
 
+    function showContent () {
+        $(event.target).parent().siblings('div:first').slideToggle("800","swing");
+        $(event.target).siblings('i').toggleClass("fa-caret-down fa-caret-up")
+    }
 </script>
