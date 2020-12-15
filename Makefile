@@ -47,8 +47,9 @@ generate-indexes:
 	@ rm -rf ./output/classes/
 	@ rm -rf ./output/properties/
 
-
-
+generate-content:
+	@ echo -e '$(BUILD_PRINT)Generating the content'
+	@ mkreport --target ./templates/content/ --output ./docker/nginx/
 #-----------------------------------------------------------------------------
 # Gherkin feature and acceptance test generation commands
 #-----------------------------------------------------------------------------
