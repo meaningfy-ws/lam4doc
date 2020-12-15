@@ -1,60 +1,11 @@
 # LAM 4 DOC
 Initiative for Modeling the Legal Analysis Methodology (LAM): Document generation service
 
-# Installation
+# Work in progress
 
-Make sure that you are running `Docker` and have the correct permissions set. If not, run the following lines to install it. 
+*Currently the project is under heavy development.*
 
-```bash
-sudo apt -y install docker.io docker-compose
-
-sudo groupadd docker
-sudo usermod -aG docker $USER
-newgrp docker
-```
-
-To build 
-```bash
-make build-services
-```
-and run the containers:
-```bash
-make start-services
-```
-
-Install test/dev dependencies:
-
-```bash
-make install-dev
-```
-
-To run the tests:
-> Make sure you have the python dependencies installed and your virtual environment activated (if you're using one).
-```bash
-make test
-```
-
-# Usage
-
-## Start services
-To run the docker containers for the `lam` `api` and `ui`:
-
-```bash
-make start-services
-```
-
-The LAM services are split into:
-
-service | URL | info
-------- | ------- | ----
-`lam-api` | [localhost:4050](http://localhost:4050) | _access [localhost:4050/ui](http://localhost:4050/ui) for the swagger interface_ 
-`lam-ui` | [localhost:8050](http://localhost:8050) |
-
-## Stop services
-To stop the containers run:
-```bash
-make stop-services
-```
+The development version of the LAM HTML content is available [here](http://dev.meaningfy.ws:9090).
 
 # Contributing
 You are more than welcome to help expand and mature this project. We adhere to [Apache code of conduct](https://www.apache.org/foundation/policies/conduct), please follow it in all your interactions on the project.   
