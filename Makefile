@@ -35,13 +35,13 @@ stop-services:
 generate-indexes:
 	@ echo -e '$(BUILD_PRINT)(dev) Generating indices for CELEX...'
 	@ mkreport --target ./templates/indexes/ --config celex.json --output ./output/celex/
-	@ mv ./output/celex/template.json ./output/celex.json
+	@ mv ./output/celex/template.json ./docker/nginx/www/celex.json
 	@ echo -e '$(BUILD_PRINT)(dev) Generating indices for CLASSES...'
 	@ mkreport --target ./templates/indexes/ --config classes.json --output ./output/classes/
-	@ mv ./output/classes/template.json ./output/classes.json
+	@ mv ./output/classes/template.json ./docker/nginx/www/classes.json
 	@ echo -e '$(BUILD_PRINT)(dev) Generating indices for PROPERTIES...'
 	@ mkreport --target ./templates/indexes/ --config properties.json --output ./output/properties/
-	@ mv ./output/properties/template.json ./output/properties.json
+	@ mv ./output/properties/template.json ./docker/nginx/www/properties.json
 	@ echo -e '$(BUILD_PRINT)(dev) Cleaning up...'
 	@ rm -rf ./output/celex/
 	@ rm -rf ./output/classes/
@@ -49,7 +49,7 @@ generate-indexes:
 
 generate-content:
 	@ echo -e '$(BUILD_PRINT)Generating the content'
-	@ mkreport --target ./templates/content/ --output ./docker/nginx/
+	@ mkreport --target ./templates/content/ --output ./docker/nginx/www/
 #-----------------------------------------------------------------------------
 # Gherkin feature and acceptance test generation commands
 #-----------------------------------------------------------------------------

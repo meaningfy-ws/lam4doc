@@ -30,12 +30,11 @@ services:
   nginx:
     container_name: nginx
     build:
-      context: ..
-      dockerfile: ./docker/nginx/Dockerfile
+      context: ./nginx/
     ports:
       - 9090:80
     volumes:
-      - ./nginx:/usr/share/nginx/html
+      - ./nginx/www:/usr/share/nginx/html
     env_file: .env
     restart: always
     networks:
