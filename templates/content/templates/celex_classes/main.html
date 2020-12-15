@@ -16,11 +16,11 @@ FROM <~graph>
     ?collection skos:prefLabel ?prefLabel
   }
   ?collection euvoc:order ?order .
-
+  BIND(xsd:integer(?order) as ?intOrder)
   FILTER NOT EXISTS {
     ?parent skos:member ?collection
   }
-} ORDER by ?order" %}
+} ORDER by ?intOrder" %}
 {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, conf.celex_classes).fetch_tabular() %}
 {% call macros.render_fetch_results(content, error) %}
     {% set level = 2 %}
