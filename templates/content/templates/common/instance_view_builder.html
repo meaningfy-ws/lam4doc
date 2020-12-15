@@ -7,9 +7,9 @@
     <h{{ level }} id="{{ instance_uri }}">
         {{ instance_label }}
         {% if is_concept %}
-            <sup title="concept">[concept]</sup>
+            <sup title="concept">[co]</sup>
         {% else %}
-            <sup title="collection">[collection]</sup>
+            <sup title="collection">[cl]</sup>
         {% endif %}
     </h{{ level }}>
     <section>
@@ -43,7 +43,7 @@
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.dropna(how="all").empty %}
-            {{ macros.render_description_item_plain_literal (content, "constraintValue", "Constraints") }}
+            {{ macros.render_description_item_plain_literal (content, "constraintValue", "Constraints", True) }}
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -98,7 +98,7 @@
         {% if not content.dropna(how="all").empty %}
             <dl>
                 <dt>IRI</dt>
-                <dd><a href="#{{ instance_uri }}">{{ instance_uri }}</a></dd>
+                <dd><p class="iri_monospace">{{ instance_uri }}</p></dd>
             </dl>
             {{ macros.render_description_item_plain_literal (content, "deprecated", "Deprecated on") }}
             {{ macros.render_description_item_plain_literal (content, "altLabel", "Alternative label") }}
@@ -171,20 +171,20 @@
             {% if conf.debug %}
                 <p class="debug-render">skos editorial part for <strong>{{ instance_uri }}</strong></p>
             {% endif %}
-            {{ macros.render_description_item_plain_literal (content,"definition", "Definition") }}
-            {{ macros.render_description_item_plain_literal (content, "scopeNote", "Scope note") }}
-            {{ macros.render_description_item_plain_literal (content, "example", "Example") }}
-            {{ macros.render_description_item_plain_literal (content, "changeNote", "Change note") }}
-            {{ macros.render_description_item_plain_literal (content, "historyNote", "History note") }}
-            {{ macros.render_description_item_plain_literal (content, "editorialNote", "Editorial note") }}
-            {{ macros.render_description_item_plain_literal (content, "note", "Note") }}
-            {{ macros.render_description_item_local_iri (content, "member", "Members") }}
-            {{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts") }}
+            {{ macros.render_description_item_plain_literal (content,"definition", "Definition", True) }}
+            {{ macros.render_description_item_plain_literal (content, "scopeNote", "Scope note", True) }}
+            {{ macros.render_description_item_plain_literal (content, "example", "Example", True) }}
+            {{ macros.render_description_item_plain_literal (content, "changeNote", "Change note", True) }}
+            {{ macros.render_description_item_plain_literal (content, "historyNote", "History note", True) }}
+            {{ macros.render_description_item_plain_literal (content, "editorialNote", "Editorial note", True) }}
+            {{ macros.render_description_item_plain_literal (content, "note", "Note" , True) }}
+            {{ macros.render_description_item_local_iri (content, "member", "Members", None,True) }}
+            {{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts", None,True) }}
             {% if conf.debug %}
                 <p class="debug-render">sh editorial part for <strong>{{ instance_uri }}</strong></p>
             {% endif %}
             {{ macros.render_description_item_plain_literal (content, "shName", "Name") }}
-            {{ macros.render_description_item_plain_literal (content, "shDescription", "Description") }}
+            {{ macros.render_description_item_plain_literal (content, "shDescription", "Description", True) }}
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -207,10 +207,21 @@
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.empty %}
-            <dt>Property configurations</dt>
-            {% for row in content.itertuples() %}
-                {{ build_lam_classification_hint_or_property_configuration(parameters, row.propertyConfiguration) }}
-            {% endfor %}
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    <a class="text-dark font-weight-bold" onclick="showContent()">
+                        Property configurations
+                    </a>
+                </div>
+                <div class="collapse">
+                    <div class="card-body">
+                        {% for row in content.itertuples() %}
+                            {{ build_lam_classification_hint_or_property_configuration(parameters, row.propertyConfiguration) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -233,10 +244,21 @@
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.empty %}
-            <dt>Defining configurations</dt>
-            {% for row in content.itertuples() %}
-                {{ build_lam_classification_hint_or_property_configuration(parameters, row.classificationHint) }}
-            {% endfor %}
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    <a class="text-dark font-weight-bold" onclick="showContent()">
+                        Defining configurations
+                    </a>
+                </div>
+                <div class="collapse">
+                    <div class="card-body">
+                        {% for row in content.itertuples() %}
+                            {{ build_lam_classification_hint_or_property_configuration(parameters, row.classificationHint) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -306,7 +328,7 @@
     {% endif %}
     {% if not content.empty %}
         {% set _ = replace_strings_in_tabular(content, target_columns=['path'], value_mapping_dict=inverted_prefixes) %}
-        <dd>
+
             {{ macros.render_inline_link(content, 'path', 'property') }}
             {{ macros.render_inline_values(content, 'minCount', 'min', '0') }}
             {{ macros.render_inline_values(content, 'maxCount', 'max', '*') }}
@@ -314,7 +336,7 @@
             {{ macros.render_inline_values(content, "pattern", "pattern") }}
             {{ macros.render_inline_values(content, "class", "class") }}
             {{ macros.render_inline_link(content, "value", "value", True) }}
-        </dd>
+        <br>
     {% endif %}
 {% endmacro %}
 
@@ -355,10 +377,21 @@
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.dropna(how="all").empty %}
-            <dt>Useful links: Classified With | Property Configuration</dt>
-            {% for row in content.itertuples() %}
-                <dd><a href="#{{ row.link }}">{{ row.linkLabel }}</a></dd>
-            {% endfor %}
+            <div class="card">
+                <div class="card-header">
+                     <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    <a class="text-dark font-weight-bold" onclick="showContent()">
+                        Useful links: Classified With | Property Configuration
+                    </a>
+                </div>
+                <div class="collapse">
+                    <div class="card-body">
+                        {% for row in content.itertuples() %}
+                            <a href="#{{ row.link }}">{{ row.linkLabel }}</a><br>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         {% endif %}
     {% endcall %}
 {% endmacro %}
