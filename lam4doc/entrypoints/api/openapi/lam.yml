@@ -39,12 +39,10 @@ components:
 
 
 paths:
-  /lam-example:
+  /generate-report:
     get:
-      operationId: lam4doc.entrypoints.api.handlers.lam_example
-      description: Example endpoint.
-      parameters:
-        - $ref: '#/components/parameters/exampleParam'
+      operationId: lam4doc.entrypoints.api.handlers.generate_lam_report
+      description: Endpoint to generate the LAM report.
       responses:
         200:
           description: OK.
