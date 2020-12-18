@@ -23,6 +23,7 @@ logger = logging.getLogger(LAM_LOGGER)
 
 @app.route('/', methods=['GET'])
 def index():
+    logger.debug('request index view')
     return render_template('index.html', title='LAM index page')
 
 
@@ -39,8 +40,7 @@ def download_lam_report():
             return send_from_directory(Path(temp_folder), file_name, as_attachment=True)
     except Exception as e:
         logger.exception(str(e))
-
         flash(str(e), 'error')
 
-        logger.debug('redirect to index view')
-        return render_template('index.html')
+    logger.debug('redirect to index view')
+    return render_template('index.html')

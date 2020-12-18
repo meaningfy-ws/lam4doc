@@ -20,13 +20,12 @@ from lam4doc.entrypoints.api.helpers import generate_report_builder_config
 logger = logging.getLogger(LAM_LOGGER)
 
 
-def generate_lam_report(target_location: str) -> Path:
+def prepare_report_template(target_location):
     """
-    Handler for generating the lam report.
+    Copy report template and generate the conifg to the temporary directory indicated in target_location
     :param target_location: path to from where to copy the templates to be used by ReportBuilder
-    :return: target_location of the report document
     """
-    logger.debug('start service for generating lam report ')
+    logger.debug('start service for preparing lam template ')
 
     template_location = config.LAM_REPORT_TEMPLATE_LOCATION
     logger.debug(f'template location {template_location}')
@@ -37,7 +36,18 @@ def generate_lam_report(target_location: str) -> Path:
         config_content = generate_report_builder_config()
         config_file.write(dumps(config_content))
 
-    report_builder = ReportBuilder(target_path=target_location)
+    logger.debug('finish service for preparing lam template ')
+
+
+def generate_lam_report(target_location: str, report_builder: ReportBuilder) -> Path:
+    """
+    Handler for generating the lam report.
+    :param target_location: path to the report templates
+    :param report_builder: a report builder type service (eds4jinja2.builders.report_builder.ReportBuilder)
+    :return: location of the report document
+    """
+    logger.debug('start service for generating lam report ')
+
     report_builder.make_document()
 
     report_path = Path(str(target_location)) / 'output/main.html'

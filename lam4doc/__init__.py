@@ -6,5 +6,6 @@
 # Email: coslet.mihai@gmail.com 
 
 import logging.config
+from pathlib import Path
 
-logging.config.fileConfig('logging.conf')
+logging.config.fileConfig(Path(__file__).parents[1] / 'logging.conf')

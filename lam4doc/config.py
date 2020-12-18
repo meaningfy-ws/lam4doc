@@ -22,7 +22,6 @@ LAM_API_SERVICE = f'{LAM_API_LOCATION}:{LAM_API_PORT}'
 LAM_FUSEKI_LOCATION = os.environ.get('LAM_FUSEKI_LOCATION', 'http://fuseki')
 LAM_FUSEKI_PORT = os.environ.get('LAM_FUSEKI_PORT', 3030)
 LAM_FUSEKI_QUERY_URL = os.environ.get('LAM_FUSEKI_QUERY_URL', '/lam/query')
-# LAM_FUSEKI_SERVICE = 'http://dev.meaningfy.ws:3030/lam/query'
 LAM_FUSEKI_SERVICE = f'{LAM_FUSEKI_LOCATION}:{LAM_FUSEKI_PORT}{LAM_FUSEKI_QUERY_URL}'
 
 LAM_REPORT_TEMPLATE_LOCATION = str(Path(__file__).parents[1] / 'templates/content')
