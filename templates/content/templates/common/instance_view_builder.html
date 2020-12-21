@@ -217,11 +217,7 @@
                 <div class="collapse">
                     <div class="card-body">
                         {% for row in content.itertuples() %}
-<<<<<<< HEAD:content_templates/templates/common/instance_view_builder.html
-                            {{ build_lam_classification_hint_or_property_configuration(graph, row.propertyConfiguration) }}
-=======
                             {{ build_lam_classification_hint_or_property_configuration(parameters, row.propertyConfiguration) }}
->>>>>>> feature/LAM-71:templates/content/templates/common/instance_view_builder.html
                         {% endfor %}
                     </div>
                 </div>
@@ -258,11 +254,7 @@
                 <div class="collapse">
                     <div class="card-body">
                         {% for row in content.itertuples() %}
-<<<<<<< HEAD:content_templates/templates/common/instance_view_builder.html
-                            {{ build_lam_classification_hint_or_property_configuration(graph, row.classificationHint) }}
-=======
                             {{ build_lam_classification_hint_or_property_configuration(parameters, row.classificationHint) }}
->>>>>>> feature/LAM-71:templates/content/templates/common/instance_view_builder.html
                         {% endfor %}
                     </div>
                 </div>

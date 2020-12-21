@@ -8,7 +8,34 @@
 """
 OpenAPI method handlers.
 """
+import logging
+import tempfile
+
+from eds4jinja2.builders.report_builder import ReportBuilder
+from flask import send_file
+from werkzeug.exceptions import InternalServerError
+
+from lam4doc.config import LAM_LOGGER
+from lam4doc.services.handlers import generate_lam_report as service_generate_lam_report, prepare_report_template
+
+logger = logging.getLogger(LAM_LOGGER)
 
 
-def lam_example():
-    return 'OK', 200
+def generate_lam_report() -> tuple:
+    """
+    API method for generating and requesting a lam report.
+    :rtype: report file (html), int
+    :return: the lam report
+    """
+    logger.debug('start generate lam report endpoint')
+    try:
+        with tempfile.TemporaryDirectory() as temp_folder:
+            prepare_report_template(temp_folder)
+            report_builder = ReportBuilder(target_path=temp_folder)
+            report_location = service_generate_lam_report(temp_folder, report_builder)
+
+            logger.debug('finish generate lam report endpoint')
+            return send_file(report_location, as_attachment=True)  # 200
+    except Exception as e:
+        logger.exception(str(e))
+        raise InternalServerError(str(e))  # 500
