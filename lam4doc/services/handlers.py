@@ -5,7 +5,6 @@
 # Author: Mihai Coșleț
 # Email: coslet.mihai@gmail.com 
 
-""" """
 import logging
 from json import dumps
 from pathlib import Path
