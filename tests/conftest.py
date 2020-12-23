@@ -18,10 +18,10 @@ def api_client():
 
 
 class FakeReportBuilder:
-    def __init__(self, target_path):
+    def __init__(self, target_path, template_name):
         self.target_path = str(target_path)
+        self.template = template_name
         self.actions = list()
 
     def make_document(self):
         self.actions.append(('MAKE DOCUMENT', self.target_path))
-

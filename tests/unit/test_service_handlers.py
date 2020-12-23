@@ -11,7 +11,7 @@ from lam4doc.services.handlers import generate_report, prepare_template
 from tests.conftest import FakeReportBuilder
 
 
-def test_prepare_report_template(tmpdir, monkeypatch):
+def test_prepare_template(tmpdir, monkeypatch):
     temp_folder = tmpdir.mkdir('report')
     prepare_template(temp_folder, config.LAM_REPORT_TEMPLATE_LOCATION)
 
@@ -19,9 +19,9 @@ def test_prepare_report_template(tmpdir, monkeypatch):
     assert Path.is_dir(Path(temp_folder) / 'templates')
 
 
-def test_generate_lam_report(tmpdir):
+def test_generate_report(tmpdir):
     temp_folder = tmpdir.mkdir('report')
-    report_builder = FakeReportBuilder(temp_folder)
+    report_builder = FakeReportBuilder(temp_folder, 'main.html')
 
     report_path = generate_report(temp_folder, report_builder)
 
