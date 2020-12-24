@@ -4,19 +4,28 @@
 # Date:  18/12/2020
 # Author: Mihai Coșleț
 # Email: coslet.mihai@gmail.com
+from json import dumps, load
 from pathlib import Path
 
-from lam4doc import config
-from lam4doc.services.handlers import generate_report, prepare_template
+from lam4doc.services.handlers import generate_report, setup_config_for_index
 from tests.conftest import FakeReportBuilder
 
 
-def test_prepare_template(tmpdir):
-    temp_folder = tmpdir.mkdir('report')
-    prepare_template(temp_folder, config.LAM_REPORT_TEMPLATE_LOCATION)
+def test_setup_config_for_index(tmpdir, monkeypatch):
+    config_dict = {
+        'template': 'main.html',
+        'conf': {
+            'default_endpoint': 'http://default.config/url',
+            'title': 'LAM Report',
+        }
+    }
+    default_config_file = tmpdir.mkdir('default').join('config.json')
+    default_config_file.write(dumps(config_dict))
+    config_file = setup_config_for_index(tmpdir, default_config_file)
 
-    assert Path.is_file(Path(temp_folder) / 'config.json')
-    assert Path.is_dir(Path(temp_folder) / 'templates')
+    assert Path(tmpdir / 'config.json').is_file()
+    with config_file.open('r') as config:
+        assert load(config)['conf']['default_endpoint'] == 'http://fuseki:3030/lam/query'
 
 
 def test_generate_report(tmpdir):
@@ -25,5 +34,5 @@ def test_generate_report(tmpdir):
 
     report_path = generate_report(temp_folder, report_builder)
 
-    assert Path(temp_folder) / 'output/main.html' == report_path
+    assert Path(temp_folder) / 'main.html' == report_path
     assert report_builder.actions[0] == ('MAKE DOCUMENT', str(temp_folder))

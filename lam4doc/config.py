@@ -25,6 +25,7 @@ LAM_FUSEKI_QUERY_URL = os.environ.get('LAM_FUSEKI_QUERY_URL', '/lam/query')
 LAM_FUSEKI_SERVICE = f'{LAM_FUSEKI_LOCATION}:{LAM_FUSEKI_PORT}{LAM_FUSEKI_QUERY_URL}'
 
 LAM_REPORT_TEMPLATE_LOCATION = str(Path(__file__).parents[1] / 'templates/content')
+LAM_REPORT_CONFIG = str(Path(__file__).parents[1] / 'templates/content/config.json')
 
 LAM_INDEXES_TEMPLATE_LOCATION = str(Path(__file__).parents[1] / 'templates/indexes')
 LAM_CELEX_CONFIG = str(Path(__file__).parents[1] / 'templates/indexes/celex.json')

@@ -26,5 +26,6 @@ def generate_report_builder_config(config_path: str) -> dict:
 
     config_dict = loads(Path(config_path).read_bytes())
     config_dict["conf"]["default_endpoint"] = config.LAM_FUSEKI_SERVICE
+
     logger.debug(f'finish with config path: {config_path}')
     return config_dict
