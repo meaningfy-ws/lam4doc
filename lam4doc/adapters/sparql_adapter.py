@@ -77,7 +77,7 @@ class FusekiSPARQLAdapter(AbstractSPARQLAdapter):
 
     def upload_file_to_graph(self, dataset_name: str, graph_name: str, file_path: str) -> dict:
         """
-            Upload the file to the Fuseki dataset
+            Upload the file to a Fuseki dataset into a specific graph
         :param dataset_name: The dataset identifier. This should be short alphanumeric string uniquely
         :param graph_name: the name of the target graph
         :param file_path: path to the data file to be uploaded
