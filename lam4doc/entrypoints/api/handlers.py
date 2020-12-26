@@ -45,7 +45,7 @@ def generate_lam_report() -> tuple:
         raise InternalServerError(str(e))  # 500
 
 
-def upload_rdfs(lam_properties_document: FileStorage = None, lam_classes_document: FileStorage = None,
+def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_classes_document: FileStorage = None,
                 celex_classes_document: FileStorage = None) -> tuple:
     """
     API method for uploading 3 RDF files.
@@ -53,9 +53,13 @@ def upload_rdfs(lam_properties_document: FileStorage = None, lam_classes_documen
     """
     logger.debug('Entering upload_rdfs')
 
-    dataset_name = "A_DATASET_NAME"
+    dataset_name = body.get("dataset_name")
+    if not dataset_name:
+        logger.error("The name of the dataset is required.")
+        return 'Dataset name is required', 400
 
     try:
+        logger.debug(body)
         sparql_adapter = FusekiSPARQLAdapter("http://fuseki:3030/", requests)
 
         if lam_properties_document is None and lam_classes_document is None and celex_classes_document is None:

@@ -28,30 +28,26 @@ components:
         type: string
       description: Example parameter
   schemas:
-    LAM_PROPERTIES:
-      type: object
-      description: The LAM properties document.
-      properties:
-        lam_properties_document:
-          type: string
-          format: binary
-          description: The LAM properties document.
-    LAM_CLASSES:
-      type: object
-      description: The LAM classes document.
-      properties:
-        lam_classes_document:
-          type: string
-          format: binary
-          description: The LAM classes document.
-    CELEX_CLASSES:
-      type: object
-      description: The CELEX classes document.
-      properties:
-        celex_classes_document:
-          type: string
-          format: binary
-          description: The CELEX classes document.
+    UPLOAD_SCHEMA:
+        type: object
+        description: The LAM properties document.
+        properties:
+          lam_properties_document:
+            type: string
+            format: binary
+            description: The LAM properties document.
+          lam_classes_document:
+            type: string
+            format: binary
+            description: The LAM classes document.
+          celex_classes_document:
+            type: string
+            format: binary
+            description: The CELEX classes document.
+          dataset_name:
+            type: string
+        required:
+          - dataset_name
 
 
 paths:
@@ -74,10 +70,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              anyOf:
-                - $ref: '#/components/schemas/LAM_PROPERTIES'
-                - $ref: '#/components/schemas/LAM_CLASSES'
-                - $ref: '#/components/schemas/CELEX_CLASSES'
+              $ref: '#/components/schemas/UPLOAD_SCHEMA'
       responses:
         200:
           description: OK.
