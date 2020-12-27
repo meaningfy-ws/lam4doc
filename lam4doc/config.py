@@ -30,6 +30,10 @@ LAM_REPORT_TEMPLATE_LOCATION = str(Path(__file__).parents[1] / 'templates/conten
 
 LAM_DEFAULT_TIMEOUT = int(os.environ.get('LAM_GUNICORN_TIMEOUT', 300))
 
+LAM_DOCUMENT_PROPERTY_GRAPH = os.environ.get("LAM_DOCUMENT_PROPERTY_GRAPH", "http://publications.europa.eu/resources/authority/lam/DocumentProperty")
+LAM_CLASSES_GRAPH = os.environ.get("LAM_CLASSES_GRAPH", "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument")
+LAM_CELEX_CLASSES_GRAPH = os.environ.get("LAM_CELEX_CLASSES_GRAPH", "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument")
+
 
 LAM_LOGGER = 'lam'
 

@@ -1,20 +1,18 @@
 #!/usr/bin/python3
 
 # sparql_adapter.py
-# Date:  17/10/2020
-# Author: Mihai Coșleț
-# Email: coslet.mihai@gmail.com 
+# Date:  20/12/2020
+# Author: Laurentiu Mandru
+# Email: mclaurentiu79@gmail.com
 
 """
 Adapter for the SPARQL wrapper library
 """
 import logging
-import urllib
 from abc import ABC, abstractmethod
 from json import JSONDecodeError
 from urllib.parse import urljoin
 
-from SPARQLWrapper import SPARQLWrapper
 from requests.auth import HTTPBasicAuth
 from requests_toolbelt import MultipartEncoder
 

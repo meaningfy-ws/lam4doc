@@ -19,7 +19,8 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import InternalServerError
 
 from lam4doc.adapters.sparql_adapter import FusekiSPARQLAdapter
-from lam4doc.config import LAM_LOGGER
+from lam4doc.config import LAM_LOGGER, LAM_DOCUMENT_PROPERTY_GRAPH, LAM_CLASSES_GRAPH, LAM_CELEX_CLASSES_GRAPH, \
+    LAM_FUSEKI_PORT, LAM_FUSEKI_LOCATION
 from lam4doc.services.handlers import generate_lam_report as service_generate_lam_report, prepare_report_template
 
 logger = logging.getLogger(LAM_LOGGER)
@@ -60,7 +61,7 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
 
     try:
         logger.debug(body)
-        sparql_adapter = FusekiSPARQLAdapter("http://fuseki:3030/", requests)
+        sparql_adapter = FusekiSPARQLAdapter(LAM_FUSEKI_LOCATION + ":" + str(LAM_FUSEKI_PORT) + "/", requests)
 
         if lam_properties_document is None and lam_classes_document is None and celex_classes_document is None:
             logger.error("No file was specified. Returning 400.")
@@ -72,9 +73,9 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
                 local_lam_properties_file = Path(temp_folder) / lam_properties_document.filename
                 lam_properties_document.save(local_lam_properties_file)
                 logger.info("lam_properties_document - saved to " + str(local_lam_properties_file))
-                sparql_adapter.delete_graph(dataset_name, "<http://publications.europa.eu/resources/authority/lam/DocumentProperty>")
+                sparql_adapter.delete_graph(dataset_name, "<"+ LAM_DOCUMENT_PROPERTY_GRAPH + ">")
                 sparql_adapter.upload_file_to_graph(dataset_name,
-                                                    "http://publications.europa.eu/resources/authority/lam/DocumentProperty",
+                                                    LAM_DOCUMENT_PROPERTY_GRAPH,
                                                     str(local_lam_properties_file))
 
             if lam_classes_document:
@@ -82,9 +83,9 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
                 lam_classes_document.save(local_lam_classes_file)
                 logger.info("lam_classes_document - saved to " + local_lam_classes_file)
                 sparql_adapter.delete_graph(dataset_name,
-                                            "<http://publications.europa.eu/resources/authority/lam/LAMLegalDocument>")
+                                            "<" + LAM_CLASSES_GRAPH + ">")
                 sparql_adapter.upload_file_to_graph(dataset_name,
-                                                    "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument",
+                                                    LAM_CLASSES_GRAPH,
                                                     str(local_lam_classes_file))
 
             if celex_classes_document:
@@ -92,9 +93,9 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
                 celex_classes_document.save(local_celex_classes_file)
                 logger.info("lam_properties_document - saved to " + local_celex_classes_file)
                 sparql_adapter.delete_graph(dataset_name,
-                                            "<http://publications.europa.eu/resources/authority/celex/CelexLegalDocument>")
+                                            "<" + LAM_CELEX_CLASSES_GRAPH + ">")
                 sparql_adapter.upload_file_to_graph(dataset_name,
-                                                    "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument",
+                                                    LAM_CELEX_CLASSES_GRAPH,
                                                     str(local_celex_classes_file))
 
             return 'OK', 200
