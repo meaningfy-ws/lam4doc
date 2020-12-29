@@ -23,10 +23,16 @@ LAM_FUSEKI_LOCATION = os.environ.get('LAM_FUSEKI_LOCATION', 'http://fuseki')
 LAM_FUSEKI_PORT = os.environ.get('LAM_FUSEKI_PORT', 3030)
 LAM_FUSEKI_QUERY_URL = os.environ.get('LAM_FUSEKI_QUERY_URL', '/lam/query')
 LAM_FUSEKI_SERVICE = f'{LAM_FUSEKI_LOCATION}:{LAM_FUSEKI_PORT}{LAM_FUSEKI_QUERY_URL}'
+LAM_FUSEKI_USERNAME = os.environ.get('LAM_FUSEKI_USERNAME', 'admin')
+LAM_FUSEKI_PASSWORD = os.environ.get('LAM_FUSEKI_PASSWORD', 'admin')
 
 LAM_REPORT_TEMPLATE_LOCATION = str(Path(__file__).parents[1] / 'templates/content')
 
 LAM_DEFAULT_TIMEOUT = int(os.environ.get('LAM_GUNICORN_TIMEOUT', 300))
+
+LAM_DOCUMENT_PROPERTY_GRAPH = os.environ.get("LAM_DOCUMENT_PROPERTY_GRAPH", "http://publications.europa.eu/resources/authority/lam/DocumentProperty")
+LAM_CLASSES_GRAPH = os.environ.get("LAM_CLASSES_GRAPH", "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument")
+LAM_CELEX_CLASSES_GRAPH = os.environ.get("LAM_CELEX_CLASSES_GRAPH", "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument")
 
 
 LAM_LOGGER = 'lam'
