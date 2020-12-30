@@ -13,15 +13,13 @@ import tempfile
 from pathlib import Path
 
 import requests
-from eds4jinja2.builders.report_builder import ReportBuilder
 from flask import send_file
 from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import InternalServerError
 
 from lam4doc.adapters.sparql_adapter import FusekiSPARQLAdapter
-from lam4doc.config import LAM_LOGGER, LAM_DOCUMENT_PROPERTY_GRAPH, LAM_CLASSES_GRAPH, LAM_CELEX_CLASSES_GRAPH, \
+from lam4doc.config import LAM_DOCUMENT_PROPERTY_GRAPH, LAM_CLASSES_GRAPH, LAM_CELEX_CLASSES_GRAPH, \
     LAM_FUSEKI_PORT, LAM_FUSEKI_LOCATION
-from lam4doc.services.handlers import generate_lam_report as service_generate_lam_report, prepare_report_template
 from lam4doc.config import LAM_LOGGER
 from lam4doc.services.handlers import generate_lam_report as service_generate_lam_report, \
     generate_indexes as service_generate_indexes, zip_files
@@ -42,6 +40,25 @@ def generate_lam_report() -> tuple:
 
             logger.debug('finish generate lam report endpoint')
             return send_file(report_location, as_attachment=True)  # 200
+    except Exception as e:
+        logger.exception(str(e))
+        raise InternalServerError(str(e))  # 500
+
+
+def generate_indexes() -> tuple:
+    """
+    API method for generating and requesting the LAM indexes.
+    :rtype: report file (zip), int
+    :return: the lam indexes
+    """
+    logger.debug('start generate lam indexes endpoint')
+    try:
+        with tempfile.TemporaryDirectory() as temp_folder:
+            index_files_info = service_generate_indexes(temp_folder)
+            archive = zip_files(temp_folder, index_files_info, 'indexes.zip')
+
+            logger.debug('finish generate lam indexes endpoint')
+            return send_file(archive, as_attachment=True)  # 200
     except Exception as e:
         logger.exception(str(e))
         raise InternalServerError(str(e))  # 500
@@ -105,22 +122,3 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
         raise InternalServerError(str(e))  # 500
     finally:
         logger.debug('Exiting upload_rdfs')
-
-
-def generate_indexes() -> tuple:
-    """
-    API method for generating and requesting the LAM indexes.
-    :rtype: report file (zip), int
-    :return: the lam indexes
-    """
-    logger.debug('start generate lam indexes endpoint')
-    try:
-        with tempfile.TemporaryDirectory() as temp_folder:
-            index_files_info = service_generate_indexes(temp_folder)
-            archive = zip_files(temp_folder, index_files_info, 'indexes.zip')
-
-            logger.debug('finish generate lam indexes endpoint')
-            return send_file(archive, as_attachment=True)  # 200
-    except Exception as e:
-        logger.exception(str(e))
-        raise InternalServerError(str(e))  # 500
