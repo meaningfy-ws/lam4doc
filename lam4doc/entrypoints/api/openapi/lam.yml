@@ -27,15 +27,27 @@ components:
       schema:
         type: string
       description: Example parameter
-
   schemas:
-    ExampleSchema:
-      type: object
-      description: Example schema
-      properties:
-        example_value:
-          type: string
-          description: Example value
+    UPLOAD_SCHEMA:
+        type: object
+        description: The LAM properties document.
+        properties:
+          lam_properties_document:
+            type: string
+            format: binary
+            description: The LAM properties document.
+          lam_classes_document:
+            type: string
+            format: binary
+            description: The LAM classes document.
+          celex_classes_document:
+            type: string
+            format: binary
+            description: The CELEX classes document.
+          dataset_name:
+            type: string
+        required:
+          - dataset_name
 
 
 paths:
@@ -48,6 +60,24 @@ paths:
           description: OK.
         5XX:
           description: Unexpected Error.
+
+  /upload-rdf:
+    post:
+      operationId: lam4doc.entrypoints.api.handlers.upload_rdfs
+      description: Endpoint to upload RDF files.
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UPLOAD_SCHEMA'
+      responses:
+        200:
+          description: OK.
+        5XX:
+          description: Unexpected Error.
+
+
   /generate-indexes:
     get:
       operationId: lam4doc.entrypoints.api.handlers.generate_indexes
