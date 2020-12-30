@@ -6,15 +6,15 @@
 # Email: coslet.mihai@gmail.com 
 
 import logging
-from json import dumps
 from pathlib import Path
+from typing import List
 from zipfile import ZipFile
 
 from eds4jinja2.builders.report_builder import ReportBuilder
 
 from lam4doc import config
 from lam4doc.config import LAM_LOGGER
-from lam4doc.services.helpers import generate_report_builder_config
+from lam4doc.services.helpers import FileInfo, IndexInfo
 
 logger = logging.getLogger(LAM_LOGGER)
 
@@ -44,69 +44,60 @@ def generate_lam_report(target_location: str) -> Path:
     """
     logger.debug('start service for generating lam report')
 
-    config_location = Path(target_location) / 'config.json'
-    with open(config_location, 'w') as config_file:
-        config_content = generate_report_builder_config(config.LAM_REPORT_CONFIG)
-        config_file.write(dumps(config_content))
-
     report_builder = ReportBuilder(target_path=config.LAM_REPORT_TEMPLATE_LOCATION,
-                                   config_file=config_location,
-                                   output_path=target_location)
+                                   output_path=target_location,
+                                   additional_config={"conf": {"default_endpoint": config.LAM_FUSEKI_SERVICE}})
     report_location = generate_report(target_location, report_builder)
 
     logger.debug('finish service for generating lam report')
     return report_location
 
 
-def setup_config_for_index(target_location: str, template_config_location: str) -> Path:
-    config_location = Path(target_location) / 'config.json'
-    with config_location.open('w') as config_file:
-        config_content = generate_report_builder_config(template_config_location)
-        config_file.write(dumps(config_content))
-    return config_location
-
-
-def generate_indexes(target_location: str) -> Path:
+def generate_indexes(target_location: str) -> List[FileInfo]:
     """
     Method for generating the lam indexes and zipping them using the generic prepare_template and generate_report
-    :param target_location: path to the report templates
-    :return: path to zip
+    :param target_location: path to where to create the reports
+    :return: list of indexes as FileInfo tuples
     """
     logger.debug('start service for generating lam indexes')
 
-    logger.debug('start generation for celex')
-    celex_target_location = Path(target_location) / 'celex'
-    celex_target_location.mkdir()
-    config_location = setup_config_for_index(target_location, config.LAM_CELEX_CONFIG)
-    report_builder = ReportBuilder(target_path=config.LAM_INDEXES_TEMPLATE_LOCATION,
-                                   config_file=config_location,
-                                   output_path=celex_target_location)
-    celex_index = generate_report(celex_target_location, report_builder)
+    index_info = [IndexInfo('celex', config.LAM_CELEX_CONFIG_NAME),
+                  IndexInfo('classes', config.LAM_CLASSES_CONFIG_NAME),
+                  IndexInfo('properties', config.LAM_PROPERTIES_CONFIG_NAME)]
+    index_files_info = list()
 
-    logger.debug('start generation for classes')
-    classes_target_location = Path(target_location) / 'classes'
-    classes_target_location.mkdir()
-    config_location = setup_config_for_index(target_location, config.LAM_CELEX_CONFIG)
-    report_builder = ReportBuilder(target_path=config.LAM_INDEXES_TEMPLATE_LOCATION,
-                                   config_file=config_location,
-                                   output_path=classes_target_location)
-    classes_index = generate_report(classes_target_location, report_builder)
-
-    logger.debug('start generation for properties')
-    properties_target_location = Path(target_location) / 'properties'
-    properties_target_location.mkdir()
-    config_location = setup_config_for_index(target_location, config.LAM_CELEX_CONFIG)
-    report_builder = ReportBuilder(target_path=config.LAM_INDEXES_TEMPLATE_LOCATION,
-                                   config_file=config_location,
-                                   output_path=properties_target_location)
-    properties_index = generate_report(celex_target_location, report_builder)
-
-    logger.debug('zipping indexes')
-    zip_path = Path(target_location) / 'indexes.zip'
-    with ZipFile(zip_path, 'w') as zip_report:
-        zip_report.write(celex_index, arcname='celex.json')
-        zip_report.write(classes_index, arcname='classes.json')
-        zip_report.write(properties_index, arcname='properties.json')
+    for index in index_info:
+        logger.debug(f'create report for {index.name}, with config {index.config_location}')
+        index_target_location = Path(target_location) / index.name
+        index_target_location.mkdir()
+        report_builder = ReportBuilder(target_path=config.LAM_INDEXES_TEMPLATE_LOCATION,
+                                       config_file=index.config_location,
+                                       output_path=index_target_location,
+                                       additional_config={"conf": {"endpoint": config.LAM_FUSEKI_SERVICE}})
+        index_files_info.append(FileInfo(location=generate_report(index_target_location, report_builder),
+                                         file_name=f'{index.name}.json'))
 
     logger.debug('finish service for generating lam indexes')
+    return index_files_info
+
+
+def zip_files(target_location: str, files: List[FileInfo], zip_name: str = None) -> Path:
+    """
+    Method for zipping a list of files using the FileInfo tuple as info about the files.
+    :param target_location: location of the archive to be created
+    :param files: list of FileInfo tuples of files to be zipped
+    :param zip_name: name of the archive, defaults to 'archive.zip'
+    :return: path to the created archive
+    """
+    logger.debug(f'start zipping {", ".join([file.file_name for file in files])} in {target_location}.')
+    if not zip_name:
+        zip_name = 'archive.zip'
+
+    zip_path = Path(target_location) / zip_name
+    with ZipFile(zip_path, 'w') as zip_report:
+        for file_info in files:
+            logger.debug(f'zipping {file_info.file_name}.')
+            zip_report.write(file_info.location, file_info.file_name)
+
+    logger.debug(f'finish zipping {", ".join([file.file_name for file in files])} in {target_location}.')
     return zip_path

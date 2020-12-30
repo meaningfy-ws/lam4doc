@@ -16,7 +16,7 @@ from werkzeug.exceptions import InternalServerError
 
 from lam4doc.config import LAM_LOGGER
 from lam4doc.services.handlers import generate_lam_report as service_generate_lam_report, \
-    generate_indexes as service_generate_indexes
+    generate_indexes as service_generate_indexes, zip_files
 
 logger = logging.getLogger(LAM_LOGGER)
 
@@ -48,10 +48,11 @@ def generate_indexes() -> tuple:
     logger.debug('start generate lam indexes endpoint')
     try:
         with tempfile.TemporaryDirectory() as temp_folder:
-            report_location = service_generate_indexes(temp_folder)
+            index_files_info = service_generate_indexes(temp_folder)
+            archive = zip_files(temp_folder, index_files_info, 'indexes.zip')
 
             logger.debug('finish generate lam indexes endpoint')
-            return send_file(report_location, as_attachment=True)  # 200
+            return send_file(archive, as_attachment=True)  # 200
     except Exception as e:
         logger.exception(str(e))
         raise InternalServerError(str(e))  # 500
