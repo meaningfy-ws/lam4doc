@@ -6,15 +6,10 @@ BUILD_PRINT = \e[1;34mSTEP: \e[0m
 # Basic commands
 #-----------------------------------------------------------------------------
 
-install-dev:
+install:
 	@ echo "$(BUILD_PRINT)Installing the local requirements"
 	@ pip install --upgrade pip
 	@ pip install -r requirements/dev.txt
-
-install-prod:
-	@ echo "$(BUILD_PRINT)Installing the production requirements"
-	@ pip install --upgrade pip
-	@ pip install -r requirements.txt
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"

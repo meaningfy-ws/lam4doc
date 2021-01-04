@@ -1,12 +1,10 @@
 requests
 requests-toolbelt
 rdflib
-connexion[swagger-ui]==2.7.0  # https://github.com/zalando/connexion
-Flask==1.1.2  # https://flask.palletsprojects.com/en/1.1.x/e
-Flask-Wtf==0.14.3  # https://flask-wtf.readthedocs.io/en/stable/
-eds4jinja2==0.1.27
+connexion[swagger-ui]  # https://github.com/zalando/connexion
+Flask  # https://flask.palletsprojects.com/en/1.1.x/e
+Flask-Wtf  # https://flask-wtf.readthedocs.io/en/stable/
+eds4jinja2
 openpyxl
-selenium
-pytest
-pytest-bdd
 werkzeug
+gunicorn  # https://gunicorn.org/
