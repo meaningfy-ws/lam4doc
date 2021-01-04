@@ -1,0 +1,127 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The Legrand Orange Book
+% LaTeX Template
+% Version 2.4 (26/09/2018)
+%
+% This template was downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Mathias Legrand (legrand.mathias@gmail.com) with modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Compiling this template:
+% This template uses biber for its bibliography and makeindex for its index.
+% When you first open the template, compile it from the command line with the
+% commands below to make sure your LaTeX distribution is configured correctly:
+%
+% 1) pdflatex main
+% 2) makeindex main.idx -s StyleInd.ist
+% 3) biber main
+% 4) pdflatex main x 2
+%
+% After this, when you wish to update the bibliography/index use the appropriate
+% command above and make sure to compile with pdflatex several times
+% afterwards to propagate your changes to the document.
+%
+% This template also uses a number of packages which may need to be
+% updated to the newest versions for the template to compile. It is strongly
+% recommended you update your LaTeX distribution if you have any
+% compilation errors.
+%
+% Important note:
+% Chapter heading images should have a 2:1 width:height ratio,
+% e.g. 920px width and 460px height.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt,fleqn]{book} % Default font size and left-justified equations
+
+\input{structure.tex} % Insert the commands.tex file which contains the majority of the structure behind the template
+
+%\hypersetup{pdftitle={Title},pdfauthor={Author}} % Uncomment and fill out to include PDF metadata for the author and title of the book
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+    \begingroup
+    \thispagestyle{empty} % Suppress headers and footers on the title page
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[inner sep=0pt] (background) at (current page.center) {\includegraphics[width=\paperwidth]{background.pdf}};
+        \draw (current page.center) node [fill=ocre!30!white,fill opacity=0.6,text opacity=1,inner sep=1cm]{\Huge\centering\bfseries\sffamily\parbox[c][][t]{\paperwidth}{\centering Legal Analisys Methodology\\[15pt] % Book title
+        {\Large Specification of Descriptive Properties and Document Classes Metadata Structure}\\[20pt] % Subtitle
+        {\huge Publications Office of the European Union}}}; % Author name
+    \end{tikzpicture}
+    \vfill
+    \endgroup
+
+%----------------------------------------------------------------------------------------
+%	COPYRIGHT PAGE
+%----------------------------------------------------------------------------------------
+
+    \newpage
+    ~\vfill
+    \thispagestyle{empty}
+
+    \noindent Copyright \copyright\ 2021 Publications Office of the European Union\\ % Copyright notice
+
+    \noindent \textsc{Published by Publications Office of the European Union}\\ % Publisher
+
+    \noindent \textsc{https://op.europa.eu/}\\ % URL
+
+    \noindent Licensed under the \textit{Creative Commons Attribution 4.0 International Public License} (the ``License''). You should have received a copy of the license along with this work. If not, see \url{http://creativecommons.org/licenses/by-sa/4.0/}.
+    To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+    \noindent \textit{Automatically generated, Jan 2021} % Printing/edition date
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+%\usechapterimagefalse % If you don't want to include a chapter image, use this to toggle images off - it can be enabled later with \usechapterimagetrue
+
+%    \chapterimage{chapter_head_1.pdf} % Table of contents heading image#}
+%
+    \usechapterimagefalse
+    \pagestyle{empty} % Disable headers and footers for the following pages#}
+
+    \tableofcontents % Print the table of contents itself
+
+    \cleardoublepage % Forces the first chapter to start on an odd page so it's on the right side of the book
+
+    \pagestyle{fancy} % Enable headers and footers again
+
+
+%----------------------------------------------------------------------------------------
+%	MAIN CONTENT
+%----------------------------------------------------------------------------------------
+
+    {% block content %}
+    < empty >
+    {% endblock %}
+
+%----------------------------------------------------------------------------------------
+%	INDEX
+%----------------------------------------------------------------------------------------
+
+    \cleardoublepage % Make sure the index starts on an odd (right side) page
+    \phantomsection
+    \setlength{\columnsep}{0.75cm} % Space between the 2 columns of the index
+    \addcontentsline{toc}{chapter}{\textcolor{ocre}{Index}} % Add an Index heading to the table of contents
+    \printindex % Output the index
+
+%----------------------------------------------------------------------------------------
+
+\end{document}

@@ -1,5 +1,5 @@
 {
-  "template": "main.html",
+  "template": "main.tex",
   "conf": {
     "default_endpoint": "http://srv.meaningfy.ws:3030/lam/query",
     "title": "LAM Report",
