@@ -21,7 +21,7 @@ logger = logging.getLogger(LAM_LOGGER)
 
 def get_lam_report() -> tuple:
     """
-    Method to connect to the RDF diff api to get the dataset diff report
+    Method to connect to the lam api to get the report
     :return: html report
     :rtype: file, int
     """
@@ -32,4 +32,20 @@ def get_lam_report() -> tuple:
         logger.exception(str(exception))
 
     logger.debug('finish get report api call')
+    return response.content, response.status_code
+
+
+def get_indexes() -> tuple:
+    """
+    Method to connect to the lam api to get the indexes
+    :return: zip file
+    :rtype: file, int
+    """
+    logger.debug('start get indexes api call')
+    try:
+        response = requests.get(url=config.LAM_API_SERVICE + '/generate-indexes', timeout=config.LAM_DEFAULT_TIMEOUT)
+    except Timeout as exception:
+        logger.exception(str(exception))
+
+    logger.debug('finish get indexes api call')
     return response.content, response.status_code
