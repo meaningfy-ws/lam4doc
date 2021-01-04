@@ -10,4 +10,4 @@ COPY . /usr/src/app
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-CMD gunicorn --timeout ${LAM_GUNICORN_TIMEOUT} -w 2 --bind 0.0.0.0:${LAM_API_PORT} --reload --log-level=debug lam4doc.entrypoints.api.run:app
+CMD gunicorn --timeout ${LAM_GUNICORN_TIMEOUT} -w ${LAM_GUNICORN_API_WORKERS} --bind 0.0.0.0:${LAM_API_PORT} --reload --log-level=debug lam4doc.entrypoints.api.run:app
