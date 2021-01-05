@@ -27,6 +27,12 @@ LAM_FUSEKI_USERNAME = os.environ.get('LAM_FUSEKI_USERNAME', 'admin')
 LAM_FUSEKI_PASSWORD = os.environ.get('LAM_FUSEKI_PASSWORD', 'admin')
 
 LAM_REPORT_TEMPLATE_LOCATION = str(Path(__file__).parents[1] / 'templates/content')
+LAM_REPORT_CONFIG = str(Path(__file__).parents[1] / 'templates/content/config.json')
+
+LAM_INDEXES_TEMPLATE_LOCATION = str(Path(__file__).parents[1] / 'templates/indexes')
+LAM_CELEX_CONFIG_NAME = 'celex.json'
+LAM_CLASSES_CONFIG_NAME = 'classes.json'
+LAM_PROPERTIES_CONFIG_NAME = 'properties.json'
 
 LAM_DEFAULT_TIMEOUT = int(os.environ.get('LAM_GUNICORN_TIMEOUT', 300))
 
