@@ -1,5 +1,6 @@
 {
   "template": "main.tex",
+  "template_flavour_syntax": "latex",
   "conf": {
     "default_endpoint": "http://srv.meaningfy.ws:3030/lam/query",
     "title": "LAM Report",

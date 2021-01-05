@@ -1,0 +1,27 @@
+%- import "common/macros.tex" as macros
+%- import "common/instance_view_builder.tex" as instance_builder
+
+%- macro build_child_collections(parameters, collection_uri, level) 
+    \BLOCK{ set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    SELECT ?member ?prefLabel
+    FROM <~graph>
+    {
+      values ?collection {<"~collection_uri~">}
+      ?member a skos:Collection .
+      ?collection skos:member ?member .
+      optional {
+        ?member skos:prefLabel ?prefLabel
+      }
+    }" }
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() 
+    %- call macros.render_fetch_results(content, error) 
+        %- if not content.empty 
+            %- for row in content.itertuples()
+                \VAR{ instance_builder.build_instance_view(parameters, row.member, row.prefLabel, level) }
+                \VAR{ build_child_collections(parameters, row.member, level + 1) }
+                %# \VAR{ build_child_concepts(parameters, row.member, level + 1) }
+            %- endfor 
+        %- endif 
+    %- endcall 
+%- endmacro 
