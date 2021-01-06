@@ -19,6 +19,14 @@ servers:
     description: Default server
 
 components:
+  parameters:
+    extensionParam:
+      in: query
+      name: report_extension
+      required: false
+      schema:
+        type: string
+      description: The type of the report that will be returned
   schemas:
     UPLOAD_SCHEMA:
       type: object
@@ -46,6 +54,8 @@ paths:
     get:
       operationId: lam4doc.entrypoints.api.handlers.generate_lam_report
       description: Endpoint to generate the LAM report.
+      parameters:
+        - $ref: '#/components/parameters/extensionParam'
       responses:
         200:
           description: OK.

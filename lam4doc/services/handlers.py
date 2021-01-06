@@ -13,13 +13,27 @@ from zipfile import ZipFile
 
 from eds4jinja2.builders.report_builder import ReportBuilder
 
-from lam4doc.config import LAMConfig
+from lam4doc.config import LAMConfig, HTML_REPORT_TYPE, PDF_REPORT_TYPE
 
 config = LAMConfig()
 logger = logging.getLogger(config.LAM_LOGGER)
 
 FileInfo = namedtuple('FileInfo', 'location file_name')
 IndexInfo = namedtuple('IndexInfo', 'name, config_location')
+
+
+class ReportType(Exception):
+    """
+        An exception when no acceptable template location has been found.
+    """
+
+
+def get_report_location(extension: str) -> str:
+    if extension == HTML_REPORT_TYPE:
+        return config.LAM_HTML_REPORT_TEMPLATE_LOCATION
+    elif extension == PDF_REPORT_TYPE:
+        return config.LAM_PDF_REPORT_TEMPLATE_LOCATION
+    raise ReportType('No acceptable report template location found')
 
 
 def generate_report(location: str, report_builder: ReportBuilder) -> Path:
@@ -52,9 +66,12 @@ def generate_lam_report(location: str, extension: str) -> Path:
         "conf": {
             "default_endpoint": config.LAM_FUSEKI_REPORT_URL
         },
-        "template_flavour_syntax": extension,
+        # correct value will be used when pdf implementation is ready
+        "template_flavour_syntax": 'html',
+        # "template_flavour_syntax": extension,
     }
-    report_builder = ReportBuilder(target_path=config.LAM_REPORT_TEMPLATE_LOCATION,
+
+    report_builder = ReportBuilder(target_path=get_report_location(extension),
                                    output_path=location,
                                    additional_config=additional_config)
     report_location = generate_report(location, report_builder)

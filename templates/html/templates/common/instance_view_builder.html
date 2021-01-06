@@ -329,13 +329,13 @@
     {% if not content.empty %}
         {% set _ = replace_strings_in_tabular(content, target_columns=['path'], value_mapping_dict=inverted_prefixes) %}
 
-            {{ macros.render_inline_link(content, 'path', 'property') }}
-            {{ macros.render_inline_values(content, 'minCount', 'min', '0') }}
-            {{ macros.render_inline_values(content, 'maxCount', 'max', '*') }}
-            {{ macros.render_inline_values(content, "flags", "flags") }}
-            {{ macros.render_inline_values(content, "pattern", "pattern") }}
-            {{ macros.render_inline_values(content, "class", "class") }}
-            {{ macros.render_inline_link(content, "value", "value", True) }}
+        {{ macros.render_inline_link(content, 'path', 'property') }}
+        {{ macros.render_inline_values(content, 'minCount', 'min', '0') }}
+        {{ macros.render_inline_values(content, 'maxCount', 'max', '*') }}
+        {{ macros.render_inline_values(content, "flags", "flags") }}
+        {{ macros.render_inline_values(content, "pattern", "pattern") }}
+        {{ macros.render_inline_values(content, "class", "class") }}
+        {{ macros.render_inline_link(content, "value", "value", True) }}
         <br>
     {% endif %}
 {% endmacro %}
@@ -345,7 +345,7 @@
     {% if conf.debug %}
         <p class="debug">build_useful_links <strong>{{ instance_uri }}</strong></p>
     {% endif %}
-{#    {% set graph = parameters.graph %}#}
+    {#    {% set graph = parameters.graph %}#}
 
     {{ build_links_from_classify_with_or_has_property_configuration(parameters, instance_uri) }}
     {{ build_constraints(parameters, instance_uri) }}
@@ -379,7 +379,7 @@
         {% if not content.dropna(how="all").empty %}
             <div class="card">
                 <div class="card-header">
-                     <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    <i class="fa fa-caret-down" aria-hidden="true"></i>
                     <a class="text-dark font-weight-bold" onclick="showContent()">
                         Useful links: Classified With | Property Configuration
                     </a>
