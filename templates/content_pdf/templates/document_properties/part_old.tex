@@ -1,0 +1,36 @@
+%- import "common/macros.tex" as macros
+%- import "common/instance_view_builder.tex" as instance_builder
+%- import "common/child_content_builder.tex" as child_content_builder
+
+
+\part{Document Properties}
+\label{part:document-properties}
+
+\BLOCK{ set select_query =
+"""PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+
+SELECT ?collection ?prefLabel
+FROM <~graph>
+{
+  ?collection a skos:Collection .
+  optional {
+    ?collection skos:prefLabel ?prefLabel
+  }
+  ?collection euvoc:order ?order .
+
+  FILTER NOT EXISTS {
+    ?parent skos:member ?collection
+  }
+} ORDER by ?order""" }
+
+\BLOCK{ set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, conf.lam_properties).fetch_tabular() }
+\BLOCK{ call macros.render_fetch_results(content, error) }
+    %- set level = 2
+    %- for row in content.itertuples()
+
+        \VAR{ instance_builder.build_instance_view(conf.lam_properties, row.collection, row.prefLabel, level) }
+        \VAR{ child_content_builder.build_child_collections(conf.lam_properties, row.collection, level + 1) }
+        %# {#        {{ child_content_builder.build_child_concepts(conf.lam_properties, row.collection, level + 1) }}#}
+    %- endfor
+\BLOCK{ endcall }

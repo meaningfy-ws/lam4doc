@@ -4,7 +4,8 @@ rdflib
 connexion[swagger-ui]  # https://github.com/zalando/connexion
 Flask  # https://flask.palletsprojects.com/en/1.1.x/e
 Flask-Wtf  # https://flask-wtf.readthedocs.io/en/stable/
-eds4jinja2
+# eds4jinja2
+git+https://github.com/meaningfy-ws/eds4jinja2@master#egg=eds4jinja2
 openpyxl
 werkzeug
 gunicorn  # https://gunicorn.org/

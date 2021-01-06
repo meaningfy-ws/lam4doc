@@ -6,23 +6,23 @@
     %- set text = instance_label
     %- if level == 1 
 \part{\VAR{ text } }
+\label{sec:\VAR{instance_uri}}
     %- elif level == 2 
 \chapter{ \VAR{ text + superscript_text } }
-\label{ sec:\VAR{instance_uri} }
+\label{sec:\VAR{instance_uri}}
     %- elif level == 3 
 \section{\VAR{ text + superscript_text } }
-\label{sec:\VAR{instance_uri} }
+\label{sec:\VAR{instance_uri}}
     %- elif level == 4 
 \subsection{\VAR{ text + superscript_text } }
-\label{sec:\VAR{instance_uri} }
+\label{sec:\VAR{instance_uri}}
     %- elif level == 5 
 \subsubsection{\VAR{text + superscript_text } }
-\label{sec:\VAR{instance_uri} }
+\label{sec:\VAR{instance_uri}}
     %- else 
 \section{Headding level out of boundaries: use a number 1 -- 5}
     %- endif 
 %- endmacro 
-
 
 
 %- macro build_instance_metadata_part(parameters, instance_uri) 
@@ -141,8 +141,8 @@
             \VAR{ macros.render_description_item_plain_literal (content, "historyNote", "History note") }
             \VAR{ macros.render_description_item_plain_literal (content, "editorialNote", "Editorial note") }
             \VAR{ macros.render_description_item_plain_literal (content, "note", "Note") }
-            %# \VAR{ macros.render_description_item_local_iri (content, "member", "Members", None,True) }
-            %# \VAR{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts", None,True) }
+            \VAR{ macros.render_description_item_local_iri (content, "member", "Members", None) }
+            \VAR{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts", None) }
             \VAR{ macros.render_description_item_plain_literal (content, "shName", "Name") }
             \VAR{ macros.render_description_item_plain_literal (content, "shDescription", "Description") }
         %- endif 
