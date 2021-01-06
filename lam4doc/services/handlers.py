@@ -6,17 +6,20 @@
 # Email: coslet.mihai@gmail.com 
 
 import logging
+from collections import namedtuple
 from pathlib import Path
 from typing import List
 from zipfile import ZipFile
 
 from eds4jinja2.builders.report_builder import ReportBuilder
 
-from lam4doc import config
-from lam4doc.config import LAM_LOGGER
-from lam4doc.services.helpers import FileInfo, IndexInfo
+from lam4doc.config import LAMConfig
 
-logger = logging.getLogger(LAM_LOGGER)
+config = LAMConfig()
+logger = logging.getLogger(config.LAM_LOGGER)
+
+FileInfo = namedtuple('FileInfo', 'location file_name')
+IndexInfo = namedtuple('IndexInfo', 'name, config_location')
 
 
 def generate_report(location: str, report_builder: ReportBuilder) -> Path:
@@ -39,15 +42,21 @@ def generate_report(location: str, report_builder: ReportBuilder) -> Path:
 def generate_lam_report(location: str, extension: str) -> Path:
     """
     Method for generating the lam report using the generic prepare_template and generate_report
-    :param extension:
+    :param extension: definition for eds4jinja2 report output type
     :param location: path to the report templates
     :return: path to report
     """
     logger.debug('start service for generating lam report')
 
+    additional_config = {
+        "conf": {
+            "default_endpoint": config.LAM_FUSEKI_REPORT_URL
+        },
+        "template_flavour_syntax": extension,
+    }
     report_builder = ReportBuilder(target_path=config.LAM_REPORT_TEMPLATE_LOCATION,
                                    output_path=location,
-                                   additional_config={"conf": {"default_endpoint": config.LAM_FUSEKI_SERVICE}})
+                                   additional_config=additional_config)
     report_location = generate_report(location, report_builder)
 
     logger.debug('finish service for generating lam report')
@@ -74,7 +83,7 @@ def generate_indexes(location: str) -> List[FileInfo]:
         report_builder = ReportBuilder(target_path=config.LAM_INDEXES_TEMPLATE_LOCATION,
                                        config_file=index.config_location,
                                        output_path=index_location,
-                                       additional_config={"conf": {"endpoint": config.LAM_FUSEKI_SERVICE}})
+                                       additional_config={"conf": {"endpoint": config.LAM_FUSEKI_REPORT_URL}})
         index_files_info.append(FileInfo(location=generate_report(index_location, report_builder),
                                          file_name=f'{index.name}.json'))
 

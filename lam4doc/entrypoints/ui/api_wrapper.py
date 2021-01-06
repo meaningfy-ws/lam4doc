@@ -13,10 +13,10 @@ import logging
 import requests
 from requests import Timeout
 
-from lam4doc import config
-from lam4doc.config import LAM_LOGGER
+from lam4doc.config import LAMConfig
 
-logger = logging.getLogger(LAM_LOGGER)
+config = LAMConfig()
+logger = logging.getLogger(config.LAM_LOGGER)
 
 
 def get_lam_report() -> tuple:

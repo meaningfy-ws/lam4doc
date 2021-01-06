@@ -14,11 +14,12 @@ from pathlib import Path
 
 from flask import render_template, send_from_directory, flash
 
-from lam4doc.config import LAM_LOGGER
+from lam4doc.config import LAMConfig
 from lam4doc.entrypoints.ui import app
 from lam4doc.entrypoints.ui.api_wrapper import get_lam_report as api_get_lam_report, get_indexes as api_get_indexes
 
-logger = logging.getLogger(LAM_LOGGER)
+config = LAMConfig()
+logger = logging.getLogger(config.LAM_LOGGER)
 
 
 @app.route('/', methods=['GET'])
