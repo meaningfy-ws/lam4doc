@@ -19,15 +19,18 @@ config = LAMConfig()
 logger = logging.getLogger(config.LAM_LOGGER)
 
 
-def get_lam_report() -> tuple:
+def get_lam_report(report_extension: str) -> tuple:
     """
     Method to connect to the lam api to get the report
+    :type report_extension: report extension type
     :return: html report
     :rtype: file, int
     """
-    logger.debug('start get report api call')
+    logger.debug(f'start get report api call with {report_extension} format')
     try:
-        response = requests.get(url=config.LAM_API_SERVICE + '/generate-report', timeout=config.LAM_DEFAULT_TIMEOUT)
+        response = requests.get(url=config.LAM_API_SERVICE + '/generate-report',
+                                params={'report_extension': report_extension},
+                                timeout=config.LAM_DEFAULT_TIMEOUT)
     except Timeout as exception:
         logger.exception(str(exception))
 
