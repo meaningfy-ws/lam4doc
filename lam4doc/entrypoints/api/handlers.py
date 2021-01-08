@@ -18,11 +18,10 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import InternalServerError, UnprocessableEntity, BadRequest
 
 from lam4doc.adapters.sparql_adapter import FusekiSPARQLAdapter
-from lam4doc.config import LAMConfig, DEFAULT_REPORT_TYPE, REPORT_EXTENSIONS
+from lam4doc.config import config, DEFAULT_REPORT_TYPE, REPORT_EXTENSIONS
 from lam4doc.services.handlers import generate_lam_report as service_generate_lam_report, \
     generate_indexes as service_generate_indexes, zip_files
 
-config = LAMConfig()
 logger = logging.getLogger(config.LAM_LOGGER)
 
 
@@ -93,7 +92,7 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
                 local_lam_properties_file = Path(temp_folder) / lam_properties_document.filename
                 lam_properties_document.save(local_lam_properties_file)
                 logger.info("lam_properties_document - saved to " + str(local_lam_properties_file))
-                sparql_adapter.delete_graph(dataset_name, "<" + config.LAM_DOCUMENT_PROPERTY_GRAPH + ">")
+                sparql_adapter.delete_graph(dataset_name, config.LAM_DOCUMENT_PROPERTY_GRAPH)
                 sparql_adapter.upload_file_to_graph(dataset_name,
                                                     config.LAM_DOCUMENT_PROPERTY_GRAPH,
                                                     str(local_lam_properties_file))
@@ -102,8 +101,7 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
                 local_lam_classes_file = Path(temp_folder) / lam_classes_document.filename
                 lam_classes_document.save(local_lam_classes_file)
                 logger.info("lam_classes_document - saved to " + local_lam_classes_file)
-                sparql_adapter.delete_graph(dataset_name,
-                                            "<" + config.LAM_CLASSES_GRAPH + ">")
+                sparql_adapter.delete_graph(dataset_name, config.LAM_CLASSES_GRAPH)
                 sparql_adapter.upload_file_to_graph(dataset_name,
                                                     config.LAM_CLASSES_GRAPH,
                                                     str(local_lam_classes_file))
@@ -112,8 +110,7 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
                 local_celex_classes_file = Path(temp_folder) / celex_classes_document.filename
                 celex_classes_document.save(local_celex_classes_file)
                 logger.info("lam_properties_document - saved to " + local_celex_classes_file)
-                sparql_adapter.delete_graph(dataset_name,
-                                            "<" + config.LAM_CELEX_CLASSES_GRAPH + ">")
+                sparql_adapter.delete_graph(dataset_name, config.LAM_CELEX_CLASSES_GRAPH)
                 sparql_adapter.upload_file_to_graph(dataset_name,
                                                     config.LAM_CELEX_CLASSES_GRAPH,
                                                     str(local_celex_classes_file))

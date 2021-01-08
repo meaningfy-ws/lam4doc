@@ -11,9 +11,7 @@ Module for configuring and exposing the ui server using the Flask framework.
 
 from flask import Flask
 
-from lam4doc.config import LAMConfig
-
-config = LAMConfig()
+from lam4doc.config import config
 
 app = Flask(__name__)
 

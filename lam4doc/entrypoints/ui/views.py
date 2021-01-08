@@ -10,18 +10,22 @@ UI pages
 """
 import logging
 import tempfile
+from json import loads
 from pathlib import Path
 
 from flask import render_template, send_from_directory, flash
 
-from lam4doc.config import LAMConfig
+from lam4doc.config import config
 from lam4doc.entrypoints.ui import app
 from lam4doc.entrypoints.ui.api_wrapper import get_lam_report as api_get_lam_report, get_indexes as api_get_indexes
 from lam4doc.entrypoints.ui.forms import ReportTypeForm
-from lam4doc.entrypoints.ui.helpers import get_error_message_from_response
 
-config = LAMConfig()
 logger = logging.getLogger(config.LAM_LOGGER)
+
+
+def get_error_message_from_response(response):
+    return f'Status: {loads(response).get("status")}. Title: {loads(response).get("title")}' \
+           f' Detail: {loads(response).get("detail")}'
 
 
 @app.route('/', methods=['GET'])
@@ -30,7 +34,7 @@ def index():
     return render_template('index.html', title='LAM index page')
 
 
-@app.route('/lam-report', methods=['GET', 'POST'])
+@app.route('/lam-report', methods=['GET'])
 def download_lam_report():
     logger.debug('request LAM report view')
 

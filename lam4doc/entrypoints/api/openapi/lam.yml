@@ -26,7 +26,7 @@ components:
       required: false
       schema:
         type: string
-      description: The type of the report that will be returned
+      description: Report type to be returned
   schemas:
     UPLOAD_SCHEMA:
       type: object

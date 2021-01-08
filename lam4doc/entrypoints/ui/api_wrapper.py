@@ -13,9 +13,8 @@ import logging
 import requests
 from requests import Timeout
 
-from lam4doc.config import LAMConfig
+from lam4doc.config import config
 
-config = LAMConfig()
 logger = logging.getLogger(config.LAM_LOGGER)
 
 

@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from lam4doc.config import HTML_REPORT_TYPE, PDF_REPORT_TYPE
-from lam4doc.services.handlers import generate_report, get_report_location, ReportType
+from lam4doc.services.handlers import generate_report, get_report_location, ReportTypeError
 from tests.conftest import FakeReportBuilder
 
 
@@ -36,6 +36,6 @@ def test_get_report_location_pdf():
 
 
 def test_get_report_location_failure():
-    with pytest.raises(ReportType) as e:
+    with pytest.raises(ReportTypeError) as e:
         _ = get_report_location('mp3')
     assert 'No acceptable report template location found' in str(e)

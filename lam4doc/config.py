@@ -142,6 +142,9 @@ class LAMConfig:
         return value
 
 
+config = LAMConfig()
+
+
 class FlaskConfig:
     """
     Base Flask config
