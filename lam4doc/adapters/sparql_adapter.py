@@ -16,11 +16,10 @@ from urllib.parse import urljoin
 from requests.auth import HTTPBasicAuth
 from requests_toolbelt import MultipartEncoder
 
-from lam4doc import config
 from lam4doc.adapters.helpers import get_file_format
-from lam4doc.config import LAM_LOGGER
+from lam4doc.config import config
 
-logger = logging.getLogger(LAM_LOGGER)
+logger = logging.getLogger(config.LAM_LOGGER)
 
 
 class FusekiException(Exception):
@@ -57,7 +56,7 @@ class FusekiSPARQLAdapter(AbstractSPARQLAdapter):
         self.http_client = http_client
 
     def delete_graph(self, dataset_name: str, graph_name: str):
-        query_data = {"update": "DROP GRAPH " + graph_name}
+        query_data = {"update": "DROP GRAPH " + f"<{graph_name}>"}
         logger.debug("QUERY DATA = " + str(query_data))
 
         response = self.http_client.post(url=urljoin(self.triplestore_service_url, f"/{dataset_name}/update"),

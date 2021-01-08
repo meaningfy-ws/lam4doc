@@ -11,10 +11,10 @@ Module for configuring and exposing the ui server using the Flask framework.
 
 from flask import Flask
 
-from lam4doc.config import LAM_FLASK_SECRET_KEY
+from lam4doc.config import config
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = LAM_FLASK_SECRET_KEY
+app.config['SECRET_KEY'] = config.LAM_FLASK_SECRET_KEY
 
 from . import views

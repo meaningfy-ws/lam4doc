@@ -10,10 +10,10 @@ UI server through flask definitions.
 """
 import logging
 
-from lam4doc.config import LAM_DEBUG, ProductionConfig, DevelopmentConfig
+from lam4doc.config import config, ProductionConfig, DevelopmentConfig
 from lam4doc.entrypoints.ui import app
 
-if LAM_DEBUG:
+if config.LAM_DEBUG:
     app.config.from_object(DevelopmentConfig())
 else:
     app.config.from_object(ProductionConfig())

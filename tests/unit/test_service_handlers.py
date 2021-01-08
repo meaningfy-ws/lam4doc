@@ -6,7 +6,10 @@
 # Email: coslet.mihai@gmail.com
 from pathlib import Path
 
-from lam4doc.services.handlers import generate_report
+import pytest
+
+from lam4doc.config import HTML_REPORT_TYPE, PDF_REPORT_TYPE
+from lam4doc.services.handlers import generate_report, get_report_location, ReportTypeError
 from tests.conftest import FakeReportBuilder
 
 
@@ -18,3 +21,21 @@ def test_generate_report(tmpdir):
 
     assert Path(temp_folder) / 'main.html' == report_path
     assert report_builder.actions[0] == ('MAKE DOCUMENT', str(temp_folder))
+
+
+def test_get_report_location_html():
+    report_location = get_report_location(HTML_REPORT_TYPE)
+    expected_location = 'templates/html'
+    assert report_location[-len(expected_location):] == expected_location
+
+
+def test_get_report_location_pdf():
+    report_location = get_report_location(PDF_REPORT_TYPE)
+    expected_location = 'templates/html'
+    assert report_location[-len(expected_location):] == expected_location
+
+
+def test_get_report_location_failure():
+    with pytest.raises(ReportTypeError) as e:
+        _ = get_report_location('mp3')
+    assert 'No acceptable report template location found' in str(e)
