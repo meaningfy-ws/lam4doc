@@ -60,7 +60,7 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro render_description_item_plain_literal(result_set, property_id, property_label, accordion_style=False) -%}
+{% macro render_description_item_plain_literal(result_set, property_id, property_label, accordion_style=False, code_mode=False) -%}
     {% if conf.debug %}
         <p class="debug-render">render_description_item_plain_literal: {{ property_id }}</p>
     {% endif %}
@@ -78,9 +78,17 @@
 
                     <div class="collapse">
                         <div class="card-body">
+                        {% if code_mode %}
+                            <pre>
+                            {% for idx, item in values.iteritems() %}
+                                <code>{{ item|e|replace("\n","<br/>") }}</code>
+                            {% endfor %}
+                            </pre>
+                        {% else %}
                             {% for idx, item in values.iteritems() %}
                                 <p>{{ item|e|replace("\n","<br/>") }}</p>
                             {% endfor %}
+                        {% endif %}
                         </div>
                     </div>
                 </div>
