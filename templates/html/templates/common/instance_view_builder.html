@@ -17,6 +17,7 @@
         {{ build_instance_editorial_part(parameters, instance_uri) }}
         {{ build_lam_property_configuration_list(parameters, instance_uri) }}
         {{ build_lam_classification_hint_list(parameters, instance_uri) }}
+        {{ build_constraints(parameters, instance_uri) }}
         {{ build_useful_links(parameters, instance_uri) }}
     </section>
 {% endmacro %}
@@ -31,10 +32,10 @@
     prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
     prefix lamd: <http://publications.europa.eu/resources/authority/lam/>
 
-    select distinct ?constraintValue
+    select distinct ?constraintValue ?graphUri
     {
       values ?instanceUri {<"~instance_uri~">}
-      graph <~graph>
+      graph ?graphUri
       {
         ?instancePath lam:path ?instanceUri .
         ?instancePath sh:value ?constraintValue .
@@ -43,7 +44,7 @@
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.dropna(how="all").empty %}
-            {{ macros.render_description_item_plain_literal (content, "constraintValue", "Constraints", True) }}
+            {{ macros.render_description_item_plain_literal (content, "constraintValue", "Encountered value constraints", True) }}
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -348,7 +349,6 @@
     {#    {% set graph = parameters.graph %}#}
 
     {{ build_links_from_classify_with_or_has_property_configuration(parameters, instance_uri) }}
-    {{ build_constraints(parameters, instance_uri) }}
 {% endmacro %}
 
 {% macro build_links_from_classify_with_or_has_property_configuration(parameters, instance_uri) %}
@@ -360,10 +360,10 @@
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
     prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
 
-    select distinct ?link ?linkLabel
+    select distinct ?link ?linkLabel ?graphUri
     {
       values ?instanceUri {<"~instance_uri~">}
-      graph <~graph>
+      graph ?graphUri
       {
         ?propConfig lam:path ?instanceUri .
         optional {
@@ -381,7 +381,7 @@
                 <div class="card-header">
                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                     <a class="text-dark font-weight-bold" onclick="showContent()">
-                        Useful links: Classified With | Property Configuration
+                        Useful links
                     </a>
                 </div>
                 <div class="collapse">
