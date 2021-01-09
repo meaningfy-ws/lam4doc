@@ -171,8 +171,8 @@
             {% if conf.debug %}
                 <p class="debug-render">skos editorial part for <strong>{{ instance_uri }}</strong></p>
             {% endif %}
-            {{ macros.render_description_item_plain_literal (content,"definition", "Definition", True) }}
-            {{ macros.render_description_item_plain_literal (content, "scopeNote", "Scope note", True) }}
+            {{ macros.render_description_item_plain_literal (content,"definition", "Definition", True, accordion_content_state="show") }}
+            {{ macros.render_description_item_plain_literal (content, "scopeNote", "Scope note", True, accordion_content_state="show") }}
             {{ macros.render_description_item_plain_literal (content, "example", "Example", True, True) }}
             {{ macros.render_description_item_plain_literal (content, "changeNote", "Change note", True) }}
             {{ macros.render_description_item_plain_literal (content, "historyNote", "History note", True) }}
