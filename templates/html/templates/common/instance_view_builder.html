@@ -111,8 +111,8 @@
             {% if conf.debug %}
                 <p class="debug-render">skos concept part for</p>
             {% endif %}
-            {{ macros.render_description_item_plain_literal (content, "class", "Class") }}
-            {{ macros.render_description_item_plain_literal (content, "path", "Path") }}
+            {{ macros.render_description_item_iri (content, "class", "Class", external_link=True) }}
+            {{ macros.render_description_item_iri (content, "path", "Path", external_link=True) }}
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -179,8 +179,8 @@
             {{ macros.render_description_item_plain_literal (content, "historyNote", "History note", True) }}
             {{ macros.render_description_item_plain_literal (content, "editorialNote", "Editorial note", True) }}
             {{ macros.render_description_item_plain_literal (content, "note", "Note" , True) }}
-            {{ macros.render_description_item_local_iri (content, "member", "Members", None,True) }}
-            {{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts", None,True) }}
+            {{ macros.render_description_item_iri (content, "member", "Members", None,True) }}
+            {{ macros.render_description_item_iri (content, "broaderConcept", "Broader Concepts", None,True) }}
             {% if conf.debug %}
                 <p class="debug-render">sh editorial part for <strong>{{ instance_uri }}</strong></p>
             {% endif %}
@@ -376,7 +376,7 @@
     }" %}
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
-        {% if not content.dropna(how="all").empty %}
+        {% if not content.dropna().empty %}
             <div class="card">
                 <div class="card-header">
                     <i class="fa fa-caret-down" aria-hidden="true"></i>
