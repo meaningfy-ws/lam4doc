@@ -219,6 +219,7 @@
                     <div class="card-body">
                         {% for row in content.itertuples() %}
                             <p property="lam:hasPropertyConfiguration">{{ build_lam_classification_hint_or_property_configuration(parameters, row.propertyConfiguration) }} </p>
+                            {{ "<hr> " if not loop.last }}
                         {% endfor %}
                     </div>
                 </div>
@@ -256,6 +257,7 @@
                     <div class="card-body">
                         {% for row in content.itertuples() %}
                             <p property="lam:classifyWith">{{ build_lam_classification_hint_or_property_configuration(parameters, row.classificationHint) }}</p>
+                            {{ "<hr> " if not loop.last }}
                         {% endfor %}
                     </div>
                 </div>
@@ -388,6 +390,7 @@
                     <div class="card-body">
                         {% for row in content.itertuples() %}
                             <a href="#{{ row.link }}">{{ row.linkLabel }}</a><br>
+                            {{ "<hr> " if not loop.last }}
                         {% endfor %}
                     </div>
                 </div>

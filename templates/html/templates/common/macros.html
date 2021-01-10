@@ -82,11 +82,13 @@
                             <pre>
                             {% for idx, item in values.iteritems() %}
                                 <code property="{{ rdfa_property }}">{{ item|e|replace("\n","<br/>") }}</code>
+                                {{ "<hr> " if not loop.last }}
                             {% endfor %}
                             </pre>
                         {% else %}
                             {% for idx, item in values.iteritems() %}
                                 <p property="{{ rdfa_property }}">{{ item|e|replace("\n","<br/>") }}</p>
+                                {{ "<hr> " if not loop.last }}
                             {% endfor %}
                         {% endif %}
                         </div>
@@ -131,6 +133,7 @@
                                 {% else %}
                                     <a href={{'"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a>
                                 {% endif %}
+                                {{ "<hr> " if not loop.last }}
                             {% endfor %}
                         </div>
                     </div>
