@@ -96,7 +96,7 @@
                 <dl>
                     <dt title="{{ property_id }}">{{ property_label }}</dt>
                     {% for idx, item in values.iteritems() %}
-                        <dd title="{{ property_id }}">{{ item|e|replace("\n","<br/>") }}</dd>
+                        <dd title="{{ property_id }}">{{ item|e }}</dd>
                     {% endfor %}
                 </dl>
                 {% endif %}

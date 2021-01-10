@@ -12,7 +12,7 @@
             <sup title="collection">[cl]</sup>
         {% endif %}
     </h{{ level }}>
-    <section>
+    <section data-about="{{ instance_uri }}">
         {{ build_instance_metadata_part(parameters, instance_uri) }}
         {{ build_instance_editorial_part(parameters, instance_uri) }}
         {{ build_lam_property_configuration_list(parameters, instance_uri) }}
