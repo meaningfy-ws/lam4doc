@@ -52,7 +52,7 @@ def generate_report(location: str, report_builder: ReportBuilder) -> Path:
     return report_path
 
 
-def generate_lam_report(location: str, extension: str) -> Path:
+def generate_lam_report(location: str, extension: str) -> FileInfo:
     """
     Method for generating the lam report using the generic prepare_template and generate_report
     :param extension: definition for eds4jinja2 report output type
@@ -76,7 +76,7 @@ def generate_lam_report(location: str, extension: str) -> Path:
     report_location = generate_report(location, report_builder)
 
     logger.debug('finish service for generating lam report')
-    return report_location
+    return FileInfo(report_location, f'report.{extension}')
 
 
 def generate_indexes(location: str) -> List[FileInfo]:

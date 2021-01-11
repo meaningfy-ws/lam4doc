@@ -18,7 +18,7 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import InternalServerError, UnprocessableEntity, BadRequest
 
 from lam4doc.adapters.sparql_adapter import FusekiSPARQLAdapter
-from lam4doc.config import config, DEFAULT_REPORT_TYPE, REPORT_EXTENSIONS
+from lam4doc.config import config, DEFAULT_REPORT_TYPE, REPORT_EXTENSIONS, HTML_REPORT_TYPE, PDF_REPORT_TYPE
 from lam4doc.services.handlers import generate_lam_report as service_generate_lam_report, \
     generate_indexes as service_generate_indexes, zip_files
 
@@ -41,10 +41,11 @@ def generate_lam_report(report_extension: str = DEFAULT_REPORT_TYPE) -> tuple:
 
     try:
         with tempfile.TemporaryDirectory() as temp_folder:
-            report_location = service_generate_lam_report(temp_folder, report_extension)
+            report_file_info = service_generate_lam_report(temp_folder, report_extension)
 
             logger.debug('finish generate lam report endpoint')
-            return send_file(report_location, as_attachment=True)  # 200
+            return send_file(report_file_info.location, attachment_filename=report_file_info.file_name,
+                             as_attachment=True)  # 200
     except Exception as e:
         logger.exception(str(e))
         raise InternalServerError(str(e))  # 500
@@ -63,6 +64,29 @@ def generate_indexes() -> tuple:
             archive = zip_files(temp_folder, index_files_info, 'indexes.zip')
 
             logger.debug('finish generate lam indexes endpoint')
+            return send_file(archive, as_attachment=True)  # 200
+    except Exception as e:
+        logger.exception(str(e))
+        raise InternalServerError(str(e))  # 500
+
+
+def get_lam_files() -> tuple:
+    """
+    API method for generating and requesting all LAM files.
+    :rtype: report file (zip), int
+    :return: all lam files: HTML and PDF report, and 3 index files
+    """
+    logger.debug('start get lam files endpoint')
+    try:
+        with tempfile.TemporaryDirectory() as temp_folder:
+            files_to_zip = list()
+            files_to_zip.append(service_generate_lam_report(temp_folder, HTML_REPORT_TYPE))
+            files_to_zip.append(service_generate_lam_report(temp_folder, PDF_REPORT_TYPE))
+            files_to_zip += service_generate_indexes(temp_folder)
+
+            archive = zip_files(temp_folder, files_to_zip, 'indexes.zip')
+
+            logger.debug('finish get lam files endpoint')
             return send_file(archive, as_attachment=True)  # 200
     except Exception as e:
         logger.exception(str(e))
