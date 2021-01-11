@@ -15,28 +15,33 @@ from pathlib import Path
 import requests
 from flask import send_file
 from werkzeug.datastructures import FileStorage
-from werkzeug.exceptions import InternalServerError
+from werkzeug.exceptions import InternalServerError, UnprocessableEntity, BadRequest
 
 from lam4doc.adapters.sparql_adapter import FusekiSPARQLAdapter
-from lam4doc.config import LAM_DOCUMENT_PROPERTY_GRAPH, LAM_CLASSES_GRAPH, LAM_CELEX_CLASSES_GRAPH, \
-    LAM_FUSEKI_PORT, LAM_FUSEKI_LOCATION
-from lam4doc.config import LAM_LOGGER
+from lam4doc.config import config, DEFAULT_REPORT_TYPE, REPORT_EXTENSIONS
 from lam4doc.services.handlers import generate_lam_report as service_generate_lam_report, \
     generate_indexes as service_generate_indexes, zip_files
 
-logger = logging.getLogger(LAM_LOGGER)
+logger = logging.getLogger(config.LAM_LOGGER)
 
 
-def generate_lam_report() -> tuple:
+def generate_lam_report(report_extension: str = DEFAULT_REPORT_TYPE) -> tuple:
     """
     API method for generating and requesting a lam report.
     :rtype: report file (html), int
     :return: the lam report
     """
     logger.debug('start generate lam report endpoint')
+
+    if report_extension not in REPORT_EXTENSIONS:
+        exception_text = 'Wrong report_extension format. Accepted formats: ' \
+                         f'{", ".join([format for format in REPORT_EXTENSIONS])}'
+        logger.exception(exception_text)
+        raise UnprocessableEntity(exception_text)  # 422
+
     try:
         with tempfile.TemporaryDirectory() as temp_folder:
-            report_location = service_generate_lam_report(temp_folder)
+            report_location = service_generate_lam_report(temp_folder, report_extension)
 
             logger.debug('finish generate lam report endpoint')
             return send_file(report_location, as_attachment=True)  # 200
@@ -72,48 +77,42 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
     """
     logger.debug('Entering upload_rdfs')
 
-    dataset_name = body.get("dataset_name")
-    if not dataset_name:
-        logger.error("The name of the dataset is required.")
-        return 'Dataset name is required', 400
+    if not lam_properties_document and not lam_classes_document and not celex_classes_document:
+        logger.error("No file was specified. Returning 400.")
+        raise BadRequest("Please supply at least one file: lam_properties_document, lam_classes_document, "
+                         "celex_classes_document")
 
+    dataset_name = body.get("dataset_name")
     try:
         logger.debug(body)
-        sparql_adapter = FusekiSPARQLAdapter(LAM_FUSEKI_LOCATION + ":" + str(LAM_FUSEKI_PORT) + "/", requests)
-
-        if lam_properties_document is None and lam_classes_document is None and celex_classes_document is None:
-            logger.error("No file was specified. Returning 400.")
-            return "Please supply at least one file: lam_properties_document, lam_classes_document, " \
-                   "celex_classes_document", 400
+        sparql_adapter = FusekiSPARQLAdapter(config.LAM_FUSEKI_SERVICE, requests)
 
         with tempfile.TemporaryDirectory() as temp_folder:
             if lam_properties_document:
                 local_lam_properties_file = Path(temp_folder) / lam_properties_document.filename
                 lam_properties_document.save(local_lam_properties_file)
                 logger.info("lam_properties_document - saved to " + str(local_lam_properties_file))
-                sparql_adapter.delete_graph(dataset_name, "<"+ LAM_DOCUMENT_PROPERTY_GRAPH + ">")
+                sparql_adapter.delete_graph(dataset_name, config.LAM_DOCUMENT_PROPERTY_GRAPH)
                 sparql_adapter.upload_file_to_graph(dataset_name,
-                                                    LAM_DOCUMENT_PROPERTY_GRAPH,
+                                                    config.LAM_DOCUMENT_PROPERTY_GRAPH,
                                                     str(local_lam_properties_file))
 
             if lam_classes_document:
                 local_lam_classes_file = Path(temp_folder) / lam_classes_document.filename
                 lam_classes_document.save(local_lam_classes_file)
                 logger.info("lam_classes_document - saved to " + local_lam_classes_file)
-                sparql_adapter.delete_graph(dataset_name,
-                                            "<" + LAM_CLASSES_GRAPH + ">")
+                sparql_adapter.delete_graph(dataset_name, config.LAM_CLASSES_GRAPH)
                 sparql_adapter.upload_file_to_graph(dataset_name,
-                                                    LAM_CLASSES_GRAPH,
+                                                    config.LAM_CLASSES_GRAPH,
                                                     str(local_lam_classes_file))
 
             if celex_classes_document:
                 local_celex_classes_file = Path(temp_folder) / celex_classes_document.filename
                 celex_classes_document.save(local_celex_classes_file)
                 logger.info("lam_properties_document - saved to " + local_celex_classes_file)
-                sparql_adapter.delete_graph(dataset_name,
-                                            "<" + LAM_CELEX_CLASSES_GRAPH + ">")
+                sparql_adapter.delete_graph(dataset_name, config.LAM_CELEX_CLASSES_GRAPH)
                 sparql_adapter.upload_file_to_graph(dataset_name,
-                                                    LAM_CELEX_CLASSES_GRAPH,
+                                                    config.LAM_CELEX_CLASSES_GRAPH,
                                                     str(local_celex_classes_file))
 
             return 'OK', 200
