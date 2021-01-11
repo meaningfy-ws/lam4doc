@@ -51,10 +51,10 @@
     %- if not result_set.empty and property_id in result_set.columns
         %- set values = result_set[property_id].dropna()
         %- if not values.empty
-            \paragraph*{\VAR{ property_label } } %\mbox{}\\
+            \paragraph*{\VAR{ property_label } }%\mbox{}\\
                 %- for idx, item in values.iteritems()
-                    \VAR{ item|escape_latex|replace("\n","
-                    ") }
+\noindent \VAR{ item|escape_latex|replace("\n","
+") } \mbox{}\\
                 %- endfor
         %- endif
     %- else
@@ -69,12 +69,9 @@
             \paragraph*{\VAR{ property_label } } %\mbox{}\\
             %- for idx, item in values.iteritems()
                 %- if link_label_property_id is none
-                    %\noindent
-                    \hyperref[sec:\VAR{ item }]{ \VAR{ item|escape_latex|replace("\n","
-                    ") } } %\mbox{}\\
+\noindent\hyperref[sec:\VAR{ item }]{ \VAR{ item|escape_latex } } \mbox{}\\
                 %- else
-                    %\noindent
-                    \hyperref[{sec:\VAR{ item }]{ \VAR{ link_label_property_id|escape_latex } }%\mbox{}\\
+\noindent\hyperref[{sec:\VAR{ item }]{ \VAR{ link_label_property_id|escape_latex } } \mbox{}\\
                 %- endif
             %- endfor
         %- endif
@@ -88,11 +85,11 @@
     %- if not result_set.empty and property_id in result_set.columns
         %- set values = result_set[property_id].dropna()
         %- if not values.empty
-            \paragraph*{\VAR{ property_label } } %\mbox{}\\
+\paragraph*{\VAR{ property_label } } %\mbox{}\\
                 %- for idx, item in values.iteritems()
 \begin{lstlisting}[language=\VAR{listing_language}]
 \VAR{ item | trim }
-\end{lstlisting}
+\end{lstlisting} \mbox{}\\
                 %- endfor
         %- endif
     %- else
