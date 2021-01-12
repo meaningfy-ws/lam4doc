@@ -51,3 +51,19 @@ def get_indexes() -> tuple:
 
     logger.debug('finish get indexes api call')
     return response.content, response.status_code
+
+
+def get_lam_files() -> tuple:
+    """
+    Method to connect to the lam api to get all LAM files
+    :return: zip file
+    :rtype: file, int
+    """
+    logger.debug('start get all lam files api call')
+    try:
+        response = requests.get(url=config.LAM_API_SERVICE + '/lam-files', timeout=config.LAM_DEFAULT_TIMEOUT)
+    except Timeout as exception:
+        logger.exception(str(exception))
+
+    logger.debug('finish get all lam files api call')
+    return response.content, response.status_code
