@@ -7,16 +7,17 @@
     <h{{ level }} id="{{ instance_uri }}">
         {{ instance_label }}
         {% if is_concept %}
-            <sup title="concept">[co]</sup>
+            <sup title="concept">[cn]</sup>
         {% else %}
             <sup title="collection">[cl]</sup>
         {% endif %}
     </h{{ level }}>
-    <section>
+    <section about="{{ instance_uri }}">
         {{ build_instance_metadata_part(parameters, instance_uri) }}
         {{ build_instance_editorial_part(parameters, instance_uri) }}
         {{ build_lam_property_configuration_list(parameters, instance_uri) }}
         {{ build_lam_classification_hint_list(parameters, instance_uri) }}
+        {{ build_constraints(parameters, instance_uri) }}
         {{ build_useful_links(parameters, instance_uri) }}
     </section>
 {% endmacro %}
@@ -31,10 +32,10 @@
     prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
     prefix lamd: <http://publications.europa.eu/resources/authority/lam/>
 
-    select distinct ?constraintValue
+    select distinct ?constraintValue ?graphUri
     {
       values ?instanceUri {<"~instance_uri~">}
-      graph <~graph>
+      graph ?graphUri
       {
         ?instancePath lam:path ?instanceUri .
         ?instancePath sh:value ?constraintValue .
@@ -43,7 +44,7 @@
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
         {% if not content.dropna(how="all").empty %}
-            {{ macros.render_description_item_plain_literal (content, "constraintValue", "Constraints", True) }}
+            {{ macros.render_description_item_plain_literal (content, "constraintValue", "Encountered value constraints", "sh:value", True) }}
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -100,18 +101,18 @@
                 <dt>IRI</dt>
                 <dd><p class="iri_monospace">{{ instance_uri }}</p></dd>
             </dl>
-            {{ macros.render_description_item_plain_literal (content, "deprecated", "Deprecated on") }}
-            {{ macros.render_description_item_plain_literal (content, "altLabel", "Alternative label") }}
-            {{ macros.render_description_item_plain_literal (content, "created", "Created on") }}
-            {{ macros.render_description_item_plain_literal (content, "modified", "Modified on") }}
-            {{ macros.render_description_item_plain_literal (content, "notation", "Notation") }}
-            {{ macros.render_description_item_plain_literal (content, "identifier", "Identifier") }}
-            {{ macros.render_description_item_plain_literal (content, "order", "Order") }}
+            {{ macros.render_description_item_plain_literal (content, "deprecated", "Deprecated on", "owl:deprecated") }}
+            {{ macros.render_description_item_plain_literal (content, "altLabel", "Alternative label", "skos:altLabel") }}
+            {{ macros.render_description_item_plain_literal (content, "created", "Created on", "dct:created") }}
+            {{ macros.render_description_item_plain_literal (content, "modified", "Modified on", "dct:modified") }}
+            {{ macros.render_description_item_plain_literal (content, "notation", "Notation", "skos:notation") }}
+            {{ macros.render_description_item_plain_literal (content, "identifier", "Identifier", "dct:identifier") }}
+            {{ macros.render_description_item_plain_literal (content, "order", "Order", "euvoc:order") }}
             {% if conf.debug %}
                 <p class="debug-render">skos concept part for</p>
             {% endif %}
-            {{ macros.render_description_item_plain_literal (content, "class", "Class") }}
-            {{ macros.render_description_item_plain_literal (content, "path", "Path") }}
+            {{ macros.render_description_item_iri (content, "class", "Class", "sh:class", external_link=True) }}
+            {{ macros.render_description_item_iri (content, "path", "Path", "sh:path", external_link=True) }}
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -171,20 +172,20 @@
             {% if conf.debug %}
                 <p class="debug-render">skos editorial part for <strong>{{ instance_uri }}</strong></p>
             {% endif %}
-            {{ macros.render_description_item_plain_literal (content,"definition", "Definition", True) }}
-            {{ macros.render_description_item_plain_literal (content, "scopeNote", "Scope note", True) }}
-            {{ macros.render_description_item_plain_literal (content, "example", "Example", True) }}
-            {{ macros.render_description_item_plain_literal (content, "changeNote", "Change note", True) }}
-            {{ macros.render_description_item_plain_literal (content, "historyNote", "History note", True) }}
-            {{ macros.render_description_item_plain_literal (content, "editorialNote", "Editorial note", True) }}
-            {{ macros.render_description_item_plain_literal (content, "note", "Note" , True) }}
-            {{ macros.render_description_item_local_iri (content, "member", "Members", None,True) }}
-            {{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts", None,True) }}
+            {{ macros.render_description_item_plain_literal (content,"definition", "Definition", "skos:definition", True, accordion_content_state="show") }}
+            {{ macros.render_description_item_plain_literal (content, "scopeNote", "Scope note", "skos:scopeNote", True, accordion_content_state="show") }}
+            {{ macros.render_description_item_plain_literal (content, "example", "Example", "skos:example", True, True) }}
+            {{ macros.render_description_item_plain_literal (content, "changeNote", "Change note", "skos:changeNote", True) }}
+            {{ macros.render_description_item_plain_literal (content, "historyNote", "History note", "skos:historyNote", True) }}
+            {{ macros.render_description_item_plain_literal (content, "editorialNote", "Editorial note", "skos:editorialNote", True) }}
+            {{ macros.render_description_item_plain_literal (content, "note", "Note" , "skos:note", True) }}
+            {{ macros.render_description_item_iri (content, "member", "Members", "skos:member", None,True) }}
+            {{ macros.render_description_item_iri (content, "broaderConcept", "Broader Concepts", "skos:broader", None,True) }}
             {% if conf.debug %}
                 <p class="debug-render">sh editorial part for <strong>{{ instance_uri }}</strong></p>
             {% endif %}
-            {{ macros.render_description_item_plain_literal (content, "shName", "Name") }}
-            {{ macros.render_description_item_plain_literal (content, "shDescription", "Description", True) }}
+            {{ macros.render_description_item_plain_literal (content, "shName", "Name", "sh:name") }}
+            {{ macros.render_description_item_plain_literal (content, "shDescription", "Description", "sh:description", True) }}
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -217,7 +218,8 @@
                 <div class="collapse">
                     <div class="card-body">
                         {% for row in content.itertuples() %}
-                            {{ build_lam_classification_hint_or_property_configuration(parameters, row.propertyConfiguration) }}
+                            <p property="lam:hasPropertyConfiguration">{{ build_lam_classification_hint_or_property_configuration(parameters, row.propertyConfiguration) }} </p>
+                            {{ "<hr> " if not loop.last }}
                         {% endfor %}
                     </div>
                 </div>
@@ -254,7 +256,8 @@
                 <div class="collapse">
                     <div class="card-body">
                         {% for row in content.itertuples() %}
-                            {{ build_lam_classification_hint_or_property_configuration(parameters, row.classificationHint) }}
+                            <p property="lam:classifyWith">{{ build_lam_classification_hint_or_property_configuration(parameters, row.classificationHint) }}</p>
+                            {{ "<hr> " if not loop.last }}
                         {% endfor %}
                     </div>
                 </div>
@@ -348,7 +351,6 @@
     {#    {% set graph = parameters.graph %}#}
 
     {{ build_links_from_classify_with_or_has_property_configuration(parameters, instance_uri) }}
-    {{ build_constraints(parameters, instance_uri) }}
 {% endmacro %}
 
 {% macro build_links_from_classify_with_or_has_property_configuration(parameters, instance_uri) %}
@@ -360,10 +362,10 @@
     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
     prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
 
-    select distinct ?link ?linkLabel
+    select distinct ?link ?linkLabel ?graphUri
     {
       values ?instanceUri {<"~instance_uri~">}
-      graph <~graph>
+      graph ?graphUri
       {
         ?propConfig lam:path ?instanceUri .
         optional {
@@ -376,18 +378,19 @@
     }" %}
     {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
     {% call macros.render_fetch_results(content, error) %}
-        {% if not content.dropna(how="all").empty %}
+        {% if not content.dropna().empty %}
             <div class="card">
                 <div class="card-header">
                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                     <a class="text-dark font-weight-bold" onclick="showContent()">
-                        Useful links: Classified With | Property Configuration
+                        Useful links
                     </a>
                 </div>
                 <div class="collapse">
                     <div class="card-body">
                         {% for row in content.itertuples() %}
                             <a href="#{{ row.link }}">{{ row.linkLabel }}</a><br>
+                            {{ "<hr> " if not loop.last }}
                         {% endfor %}
                     </div>
                 </div>
