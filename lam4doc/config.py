@@ -141,6 +141,19 @@ class LAMConfig:
         self.logger.debug(value)
         return value
 
+    @property
+    def LAM_INDEXES_ZIP_NAME(self) -> str:
+        value = 'indexes.zip'
+        self.logger.debug(value)
+        return value
+
+
+    @property
+    def LAM_ALL_ZIP_NAME(self) -> str:
+        value = 'lam_assets.zip'
+        self.logger.debug(value)
+        return value
+
 
 config = LAMConfig()
 

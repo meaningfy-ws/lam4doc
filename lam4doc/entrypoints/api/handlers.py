@@ -61,7 +61,7 @@ def generate_indexes() -> tuple:
     try:
         with tempfile.TemporaryDirectory() as temp_folder:
             index_files_info = service_generate_indexes(temp_folder)
-            archive = zip_files(temp_folder, index_files_info, 'indexes.zip')
+            archive = zip_files(temp_folder, index_files_info, config.LAM_INDEXES_ZIP_NAME)
 
             logger.debug('finish generate lam indexes endpoint')
             return send_file(archive, as_attachment=True)  # 200
@@ -84,7 +84,7 @@ def get_lam_files() -> tuple:
             files_to_zip.append(service_generate_lam_report(temp_folder, PDF_REPORT_TYPE))
             files_to_zip += service_generate_indexes(temp_folder)
 
-            archive = zip_files(temp_folder, files_to_zip, 'indexes.zip')
+            archive = zip_files(temp_folder, files_to_zip, config.LAM_ALL_ZIP_NAME)
 
             logger.debug('finish get lam files endpoint')
             return send_file(archive, as_attachment=True)  # 200
