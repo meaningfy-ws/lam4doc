@@ -49,7 +49,7 @@ generate-indexes:
 
 generate-content:
 	@ echo -e '$(BUILD_PRINT)Generating the content'
-	@ mkreport --target ./templates/content/ --output ./docker/nginx/www/
+	@ mkreport --target ./templates/html/ --output ./docker/nginx/www/
 #-----------------------------------------------------------------------------
 # Gherkin feature and acceptance test generation commands
 #-----------------------------------------------------------------------------

@@ -1,31 +1,31 @@
 version: "3.7"
 
 services:
-  lam-api:
-    container_name: lam-api
-    build:
-      context: ..
-      dockerfile: ./docker/api/Dockerfile
-    volumes:
-      - ..:/usr/src/app
-    ports:
-      - ${LAM_API_PORT}:${LAM_API_PORT}
-    env_file: .env
-    networks:
-      - mydefault
-
-  lam-ui:
-    container_name: lam-ui
-    build:
-      context: ..
-      dockerfile: ./docker/ui/Dockerfile
-    volumes:
-      - ..:/usr/src/app
-    ports:
-      - ${LAM_UI_PORT}:${LAM_UI_PORT}
-    env_file: .env
-    networks:
-      - mydefault
+#  lam-api:
+#    container_name: lam-api
+#    build:
+#      context: ..
+#      dockerfile: ./docker/api/Dockerfile
+#    volumes:
+#      - ..:/usr/src/app
+#    ports:
+#      - ${LAM_API_PORT}:${LAM_API_PORT}
+#    env_file: .env
+#    networks:
+#      - mydefault
+#
+#  lam-ui:
+#    container_name: lam-ui
+#    build:
+#      context: ..
+#      dockerfile: ./docker/ui/Dockerfile
+#    volumes:
+#      - ..:/usr/src/app
+#    ports:
+#      - ${LAM_UI_PORT}:${LAM_UI_PORT}
+#    env_file: .env
+#    networks:
+#      - mydefault
 
   nginx:
     container_name: nginx
