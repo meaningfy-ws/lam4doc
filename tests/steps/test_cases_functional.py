@@ -36,48 +36,45 @@ def test_tc03_toc_for_properties_selected_entry_is_highlighted():
 
 @scenario('../features/functional_test_cases.feature', 'TC.04 – TOC for Templates - Expands and collapses')
 def test_tc04_toc_for_templates_expands_and_collapses():
-    """Pipelines storage not failing."""
+    """TC.04 – TOC for Templates - Expands and collapses"""
 
 
 @scenario('../features/functional_test_cases.feature', 'TC.05 – TOC for Celex numbers - Expands and collapses')
 def test_tc05_toc_for_celex_numbers_expands_and_collapses():
-    """Pipelines storage not failing."""
+    """TC.05 – TOC for Celex numbers - Expands and collapses"""
 
 
 @scenario('../features/functional_test_cases.feature', 'TC.05 – TOC for Celex numbers - Selected entry is highlighted')
 def test_tc05_toc_for_celex_numbers_selected_entry_is_highlighted():
-    """Pipelines storage not failing."""
+    """TC.05 – TOC for Celex numbers - Selected entry is highlighted"""
 
 
 @scenario('../features/functional_test_cases.feature', 'Verify that specific properties exist')
 def test_verify_that_specific_properties_exist():
-    """Pipelines storage not failing."""
+    """Verify that specific properties exist"""
 
 
 @scenario('../features/functional_test_cases.feature', 'Verify that specific classes exist')
 def test_verify_that_specific_classes_exist():
-    """Pipelines storage not failing."""
+    """Verify that specific classes exist"""
 
 
 @scenario('../features/functional_test_cases.feature', 'Verify that specific CELEXs exist')
 def test_verify_that_specific_celexs_exist():
-    """Pipelines storage not failing."""
+    """Verify that specific CELEXs exist"""
 
 
-# ------------------------------------------------------------------------------------------------
-
-
-@given(parsers.cfparse('the baseURI {baseUri:String}', extra_types=dict(String=str)))
-def the_baseuri_lam_uri(browser, scenario_context, baseUri):
+@given(parsers.cfparse('the baseURI {base_uri:String}', extra_types=dict(String=str)))
+def the_baseuri_lam_uri(browser, scenario_context, base_uri):
     """the baseURI LAM_URI."""
-    if baseUri == "LAM_URL":
+    if base_uri == "LAM_URL":
         from tests.config import LAM_URL
-        scenario_context["baseURI"] = LAM_URL
+        scenario_context["base_uri"] = LAM_URL
 
 
 @when(parsers.cfparse('I navigate to the location {pageLocation:String}', extra_types=dict(String=str)))
 def i_navigate_to_the_location_page(scenario_context, browser, pageLocation):
-    browser.get(scenario_context["baseURI"] + pageLocation)
+    browser.get(scenario_context["base_uri"] + pageLocation)
 
 
 @then(parsers.cfparse('the resulting page contains {content:String} in the element with id {field_id:String}',
