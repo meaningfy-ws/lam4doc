@@ -10,11 +10,13 @@ install-dev:
 	@ echo "$(BUILD_PRINT)Installing the local requirements"
 	@ pip install --upgrade pip
 	@ pip install -r requirements/dev.txt
+	@ sudo ./requirements/install_chrome_and_driver.sh
 
 install-prod:
 	@ echo "$(BUILD_PRINT)Installing the production requirements"
 	@ pip install --upgrade pip
 	@ pip install -r requirements.txt
+	@ sudo ./requirements/install_chrome_and_driver.sh
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"
