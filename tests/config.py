@@ -6,4 +6,4 @@
 import os
 
 LAM_URL = os.environ.get('LAM_URL', 'http://localhost:9090')
-RUN_HEADLESS_UI_TESTS = os.environ.get('RUN_HEADLESS_UI_TESTS', False)
+RUN_HEADLESS_UI_TESTS = os.environ.get('RUN_HEADLESS_UI_TESTS', True)
