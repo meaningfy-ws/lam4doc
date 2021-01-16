@@ -20,7 +20,7 @@ install-prod:
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"
-	@ pytest
+	@ pytest --html=report.html --self-contained-html
 
 build-services:
 	@ echo -e '$(BUILD_PRINT)Building the containers'
