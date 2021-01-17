@@ -40,6 +40,20 @@ services:
     networks:
       - mydefault
 
+  fuseki:
+    container_name: lam-fuseki
+    image: meaningfy/fuseki:latest
+    volumes:
+      - ${PWD}/${LAM_FUSEKI_DATA_FOLDER}/fuseki:/fuseki
+    env_file: .env
+    environment:
+      - ADMIN_PASSWORD=${LAM_FUSEKI_ADMIN_PASSWORD}
+      - JVM_ARGS=${LAM_FUSEKI_JVM_ARGS}
+    ports:
+      - ${LAM_FUSEKI_EXTERNAL_PORT}:3030
+    networks:
+      - mydefault
+
 networks:
   mydefault:
     name: globalnet
