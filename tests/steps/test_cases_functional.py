@@ -129,13 +129,13 @@ def step_impl(browser, scenario_context, field_xpath):
 def step_impl(browser, scenario_context, field_xpath):
     sleep(1)
     element = browser.find_element_by_xpath(field_xpath)
-    assert is_element_visible_in_viewpoint(browser, element) is True
+    assert is_element_visible_in_viewpoint(browser, element) == True
 
 
 @then(parsers.cfparse('the field with id {field_id:String} has CSS class {css_class:String}',
                       extra_types=dict(String=str)))
 def step_impl(browser, scenario_context, field_id, css_class):
-    assert browser.find_element_by_id(field_id).is_displayed() is True
+    assert browser.find_element_by_id(field_id).is_displayed() == True
 
 
 @then(parsers.cfparse('the field with XPath {field_xpath:String} has CSS class {css_class:String}',
