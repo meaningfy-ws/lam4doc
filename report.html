@@ -429,7 +429,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
 }
 </script>
     <h1>report.html</h1>
-    <p>Report generated on 16-Jan-2021 at 15:48:32 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
+    <p>Report generated on 17-Jan-2021 at 13:59:19 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
     <h2>Environment</h2>
     <table id="environment">
       <tr>
@@ -445,8 +445,8 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <td>Python</td>
         <td>3.8.5</td></tr></table>
     <h2>Summary</h2>
-    <p>9 tests ran in 107.00 seconds. </p>
-    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">8 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">1 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <p>9 tests ran in 104.35 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">9 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
     <h2>Results</h2>
     <table id="results-table">
       <thead id="results-table-head">
@@ -457,20 +457,20 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
           <th class="sortable links" col="links">Links</th></tr>
         <tr hidden="true" id="not-found-message">
           <th colspan="4">No results found. Try to check the filters</th></tr></thead>
-      <tbody class="failed results-table-row">
+      <tbody class="passed results-table-row">
         <tr>
-          <td class="col-result">Failed</td>
+          <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc01__access_lam_online_tool</td>
-          <td class="col-duration">15.06</td>
+          <td class="col-duration">14.04</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log">request = &lt;FixtureRequest for &lt;Function test_tc01__access_lam_online_tool&gt;&gt;<br/><br/>    @pytest.mark.usefixtures(*function_args)<br/>    def scenario_wrapper(request):<br/>&gt;       _execute_scenario(feature, scenario, request, encoding)<br/><br/>venv/lib/python3.8/site-packages/pytest_bdd/scenario.py:177: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/>venv/lib/python3.8/site-packages/pytest_bdd/scenario.py:143: in _execute_scenario<br/>    _execute_step_function(request, scenario, step, step_func)<br/>venv/lib/python3.8/site-packages/pytest_bdd/scenario.py:113: in _execute_step_function<br/>    return_value = step_func(**kwargs)<br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>browser = &lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&quot;7fc02555bb7839ba59689626de81beae&quot;)&gt;, scenario_context = {&#x27;base_uri&#x27;: &#x27;http://localhost:9090&#x27;}<br/>field_xpath = &quot;//li[@data-unique=&#x27;-references-[cl]-&#x27;]&quot;<br/><br/>    @then(parsers.cfparse(&#x27;the field with XPath {field_xpath:String} is visible&#x27;, extra_types=dict(String=str)))<br/>    def step_impl(browser, scenario_context, field_xpath):<br/>        sleep(1)<br/>&gt;       assert browser.find_element_by_xpath(field_xpath).is_displayed() is True<br/><span class="error">E       assert False is True</span><br/><span class="error">E        +  where False = &lt;bound method WebElement.is_displayed of &lt;selenium.webdriver.remote.webelement.WebElement (session=&quot;7fc02555bb7839ba59689626de81beae&quot;, element=&quot;f523e97f-e476-4253-b2bd-022d152e5b90&quot;)&gt;&gt;()</span><br/><span class="error">E        +    where &lt;bound method WebElement.is_displayed of &lt;selenium.webdriver.remote.webelement.WebElement (session=&quot;7fc02555bb7839ba59689626de81beae&quot;, element=&quot;f523e97f-e476-4253-b2bd-022d152e5b90&quot;)&gt;&gt; = &lt;selenium.webdriver.remote.webelement.WebElement (session=&quot;7fc02555bb7839ba59689626de81beae&quot;, element=&quot;f523e97f-e476-4253-b2bd-022d152e5b90&quot;)&gt;.is_displayed</span><br/><span class="error">E        +      where &lt;selenium.webdriver.remote.webelement.WebElement (session=&quot;7fc02555bb7839ba59689626de81beae&quot;, element=&quot;f523e97f-e476-4253-b2bd-022d152e5b90&quot;)&gt; = &lt;bound method WebDriver.find_element_by_xpath of &lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&quot;7fc02555bb7839ba59689626de81beae&quot;)&gt;&gt;(&quot;//li[@data-unique=&#x27;-references-[cl]-&#x27;]&quot;)</span><br/><span class="error">E        +        where &lt;bound method WebDriver.find_element_by_xpath of &lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&quot;7fc02555bb7839ba59689626de81beae&quot;)&gt;&gt; = &lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&quot;7fc02555bb7839ba59689626de81beae&quot;)&gt;.find_element_by_xpath</span><br/><br/>tests/steps/test_cases_functional.py:125: AssertionError<br/></div></td></tr></tbody>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc03_toc_for_properties_expands_and_collapses</td>
-          <td class="col-duration">10.47</td>
+          <td class="col-duration">10.41</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -479,7 +479,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc03_toc_for_properties_selected_entry_is_highlighted</td>
-          <td class="col-duration">9.30</td>
+          <td class="col-duration">9.50</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -488,7 +488,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc04_toc_for_templates_expands_and_collapses</td>
-          <td class="col-duration">11.75</td>
+          <td class="col-duration">11.66</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -497,7 +497,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc05_toc_for_celex_numbers_expands_and_collapses</td>
-          <td class="col-duration">12.00</td>
+          <td class="col-duration">11.63</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -506,7 +506,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc05_toc_for_celex_numbers_selected_entry_is_highlighted</td>
-          <td class="col-duration">11.10</td>
+          <td class="col-duration">10.51</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -515,7 +515,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_verify_that_specific_properties_exist</td>
-          <td class="col-duration">12.94</td>
+          <td class="col-duration">12.76</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -524,7 +524,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_verify_that_specific_classes_exist</td>
-          <td class="col-duration">12.10</td>
+          <td class="col-duration">11.65</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -533,7 +533,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_verify_that_specific_celexs_exist</td>
-          <td class="col-duration">11.75</td>
+          <td class="col-duration">11.80</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">

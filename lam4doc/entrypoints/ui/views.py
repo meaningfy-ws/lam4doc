@@ -35,7 +35,7 @@ def index():
     return render_template('index.html', title='LAM index page')
 
 
-@app.route('/lam-report', methods=['GET'])
+@app.route('/lam-report', methods=['GET', 'POST'])
 def download_lam_report():
     logger.debug('request LAM report view')
 
