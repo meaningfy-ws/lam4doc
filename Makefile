@@ -10,10 +10,11 @@ install:
 	@ echo "$(BUILD_PRINT)Installing the local requirements"
 	@ pip install --upgrade pip
 	@ pip install -r requirements/dev.txt
+	@ sudo ./requirements/install_chrome_and_driver.sh
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"
-	@ pytest
+	@ pytest --html=report.html --self-contained-html
 
 build-services:
 	@ echo -e '$(BUILD_PRINT)Building the containers'
@@ -44,7 +45,7 @@ generate-indexes:
 
 generate-content:
 	@ echo -e '$(BUILD_PRINT)Generating the content'
-	@ mkreport --target ./templates/content/ --output ./docker/nginx/www/
+	@ mkreport --target ./templates/html/ --output ./docker/nginx/www/
 #-----------------------------------------------------------------------------
 # Gherkin feature and acceptance test generation commands
 #-----------------------------------------------------------------------------

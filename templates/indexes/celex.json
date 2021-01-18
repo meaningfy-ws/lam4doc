@@ -2,7 +2,7 @@
     "template": "template.json",
     "conf":
     {
-        "endpoint": "http://dev.meaningfy.ws:3030/lam/sparql",
+        "endpoint": "http://srv.meaningfy.ws:3030/lam/sparql",
         "sparql_query_file" : "./templates/indexes/queries/celex.rq"
     }
 }

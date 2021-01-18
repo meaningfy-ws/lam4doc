@@ -131,6 +131,15 @@
             position: absolute;
             margin-left: 0.3rem;
         }
+
+        code {
+            color: #1b1e21;
+        }
+
+        pre {
+            white-space: pre-line;
+        }
+
         h1,h2,h3,h4,h5,h6{
             margin-top: 0.5rem;
         }
@@ -221,7 +230,7 @@
 <div class="loading">
     <div class="loader"></div>
 </div>
-<main>
+<main prefix="sh: http://www.w3.org/ns/shacl# lam: http://publications.europa.eu/ontology/lam-skos-ap# skos: http://www.w3.org/2004/02/skos/core# dct: http://purl.org/dc/terms/ euvoc: http://publications.europa.eu/ontology/euvoc# owl: http://www.w3.org/2002/07/owl# lamd: http://publications.europa.eu/resources/authority/lam/">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-md-3">
@@ -231,10 +240,12 @@
             <div class="col-sm-12 col-md-9">
                 <h1 class="text-center counter-skip" id="skip-toc">{{ conf.title }}</h1>
                 <div id="content">
-                {% block content %}
-                    < empty >
-                {% endblock %}
-                <div>
+                    {% block content %}
+                        < empty >
+                    {% endblock %}
+                    <div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -274,7 +285,7 @@
             $(".loader").remove();
             $('.loading').remove();
             $('main').css("display", "block");
-
+            window.scrollTo(2,0);
         }, 100);
     });
 

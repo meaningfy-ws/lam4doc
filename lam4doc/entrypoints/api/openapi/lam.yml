@@ -70,6 +70,15 @@ paths:
           description: OK.
         5XX:
           description: Unexpected Error.
+  /lam-files:
+    get:
+      operationId: lam4doc.entrypoints.api.handlers.get_lam_files
+      description: Endpoint to generate all LAM files.
+      responses:
+        200:
+          description: OK.
+        5XX:
+          description: Unexpected Error.
   /upload-rdf:
     post:
       operationId: lam4doc.entrypoints.api.handlers.upload_rdfs

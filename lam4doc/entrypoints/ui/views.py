@@ -17,7 +17,8 @@ from flask import render_template, send_from_directory, flash
 
 from lam4doc.config import config
 from lam4doc.entrypoints.ui import app
-from lam4doc.entrypoints.ui.api_wrapper import get_lam_report as api_get_lam_report, get_indexes as api_get_indexes
+from lam4doc.entrypoints.ui.api_wrapper import get_lam_report as api_get_lam_report, get_indexes as api_get_indexes, \
+    get_lam_files as api_get_lam_files
 from lam4doc.entrypoints.ui.forms import ReportTypeForm
 
 logger = logging.getLogger(config.LAM_LOGGER)
@@ -34,7 +35,7 @@ def index():
     return render_template('index.html', title='LAM index page')
 
 
-@app.route('/lam-report', methods=['GET'])
+@app.route('/lam-report', methods=['GET', 'POST'])
 def download_lam_report():
     logger.debug('request LAM report view')
 
@@ -73,6 +74,25 @@ def download_indexes():
             report = Path(temp_folder) / file_name
             report.write_bytes(report_content)
             logger.debug('render LAM indexes view')
+            return send_from_directory(Path(temp_folder), file_name, as_attachment=True)
+    except Exception as e:
+        logger.exception(str(e))
+        flash(str(e), 'error')
+
+    logger.debug('redirect to index view')
+    return render_template('index.html')
+
+
+@app.route('/lam-files', methods=['GET'])
+def download_lam_files():
+    logger.debug('request all LAM files view')
+    try:
+        with tempfile.TemporaryDirectory() as temp_folder:
+            file_name = 'LAM_files.zip'
+            report_content, _ = api_get_lam_files()
+            report = Path(temp_folder) / file_name
+            report.write_bytes(report_content)
+            logger.debug('render all LAM files view')
             return send_from_directory(Path(temp_folder), file_name, as_attachment=True)
     except Exception as e:
         logger.exception(str(e))
