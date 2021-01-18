@@ -1,0 +1,97 @@
+%! Author = lps
+%! Date = 06/01/2021
+%! Selector macros iterate through desired parts of the dataset and give control back to the caller
+
+%- import "common/renderers.tex" as renderers
+
+%- macro select_top_collections(query_substitution_parameters=None)
+    \BLOCK{set select_query =
+        "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+        SELECT ?collection
+        {
+            GRAPH <~graph>
+            {
+                ?collection a skos:Collection .
+                optional {
+                    ?collection euvoc:order ?order .
+                }
+                BIND(xsd:integer(?order) as ?intOrder)
+                FILTER NOT EXISTS {
+                    ?parent skos:member ?collection
+                }
+            }
+        } ORDER by ?intOrder"
+    }
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query,query_substitution_parameters).fetch_tabular()
+    %- set caller_ = caller 
+    %- call renderers.render_fetch_results(content, error)
+        %- if not content.empty 
+            %- for row in content.itertuples() 
+                \VAR{ caller_(row.collection) }
+            %- endfor 
+        %- endif 
+    %- endcall 
+%- endmacro
+
+%- macro select_member_collections(parent_collection_uri, query_substitution_parameters)
+    \BLOCK{ set select_query =
+        "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+        SELECT ?member
+        FROM <~graph>
+        {
+            values ?collection {<"~parent_collection_uri~">}
+            ?collection skos:member ?member .
+            ?member a skos:Collection .
+            optional{
+                ?member euvoc:order ?order .
+                BIND(xsd:integer(?order) as ?intOrder)
+            }
+        } ORDER by ?intOrder"
+    }
+
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query,query_substitution_parameters).fetch_tabular()
+    %- set caller_ = caller
+    %- call renderers.render_fetch_results(content, error)
+        %- if not content.empty
+            %- for row in content.itertuples()
+                \VAR{ caller_(row.member) }
+            %- endfor
+        %- endif
+    %- endcall
+%- endmacro
+
+%- macro select_member_concepts(parent_collection_uri, query_substitution_parameters)
+    \BLOCK{ set select_query =
+        "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+        SELECT ?member
+        FROM <~graph>
+        {
+            values ?collection {<"~parent_collection_uri~">}
+            ?collection skos:member ?member .
+            ?member a skos:Concept .
+            optional{
+                ?member euvoc:order ?order .
+                BIND(xsd:integer(?order) as ?intOrder)
+            }
+        } ORDER by ?intOrder"
+    }
+
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query,query_substitution_parameters).fetch_tabular()
+    %- set caller_ = caller
+    %- call renderers.render_fetch_results(content, error)
+        %- if not content.empty
+            %- for row in content.itertuples()
+                \VAR{ caller_(row.member) }
+            %- endfor
+        %- endif
+    %- endcall
+%- endmacro

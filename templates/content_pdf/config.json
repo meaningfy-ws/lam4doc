@@ -1,0 +1,20 @@
+{
+  "template": "main.tex",
+  "template_flavour_syntax": "latex",
+  "conf": {
+    "default_endpoint": "http://srv.meaningfy.ws:3030/lam/query",
+    "title": "LAM Report",
+    "type": "report",
+    "author": "Meaningfy",
+    "debug": false,
+    "lam_properties": {
+      "graph": "http://publications.europa.eu/resources/authority/lam/DocumentProperty"
+    },
+    "lam_classes": {
+      "graph": "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument"
+    },
+    "celex_classes": {
+      "graph": "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument"
+    }
+  }
+}

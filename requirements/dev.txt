@@ -1,6 +1,8 @@
 -r common.txt
 
 # Testing Dependencies
+pytest
+pytest-bdd
 coverage==5.3  # https://coverage.readthedocs.io/en/coverage-5.3/
 pytest-cov==2.10.1  # https://github.com/pytest-dev/pytest-cov
 selenium==3.141.0  # https://selenium-python.readthedocs.io/

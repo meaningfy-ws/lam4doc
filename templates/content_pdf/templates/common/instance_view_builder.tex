@@ -1,0 +1,156 @@
+%- import "common/macros.tex" as macros
+
+%- macro render_section_header(instance_uri, instance_label, level, is_concept=false) 
+    %- set super_script_symbol = "Cn" if is_concept else "Cl" 
+    %- set superscript_text=" \\textsuperscript{\\normalsize "+super_script_symbol+" }"
+    %- set text = instance_label
+    %- if level == 1 
+\part{\VAR{ text } }
+\label{sec:\VAR{instance_uri}}
+    %- elif level == 2 
+\chapter{ \VAR{ text + superscript_text } }
+\label{sec:\VAR{instance_uri}}
+    %- elif level == 3 
+\section{\VAR{ text + superscript_text } }
+\label{sec:\VAR{instance_uri}}
+    %- elif level == 4 
+\subsection{\VAR{ text + superscript_text } }
+\label{sec:\VAR{instance_uri}}
+    %- elif level == 5 
+\subsubsection{\VAR{text + superscript_text } }
+\label{sec:\VAR{instance_uri}}
+    %- else 
+\section{Headding level out of boundaries: use a number 1 -- 5}
+    %- endif 
+%- endmacro 
+
+
+%- macro build_instance_metadata_part(parameters, instance_uri) 
+    \BLOCK{  set select_query = """PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX sh: <http://www.w3.org/ns/shacl#>
+    PREFIX dct: <http://purl.org/dc/terms/>
+    PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+
+    SELECT ?deprecated ?altLabel ?created ?modified ?notation ?identifier ?order ?class ?path
+    FROM <~graph>
+    {
+      values ?instance {<"""~instance_uri~""">}
+      {
+        ?instance owl:deprecated ?deprecated
+      }
+      union {
+        ?instance skos:altLabel ?altLabel
+      }
+      union {
+        ?instance dct:created ?created .
+      }
+      union {
+        ?instance dct:modified ?modified
+      }
+      union {
+        ?instance skos:notation ?notation
+      }
+      union {
+        ?instance dct:identifier ?identifier
+      }
+      union {
+        ?instance euvoc:order ?order .
+      }
+      union {
+        ?instance sh:class ?class .
+      }
+      union {
+        ?instance sh:path ?path .
+      }
+    }""" }
+
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() 
+    %- call macros.render_fetch_results(content, error) 
+        %- if not content.dropna(how="all").empty 
+            \paragraph*{IRI} \texttt{\VAR{instance_uri|escape_latex} }
+
+            \VAR{ macros.render_description_item_plain_literal (content, "deprecated", "Deprecated on") }
+            \VAR{ macros.render_description_item_plain_literal (content, "altLabel", "Alternative label") }
+            \VAR{ macros.render_description_item_plain_literal (content, "created", "Created on") }
+            \VAR{ macros.render_description_item_plain_literal (content, "modified", "Modified on") }
+            \VAR{ macros.render_description_item_plain_literal (content, "notation", "Notation") }
+            \VAR{ macros.render_description_item_plain_literal (content, "identifier", "Identifier") }
+            \VAR{ macros.render_description_item_plain_literal (content, "order", "Order") }
+            \VAR{ macros.render_description_item_plain_literal (content, "class", "Class") }
+            \VAR{ macros.render_description_item_plain_literal (content, "path", "Path") }
+        %- endif
+    %- endcall 
+%- endmacro
+
+%- macro build_instance_editorial_part(parameters, instance_uri)
+ \BLOCK{ set select_query =
+    """PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX sh: <http://www.w3.org/ns/shacl#>
+    PREFIX dct: <http://purl.org/dc/terms/>
+    PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+
+    select ?definition ?scopeNote ?example ?changeNote ?historyNote ?editorialNote ?note ?member ?broaderConcept ?shName ?shDescription
+    FROM <~graph>
+    {
+      values ?instance {<"""~instance_uri~""">}
+      {
+        ?instance skos:definition ?definition .
+      }
+      union {
+        ?instance skos:scopeNote ?scopeNote
+      }
+      union {
+        ?instance skos:example ?example
+      }
+      union {
+        ?instance skos:changeNote ?changeNote
+      }
+      union {
+        ?instance skos:historyNote ?historyNote
+      }
+      union {
+        ?instance skos:editorialNote ?editorialNote
+      }
+      union {
+        ?instance skos:note ?note
+      }
+      union {
+        ?instance skos:member ?member .
+      }
+      union {
+        ?broaderConcept skos:broader ?instance .
+      }
+      union {
+        ?instance sh:name ?shName .
+      }
+      union {
+        ?instance sh:description ?shDescription .
+      }
+    }"""}
+
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() 
+    %- call macros.render_fetch_results(content, error) 
+        %- if not content.dropna(how="all").empty 
+
+            \VAR{ macros.render_description_item_plain_literal (content, "definition", "Definition") }
+            \VAR{ macros.render_description_item_plain_literal (content, "scopeNote", "Scope note") }
+            \VAR{ macros.render_description_item_plain_literal (content, "example", "Example") }
+            \VAR{ macros.render_description_item_plain_literal (content, "changeNote", "Change note") }
+            \VAR{ macros.render_description_item_plain_literal (content, "historyNote", "History note") }
+            \VAR{ macros.render_description_item_plain_literal (content, "editorialNote", "Editorial note") }
+            \VAR{ macros.render_description_item_plain_literal (content, "note", "Note") }
+            \VAR{ macros.render_description_item_local_iri (content, "member", "Members", None) }
+            \VAR{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts", None) }
+            \VAR{ macros.render_description_item_plain_literal (content, "shName", "Name") }
+            \VAR{ macros.render_description_item_plain_literal (content, "shDescription", "Description") }
+        %- endif 
+    %- endcall 
+%- endmacro
+
+%- macro build_instance_view (parameters, instance_uri, instance_label, level, is_concept=false) 
+    \VAR{ render_section_header(instance_uri, instance_label, level, is_concept=false) }
+    \VAR{ build_instance_metadata_part(parameters, instance_uri) }
+    \VAR{ build_instance_editorial_part(parameters, instance_uri) }
+%- endmacro

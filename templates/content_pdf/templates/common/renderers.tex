@@ -1,0 +1,98 @@
+%! Author = lps
+%! Date = 06/01/2021
+%! Renderer macros render given data in a specific form
+
+%- macro render_error(message)
+    \todo[inline]{"Fix this"}
+    \begin{lstlisting}[language=PostScript, caption=Error message]
+            \VAR{ message|replace("\n","
+") }
+    \end{lstlisting}
+%- endmacro
+
+%# The default macro for showing/wrapping the fetch results
+%- macro render_fetch_results(content, error)
+    %- if error
+        \VAR{ render_error(error) }
+    %- else
+        %- if content is undefined
+            \VAR{ render_error("Some content expected but none was found.") }
+            \todo{"Fix this"}
+        %- else
+            \VAR{ caller() }
+        %- endif
+    %- endif
+%- endmacro
+
+%- macro render_section_header(instance_uri, instance_label, level, is_concept=false)
+    %- set super_script_symbol = "Cn" if is_concept else "Cl"
+    %- set text = instance_label
+    %- if level == 1
+\part{\VAR{ text } }
+\label{sec:\VAR{instance_uri}}
+    %- elif level == 2
+\chapter{ \VAR{ text } \textsuperscript{\normalsize \VAR{super_script_symbol} } }
+\label{sec:\VAR{instance_uri}}
+    %- elif level == 3
+\section{\VAR{ text } \textsuperscript{\normalsize \VAR{super_script_symbol} } }
+\label{sec:\VAR{instance_uri}}
+    %- elif level == 4
+\subsection{\VAR{ text} \textsuperscript{\normalsize \VAR{super_script_symbol} } }
+\label{sec:\VAR{instance_uri}}
+    %- elif level == 5
+\subsubsection{\VAR{ text } \textsuperscript{\normalsize \VAR{super_script_symbol} } }
+\label{sec:\VAR{instance_uri}}
+    %- else
+\section{Headding level out of boundaries: use a number 1 -- 5}
+    %- endif
+%- endmacro
+
+%- macro render_description_item_plain_literal(result_set, property_id, property_label)
+    %- if not result_set.empty and property_id in result_set.columns
+        %- set values = result_set[property_id].dropna()
+        %- if not values.empty
+            \paragraph*{\VAR{ property_label } }%\mbox{}\\
+                %- for idx, item in values.iteritems()
+\noindent \VAR{ item|escape_latex|replace("\n","
+") } \mbox{}\\
+                %- endfor
+        %- endif
+    %- else
+        \VAR{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }
+    %- endif
+%- endmacro
+
+%- macro render_description_item_local_iri(result_set, property_id, property_label, link_label_property_id=None)
+    %- if not result_set.empty and property_id in result_set.columns
+        %- set values =  result_set[property_id].dropna()
+        %- if not values.empty
+            \paragraph*{\VAR{ property_label } } %\mbox{}\\
+            %- for idx, item in values.iteritems()
+                %- if link_label_property_id is none
+\noindent\hyperref[sec:\VAR{ item }]{ \VAR{ item|escape_latex } } \mbox{}\\
+                %- else
+\noindent\hyperref[{sec:\VAR{ item }]{ \VAR{ link_label_property_id|escape_latex } } \mbox{}\\
+                %- endif
+            %- endfor
+        %- endif
+    %- else
+        \VAR{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }
+    %- endif
+%- endmacro
+
+
+%- macro render_description_item_listing(result_set, property_id, property_label, listing_language=XML)
+    %- if not result_set.empty and property_id in result_set.columns
+        %- set values = result_set[property_id].dropna()
+        %- if not values.empty
+\paragraph*{\VAR{ property_label } } %\mbox{}\\
+                %- for idx, item in values.iteritems()
+\begin{lstlisting}[language=\VAR{listing_language}]
+\VAR{ item | trim }
+\end{lstlisting} \mbox{}\\
+                %- endfor
+        %- endif
+    %- else
+        \VAR{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }
+    %- endif
+%- endmacro

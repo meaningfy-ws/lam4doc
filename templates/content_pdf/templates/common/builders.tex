@@ -1,0 +1,255 @@
+%! Author = lps
+%! Date = 06/01/2021
+%! Builder macros aggregate selectors and renderers into a coherent document building logic
+
+%- import "common/selectors.tex" as selectors
+%- import "common/renderers.tex" as renderers
+
+%- macro build_instance_view (instance_uri, query_substitution_parameters, level, is_concept=false)
+    \VAR{ _build_instance_header_part(instance_uri, query_substitution_parameters, level, is_concept=is_concept) }
+    \VAR{ _build_instance_metadata_part(instance_uri, query_substitution_parameters) }
+    \VAR{ _build_instance_editorial_part(instance_uri, query_substitution_parameters) }
+    \VAR{ _build_instance_structural_relations_part(instance_uri, query_substitution_parameters) }
+%- endmacro
+
+%- macro _build_instance_metadata_part(instance_uri, parameters)
+    \BLOCK{  set select_query = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX sh: <http://www.w3.org/ns/shacl#>
+    PREFIX dct: <http://purl.org/dc/terms/>
+    PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+
+    SELECT ?deprecated ?altLabel ?created ?modified ?notation ?identifier ?order ?class ?path
+    FROM <~graph>
+    {
+      values ?instance {<"~instance_uri~">}
+      {
+        ?instance owl:deprecated ?deprecated
+      }
+      union {
+        ?instance skos:altLabel ?altLabel
+      }
+      union {
+        ?instance dct:created ?created .
+      }
+      union {
+        ?instance dct:modified ?modified
+      }
+      union {
+        ?instance skos:notation ?notation
+      }
+      union {
+        ?instance dct:identifier ?identifier
+      }
+      union {
+        ?instance euvoc:order ?order .
+      }
+      union {
+        ?instance sh:class ?class .
+      }
+      union {
+        ?instance sh:path ?path .
+      }
+    }" }
+
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() 
+    %- call renderers.render_fetch_results(content, error) 
+        %- if not content.dropna(how="all").empty 
+            \paragraph*{IRI} \texttt{\footnotesize \VAR{instance_uri|escape_latex} }
+
+            \VAR{ renderers.render_description_item_plain_literal (content, "deprecated", "Deprecated on") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "altLabel", "Alternative label") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "created", "Created on") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "modified", "Modified on") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "notation", "Notation") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "identifier", "Identifier") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "order", "Order") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "class", "Class") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "path", "Path") }
+        %- endif
+    %- endcall 
+%- endmacro
+
+%- macro _build_instance_editorial_part(instance_uri, parameters)
+ \BLOCK{ set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX sh: <http://www.w3.org/ns/shacl#>
+    PREFIX dct: <http://purl.org/dc/terms/>
+    PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+
+    select ?definition ?scopeNote ?example ?changeNote ?historyNote ?editorialNote ?note ?member ?broaderConcept ?shName ?shDescription
+    FROM <~graph>
+    {
+      values ?instance {<"~instance_uri~">}
+      {
+        ?instance skos:definition ?definition .
+      }
+      union {
+        ?instance skos:scopeNote ?scopeNote
+      }
+      union {
+        ?instance skos:example ?example
+      }
+      union {
+        ?instance skos:changeNote ?changeNote
+      }
+      union {
+        ?instance skos:historyNote ?historyNote
+      }
+      union {
+        ?instance skos:editorialNote ?editorialNote
+      }
+      union {
+        ?instance skos:note ?note
+      }
+      union {
+        ?instance skos:member ?member .
+      }
+      union {
+        ?broaderConcept skos:broader ?instance .
+      }
+      union {
+        ?instance sh:name ?shName .
+      }
+      union {
+        ?instance sh:description ?shDescription .
+      }
+    }"}
+
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() 
+    %- call renderers.render_fetch_results(content, error) 
+        %- if not content.dropna(how="all").empty 
+            \VAR{ renderers.render_description_item_plain_literal (content, "definition", "Definition") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "scopeNote", "Scope note") }
+            \VAR{ renderers.render_description_item_listing (content, "example", "Example") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "changeNote", "Change note") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "historyNote", "History note") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "editorialNote", "Editorial note") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "note", "Note") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "shName", "Name") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "shDescription", "Description") }
+        %- endif 
+    %- endcall 
+%- endmacro
+
+%- macro _build_instance_structural_relations_part(instance_uri, parameters)
+ \BLOCK{ set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX sh: <http://www.w3.org/ns/shacl#>
+    PREFIX dct: <http://purl.org/dc/terms/>
+    PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+
+    select ?definition ?scopeNote ?example ?changeNote ?historyNote ?editorialNote ?note ?member ?broaderConcept ?shName ?shDescription
+    FROM <~graph>
+    {
+      values ?instance {<"~instance_uri~">}
+      {
+        ?instance skos:definition ?definition .
+      }
+      union {
+        ?instance skos:scopeNote ?scopeNote
+      }
+      union {
+        ?instance skos:example ?example
+      }
+      union {
+        ?instance skos:changeNote ?changeNote
+      }
+      union {
+        ?instance skos:historyNote ?historyNote
+      }
+      union {
+        ?instance skos:editorialNote ?editorialNote
+      }
+      union {
+        ?instance skos:note ?note
+      }
+      union {
+        ?instance skos:member ?member .
+      }
+      union {
+        ?broaderConcept skos:broader ?instance .
+      }
+      union {
+        ?instance sh:name ?shName .
+      }
+      union {
+        ?instance sh:description ?shDescription .
+      }
+    }"}
+
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular()
+    %- call renderers.render_fetch_results(content, error)
+        %- if not content.dropna(how="all").empty
+            \VAR{ renderers.render_description_item_local_iri (content, "member", "Members", None) }
+            \VAR{ renderers.render_description_item_local_iri (content, "broaderConcept", "Broader concepts", None) }
+        %- endif
+    %- endcall
+%- endmacro
+
+%- macro _build_instance_header_part(instance_uri, parameters, level, is_concept=false)
+ \BLOCK{ set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX sh: <http://www.w3.org/ns/shacl#>
+    PREFIX dct: <http://purl.org/dc/terms/>
+    PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+
+    select ?label
+    FROM <~graph>
+    {
+      values ?instance {<"~instance_uri~">}
+      {
+        ?instance skos:prefLabel ?label .
+      }
+    }"}
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular()
+    %- call renderers.render_fetch_results(content, error)
+        %- set values = content["label"].dropna()
+        %- if not values.empty
+            %- set super_script_symbol = "Cn" if is_concept else "Cl"
+            %- set superscript_text=" \\textsuperscript{\\normalsize "+super_script_symbol+" }"
+            %- set text = values[0]
+            %- if level == 1
+                \part{\VAR{ text|replace("\n"," // ")} }
+                \label{sec:\VAR{instance_uri}}
+            %- elif level == 2
+                \chapter{ \VAR{ text |replace("\n"," // ")} \VAR{ superscript_text } }
+                \label{sec:\VAR{instance_uri}}
+            %- elif level == 3
+                \section{ \VAR{ text |replace("\n"," // ")} \VAR{ superscript_text } }
+                \label{sec:\VAR{instance_uri}}
+            %- elif level == 4
+                \subsection{ \VAR{ text |replace("\n"," // ")} \VAR{ superscript_text } }
+                \label{sec:\VAR{instance_uri}}
+            %- elif level == 5
+                \subsubsection{ \VAR{ text |replace("\n"," // ")} \VAR{ superscript_text } }
+                \label{sec:\VAR{instance_uri}}
+            %- else
+                \section{Headding level out of boundaries: use a number 1 -- 5}
+            %- endif
+        %- endif
+    %- endcall
+%- endmacro
+
+%- macro build_top_collections(query_substitution_parameters, level)
+    %- call(top_collection) selectors.select_top_collections(query_substitution_parameters=query_substitution_parameters)
+        \VAR{ build_instance_view(instance_uri=top_collection, query_substitution_parameters=query_substitution_parameters, level=level, is_concept=false) }
+        \VAR{ build_instance_concepts(top_collection, query_substitution_parameters, level=level+1) }
+        \VAR{ build_instance_collections_recursively(top_collection, query_substitution_parameters, level=level+1) }
+    %- endcall
+%- endmacro
+
+%- macro build_instance_collections_recursively(parent_collection_uri, query_substitution_parameters, level)
+    %- call(member_collection) selectors.select_member_collections(parent_collection_uri, query_substitution_parameters)
+        \VAR{ build_instance_view(instance_uri=member_collection, query_substitution_parameters=query_substitution_parameters, level=level, is_concept=false) }
+        \VAR{ build_instance_concepts(member_collection, query_substitution_parameters, level=level+1) }
+        \VAR{ build_instance_collections_recursively(member_collection, query_substitution_parameters, level=level+1) }
+    %- endcall
+%- endmacro
+
+%- macro build_instance_concepts(parent_collection_uri, query_substitution_parameters, level)
+    %- call(member_collection) selectors.select_member_concepts(parent_collection_uri, query_substitution_parameters)
+        \VAR{ build_instance_view(instance_uri=member_collection, query_substitution_parameters=query_substitution_parameters, level=level, is_concept=true) }
+    %- endcall
+%- endmacro
