@@ -143,3 +143,6 @@ junit_report.xml
 
 # Misc
 .~lock*.*
+
+# Fuseki
+fuseki-lam-volume/

@@ -64,10 +64,7 @@ def generate_lam_report(location: str, extension: str) -> FileInfo:
     additional_config = {
         "conf": {
             "default_endpoint": config.LAM_FUSEKI_REPORT_URL
-        },
-        # correct value will be used when pdf implementation is ready
-        "template_flavour_syntax": 'html',
-        # "template_flavour_syntax": extension,
+        }
     }
 
     report_builder = ReportBuilder(target_path=get_report_location(extension),
