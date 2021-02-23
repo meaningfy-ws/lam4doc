@@ -18,8 +18,8 @@ from flask import render_template, send_from_directory, flash
 from lam4doc.config import config
 from lam4doc.entrypoints.ui import app
 from lam4doc.entrypoints.ui.api_wrapper import get_lam_report as api_get_lam_report, get_indexes as api_get_indexes, \
-    get_lam_files as api_get_lam_files
-from lam4doc.entrypoints.ui.forms import ReportTypeForm
+    get_lam_files as api_get_lam_files, upload_rdf as api_upload_rdf
+from lam4doc.entrypoints.ui.forms import ReportTypeForm, UploadRDFFilesForm
 
 logger = logging.getLogger(config.LAM_LOGGER)
 
@@ -100,3 +100,31 @@ def download_lam_files():
 
     logger.debug('redirect to index view')
     return render_template('index.html')
+
+
+@app.route('/upload-rdf', methods=['GET', 'POST'])
+def upload_rdf():
+    logger.debug('request upload RDFs view')
+
+    form = UploadRDFFilesForm()
+
+    if form.validate_on_submit():
+        response, status = api_upload_rdf(
+            dataset_name=form.dataset_name.data,
+            lam_properties_document=form.lam_properties_document.data,
+            lam_classes_document=form.lam_classes_document.data,
+            celex_classes_document=form.celex_classes_document.data
+        )
+
+        if status != 200:
+            exception_text = get_error_message_from_response(response)
+            logger.exception(exception_text)
+            flash(exception_text, 'error')
+        else:
+            logger.debug('upload successful')
+            flash('File upload successful', 'success')
+            form = UploadRDFFilesForm()
+            return render_template('upload_rdf.html', form=form, title='Upload RDF Files')
+
+    logger.debug('upload RDFs clean view')
+    return render_template('upload_rdf.html', form=form, title='Upload RDF Files')
