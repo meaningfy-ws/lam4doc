@@ -1,5 +1,5 @@
 {
-  "template": "main.tex",
+  "template": "main-celex-classes.tex",
   "template_flavour_syntax": "latex",
   "conf": {
     "default_endpoint": "http://srv.meaningfy.ws:3030/lam/query",
