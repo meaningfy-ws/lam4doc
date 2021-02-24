@@ -15,7 +15,7 @@ from pathlib import Path
 
 from flask import render_template, send_from_directory, flash
 
-from lam4doc.config import config
+from lam4doc.config import config, HTML_REPORT_TYPE, ZIP_REPORT_TYPE
 from lam4doc.entrypoints.ui import app
 from lam4doc.entrypoints.ui.api_wrapper import get_lam_report as api_get_lam_report, get_indexes as api_get_indexes, \
     get_lam_files as api_get_lam_files, upload_rdf as api_upload_rdf
@@ -51,7 +51,9 @@ def download_lam_report():
         else:
             try:
                 with tempfile.TemporaryDirectory() as temp_folder:
-                    file_name = f'LAM-report.{form.report_extension.data}'
+                    report_extension = form.report_extension.data if form.report_extension.data == HTML_REPORT_TYPE \
+                        else ZIP_REPORT_TYPE
+                    file_name = f'LAM-report.{report_extension}'
                     report = Path(temp_folder) / file_name
                     report.write_bytes(response)
                     logger.debug('render LAM report view')
