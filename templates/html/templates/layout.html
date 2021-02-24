@@ -74,6 +74,10 @@
             overflow-wrap: break-word;
         }
 
+        dd a {
+            overflow-wrap: anywhere;
+        }
+
         .loading {
             position: fixed;
             top: 0;
@@ -114,10 +118,12 @@
         #tocButton {
             display: none;
         }
+
         .iri_monospace {
             color: #bd2130;
             font-family: monospace !important;
         }
+
         .card-header {
             padding: 0.5rem;
         }
@@ -126,8 +132,9 @@
             text-decoration: none !important;
             cursor: pointer;
         }
+
         .card-header a {
-            width: 100%;
+            width: 90%;
             position: absolute;
             margin-left: 0.3rem;
         }
@@ -140,7 +147,7 @@
             white-space: pre-line;
         }
 
-        h1,h2,h3,h4,h5,h6{
+        h1, h2, h3, h4, h5, h6 {
             margin-top: 0.5rem;
         }
 
@@ -223,6 +230,23 @@
             }
         }
 
+        @media only screen and (min-width: 1024px) {
+            .sectionLeftColumn {
+                display: table-cell;
+                width: 70%;
+                padding-right: 0.5em;
+            }
+
+            .sectionRightColumn {
+                display: table-cell;
+                width: 30%;
+            }
+
+            section {
+                display: table;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -247,6 +271,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </main>
@@ -285,16 +310,16 @@
             $(".loader").remove();
             $('.loading').remove();
             $('main').css("display", "block");
-            window.scrollTo(2,0);
+            window.scrollTo(2, 0);
         }, 100);
     });
 
-    function showHideToc () {
-        $("#toc").slideToggle("2000","swing");
+    function showHideToc() {
+        $("#toc").slideToggle("2000", "swing");
     }
 
-    function showContent () {
-        $(event.target).parent().siblings('div:first').slideToggle("800","swing");
+    function showContent() {
+        $(event.target).parent().siblings('div:first').slideToggle("800", "swing");
         $(event.target).siblings('i').toggleClass("fa-caret-down fa-caret-up")
     }
 </script>
