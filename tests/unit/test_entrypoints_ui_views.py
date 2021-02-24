@@ -26,7 +26,7 @@ def test_index(ui_client):
 
 
 def test_upload_rdf(ui_client):
-    ui_url = '/upload_rdf'
+    ui_url = '/upload-rdf'
     soup = _helper_get_request_and_parse(ui_client, ui_url)
 
     title = soup.find(id='title')
