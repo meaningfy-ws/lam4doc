@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block app_content %}
+    <h1 id="title">{{ title }}</h1>
+    <form id="upload-rdf-form" class="col s12 z-depth-3 form" method="POST" enctype="multipart/form-data" role="form" action="">
+
+        {{ form.csrf_token }}
+        {{ macros.render_text_input_field(form.dataset_name) }}
+        {{ macros.render_upload_input_field(form.lam_properties_document) }}
+        {{ macros.render_upload_input_field(form.lam_classes_document) }}
+        {{ macros.render_upload_input_field(form.celex_classes_document) }}
+
+        <div class="row" style="margin-top: 4em;">
+            <div class="col s12 right-align">
+                <a href="{{ url_for('upload_rdf') }}" id="reload" class="btn btn-file red darken-2">Reset form<i
+                        class="material-icons right">clear</i></a>
+                <button type="submit" id="submit" class="btn blue darken-2">{{ title }} <i class="material-icons right">check</i>
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

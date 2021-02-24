@@ -124,7 +124,7 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
             if lam_classes_document:
                 local_lam_classes_file = Path(temp_folder) / lam_classes_document.filename
                 lam_classes_document.save(local_lam_classes_file)
-                logger.info("lam_classes_document - saved to " + local_lam_classes_file)
+                logger.info("lam_classes_document - saved to " + str(local_lam_classes_file))
                 sparql_adapter.delete_graph(dataset_name, config.LAM_CLASSES_GRAPH)
                 sparql_adapter.upload_file_to_graph(dataset_name,
                                                     config.LAM_CLASSES_GRAPH,
@@ -133,7 +133,7 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
             if celex_classes_document:
                 local_celex_classes_file = Path(temp_folder) / celex_classes_document.filename
                 celex_classes_document.save(local_celex_classes_file)
-                logger.info("lam_properties_document - saved to " + local_celex_classes_file)
+                logger.info("lam_properties_document - saved to " + str(local_celex_classes_file))
                 sparql_adapter.delete_graph(dataset_name, config.LAM_CELEX_CLASSES_GRAPH)
                 sparql_adapter.upload_file_to_graph(dataset_name,
                                                     config.LAM_CELEX_CLASSES_GRAPH,
