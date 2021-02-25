@@ -12,6 +12,7 @@ from typing import List
 from zipfile import ZipFile
 
 from eds4jinja2.builders.report_builder import ReportBuilder
+from eds4jinja2.builders.report_builder_actions import make_pdf_from_latex, copy_static_content
 
 from lam4doc.config import config, HTML_REPORT_TYPE, PDF_REPORT_TYPE
 
@@ -35,21 +36,46 @@ def get_report_location(extension: str) -> str:
     raise ReportTypeError('No acceptable report template location found')
 
 
-def generate_report(location: str, report_builder: ReportBuilder) -> Path:
+def generate_report(location: str, report_builder: ReportBuilder, report_name: str = None) -> Path:
     """
     Handler for generating the lam report.
     :param location: path to the report templates
     :param report_builder: a report builder type service (eds4jinja2.builders.report_builder.ReportBuilder)
+    :param report_name: optional name for the report
     :return: location of the report document
     """
     logger.debug(f'start service for generating report with location: {location}')
 
     report_builder.make_document()
 
-    report_path = Path(str(location)) / report_builder.template
+    report_path = Path(str(location)) / (report_name if report_name else report_builder.template)
 
     logger.debug(f'finish service for generating report with location: {location}')
     return report_path
+
+
+def build_report_for_html(additional_config: dict, location: str, extension: str) -> FileInfo:
+    report_builder = ReportBuilder(target_path=get_report_location(extension),
+                                   output_path=location,
+                                   additional_config=additional_config)
+    return FileInfo(generate_report(location, report_builder), 'report.html')
+
+
+def build_report_for_pdf(additional_config: dict, location: str, extension: str) -> FileInfo:
+    report_locations = list()
+    for filename in config.LAM_PDF_REPORT_TEMPLATE_LATEX_FILES:
+        additional_config['template'] = filename
+        additional_config["latex_engine"] = "xelatex"
+        report_builder = ReportBuilder(target_path=get_report_location(extension),
+                                       output_path=location,
+                                       additional_config=additional_config)
+        report_builder.add_before_rendering_listener(copy_static_content)
+        report_builder.add_after_rendering_listener(make_pdf_from_latex)
+
+        report_locations.append(FileInfo(generate_report(location, report_builder, filename.replace('tex', 'pdf')),
+                                         filename.replace('tex', 'pdf')))
+
+    return FileInfo(zip_files(location, report_locations, 'report.zip'), 'report.zip')
 
 
 def generate_lam_report(location: str, extension: str) -> FileInfo:
@@ -59,7 +85,7 @@ def generate_lam_report(location: str, extension: str) -> FileInfo:
     :param location: path to the report templates
     :return: path to report
     """
-    logger.debug('start service for generating lam report')
+    logger.debug(f'start service for generating lam report with {extension} extension')
 
     additional_config = {
         "conf": {
@@ -67,13 +93,14 @@ def generate_lam_report(location: str, extension: str) -> FileInfo:
         }
     }
 
-    report_builder = ReportBuilder(target_path=get_report_location(extension),
-                                   output_path=location,
-                                   additional_config=additional_config)
-    report_location = generate_report(location, report_builder)
+    report = None
+    if extension == HTML_REPORT_TYPE:
+        report = build_report_for_html(additional_config, location, extension)
+    elif extension == PDF_REPORT_TYPE:
+        report = build_report_for_pdf(additional_config, location, extension)
 
     logger.debug('finish service for generating lam report')
-    return FileInfo(report_location, f'report.{extension}')
+    return report
 
 
 def generate_indexes(location: str) -> List[FileInfo]:

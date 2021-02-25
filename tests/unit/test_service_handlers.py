@@ -17,7 +17,7 @@ def test_generate_report(tmpdir):
     temp_folder = tmpdir.mkdir('report')
     report_builder = FakeReportBuilder(temp_folder, 'main.html')
 
-    report_path = generate_report(temp_folder, report_builder)
+    report_path = generate_report(temp_folder, report_builder, 'main.html')
 
     assert Path(temp_folder) / 'main.html' == report_path
     assert report_builder.actions[0] == ('MAKE DOCUMENT', str(temp_folder))
@@ -31,7 +31,7 @@ def test_get_report_location_html():
 
 def test_get_report_location_pdf():
     report_location = get_report_location(PDF_REPORT_TYPE)
-    expected_location = 'templates/html'
+    expected_location = 'templates/pdf'
     assert report_location[-len(expected_location):] == expected_location
 
 
