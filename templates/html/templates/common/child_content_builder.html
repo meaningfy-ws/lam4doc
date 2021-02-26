@@ -1,5 +1,5 @@
-{% import "common/macros.html" as macros %}
-{% import "common/instance_view_builder.html" as view_builder %}
+{% import "common/macros.html" as macros with context %}
+{% import "common/instance_view_builder.html" as view_builder with context %}
 
 {% macro build_child_collections(parameters, collection_uri, level) %}
     {% if conf.debug %}

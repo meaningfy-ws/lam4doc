@@ -129,7 +129,7 @@
                         <div class="card-body">
                             {% for idx, item in values.iteritems() %}
                                 {% if link_label_property_id is none %}
-                                    <a href={{'"' + item +'"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ item|e|replace("\n","<br/>") }}</a><br>
+                                    <a href={{'"' + item +'"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ namespaces.uri_to_qname(item) |e|replace("\n","<br/>") }}</a><br>
                                 {% else %}
                                     <a href={{'"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a>
                                 {% endif %}
@@ -143,7 +143,7 @@
                     <dt>{{ property_label }}</dt>
                     {% for idx, item in values.iteritems() %}
                         {% if link_label_property_id is none %}
-                            <dd><a href={{'"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ item|e|replace("\n","<br/>") }}</a></dd>
+                            <dd><a href={{'"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ namespaces.uri_to_qname(item)|e|replace("\n","<br/>") }}</a></dd>
                         {% else %}
                             <dd><a href={{'"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a></dd>
                         {% endif %}
@@ -180,7 +180,7 @@
                 {% if external %}
                     <a href="{{ item }}" target="_blank">{{ item|e|replace("\n","<br/>") }}</a>
                 {% else %}
-                    <a href="#{{ item }}">{{ item|e|replace("\n","<br/>") }}</a>
+                    <a href="#{{ item }}">{{ namespaces.uri_to_qname(item)|e|replace("\n","<br/>") }}</a>
                 {% endif %}
             {% endfor %}
         {% endif %}

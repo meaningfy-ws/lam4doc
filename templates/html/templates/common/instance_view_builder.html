@@ -1,4 +1,4 @@
-{% import "common/macros.html" as macros %}
+{% import "common/macros.html" as macros with context %}
 
 {% macro build_instance_view (parameters, instance_uri, instance_label, level, is_concept=false) %}
     {% if conf.debug %}
