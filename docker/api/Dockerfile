@@ -1,5 +1,9 @@
 FROM python:3.8.5-buster
 
+RUN apt-get update \
+    && apt-get install -y texlive texlive-bibtex-extra texlive-latex-extra texlive-xetex texlive-lang-european lmodern --no-install-recommends \
+    && apt --purge remove tex.\*-doc$
+
 WORKDIR /usr/src/app
 
 ENV PYTHONDONTWRITEBYTECODE 1
