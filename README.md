@@ -46,10 +46,10 @@ A CELEX index record contains the following fields:
 - **broaderLabels**: The labels of the associated broader concepts (for example "Treaties")
 - **collectionURIS**: The URIs of the collection(s) that the current result belongs to (for example http://publications.europa.eu/resources/authority/celex/class_1 )
 - **collectionLabels**: The label(s) of the aforementioned collection(s) (for example "Celex sector 1") 
-- **dttValues**: 
-- **dtsValues**:
-- **dtaValues**:
-- **dtnValues**:
+- **dttValues**: This one or two letters code refers to a specific type of document as indicated in the CELEX number. 
+- **dtsValues**: This refers to a specific sector (collection) of documents as indicated in the CELEX number (it is the first number in the celex number).
+- **dtaValues**: The year attributed to the document (internal number or ppf number).
+- **dtnValues**: A sequential number representing the original reference number of the act. In some instances composed or non-standardised numbers are attributed (e.g. treaties).
 - **labels**: The label of the current record, if any.
 - **examples**: The example of the current record, if any.
 - **editorialNotes**: The editorial note of the current record, if any.
@@ -61,15 +61,17 @@ A class index record contains the following fields:
 - **classURI**: The URI of the class (for example http://publications.europa.eu/resources/authority/lam/c_108)
 - **types**: The RDF type(s) ( for example http://www.w3.org/2004/02/skos/core#Concept )
 - **authors**: The author(s) of the current class (for example http://publications.europa.eu/resource/authority/corporate-body/CONSIL)
-- **resourceTypes**: The resource type (for example http://publications.europa.eu/resource/authority/resource-type/STRATEGY_COMMON)
+- **resourceTypes**: The resource type (for example http://publications.europa.eu/resource/authority/resource-type/STRATEGY_COMMON). This is also known as the type of act (lamd:md_fm).
 - **collections**: The collection that the current class is part of (for example http://publications.europa.eu/resources/authority/lam/class_3OTHER)
 - **dnClassValues**:
-- **dc**:
-- **ct**:
-- **cc**:
+- **dc**: The Eurovoc concept for this specific class.
+- **ct**: The subject matter concept for this specific class.
+- **cc**: The directory code for this specific class.
 - **labels**: The label(s) of the current class (for example "Common strategy , Common strategy , Common strategy , Common strategy (CFSP number), Common strategy (CFSP number), Common strategy (CFSP number)")
 - **notes**: The notes of the current class (for example "Proposal**: strategy_council.")
 - **examples**: The examples for the current class (for example "32003E0897, Common Strategy 2003/897/CFSP of the European Council of 12 December 2003 amending Common Strategy 1999/877/CFSP on Ukraine in order to extend the period of its application , Stratégie commune 2003/897/PESC du Conseil européen du 12 décembre 2003 modifiant la stratégie commune 1999/877/PESC à l'égard de l'Ukraine afin de proroger sa période d'application, 32003E0897, Common Strategy 2003/897/CFSP of the European Council of 12 December 2003 amending Common Strategy 1999/877/CFSP on Ukraine in order to extend the period of its application , Stratégie commune 2003/897/PESC du Conseil européen du 12 décembre 2003 modifiant la stratégie commune 1999/877/PESC à l'égard de l'Ukraine afin de proroger sa période d'application")
+
+For additional information, please consult [this file](./templates/indexes/queries/classes.rq)
 
 ## Properties index
 
