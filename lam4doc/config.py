@@ -14,6 +14,7 @@ from pathlib import Path
 
 HTML_REPORT_TYPE = 'html'
 PDF_REPORT_TYPE = 'pdf'
+ZIP_REPORT_TYPE = 'zip'
 DEFAULT_REPORT_TYPE = HTML_REPORT_TYPE
 REPORT_EXTENSIONS = [HTML_REPORT_TYPE, PDF_REPORT_TYPE]
 
@@ -85,10 +86,15 @@ class LAMConfig:
 
     @property
     def LAM_PDF_REPORT_TEMPLATE_LOCATION(self) -> str:
-        # correct value will be used when pdf implementation is ready
-        value = str(Path(__file__).parents[1] / 'templates/html')
+        value = str(Path(__file__).parents[1] / 'templates/pdf')
         self.logger.debug(value)
         return value
+
+    @property
+    def LAM_PDF_REPORT_TEMPLATE_LATEX_FILES(self) -> list:
+        filenames = ['main-all.tex', 'main-celex-classes.tex', 'main-lam-classes.tex', 'main-lam-properties.tex']
+        self.logger.debug(filenames)
+        return filenames
 
     @property
     def LAM_INDEXES_TEMPLATE_LOCATION(self) -> str:
@@ -146,7 +152,6 @@ class LAMConfig:
         value = 'indexes.zip'
         self.logger.debug(value)
         return value
-
 
     @property
     def LAM_ALL_ZIP_NAME(self) -> str:

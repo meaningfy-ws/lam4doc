@@ -18,15 +18,15 @@ test:
 
 build-services:
 	@ echo -e '$(BUILD_PRINT)Building the containers'
-	@ docker-compose --file docker/docker-compose.yml --env-file docker/.env build
+	@ docker-compose --file docker/docker-compose.yml --env-file .env build
 
 start-services:
 	@ echo -e '$(BUILD_PRINT)(dev) Starting the containers'
-	@ docker-compose --file docker/docker-compose.yml --env-file docker/.env up -d
+	@ docker-compose --file docker/docker-compose.yml --env-file .env up -d
 
 stop-services:
 	@ echo -e '$(BUILD_PRINT)(dev) Stopping the containers'
-	@ docker-compose --file docker/docker-compose.yml --env-file docker/.env stop
+	@ docker-compose --file docker/docker-compose.yml --env-file .env stop
 
 generate-indexes:
 	@ echo -e '$(BUILD_PRINT)(dev) Generating indices for CELEX...'
