@@ -194,3 +194,15 @@
         {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
     {% endif %}
 {% endmacro %}
+
+
+{% macro render_namespaces(namesapces_dist) %}
+    <dl>
+        {% for prefix, ns in namesapces_dist|dictsort %}
+            <dt>{{ prefix }}</dt>
+            <dd><p class="iri_monospace">{{ ns }}</p></dd>
+        {% endfor %}
+    </dl>
+{% endmacro %}
+
+

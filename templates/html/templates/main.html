@@ -1,14 +1,17 @@
 {% extends "layout.html" %}
+{% import "common/macros.html" as macros with context %}
 
 {% block content %}
     {# Read the and invert the namespace/prefix definitions for substitution #}
     {% set prefixes, error = from_file(conf.template_path+'/prefixes.json').fetch_tree() %}
-    {% set inverted_prefixes = invert_dict(prefixes) %}
-
-    {% set namespaces = namespace_inventory(inverted_prefixes) %}
+    {% set namespaces = namespace_inventory(prefixes) %}
 
     {% include "document_properties/main.html" with context %}
     {% include "lam_classes/main.html" with context %}
     {% include "celex_classes/main.html" with context %}
 
+    <h1>Namespace Declarations</h1>
+    <section>
+        {{ macros.render_namespaces(namespaces.namespaces_as_dict()) }}
+    </section>
 {% endblock %}
