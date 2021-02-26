@@ -8,6 +8,8 @@ Initiative for Modeling the Legal Analysis Methodology (LAM): Document generatio
 The development version of the LAM HTML content is available [here](http://dev.meaningfy.ws:9090).
 # User interface
 
+The user interface is simple and intuitive. Choose what you need to generate and press the corresponding button.
+
 ![User interface](docs/images/user_interface.png)
 
 ### Makefile targets
