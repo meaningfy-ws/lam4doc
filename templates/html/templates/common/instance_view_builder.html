@@ -338,8 +338,6 @@
         <p class="debug-render">render_lam_classification_hint</p>
     {% endif %}
     {% if not content.empty %}
-        {% set _ = replace_strings_in_tabular(content, target_columns=['path'], value_mapping_dict=inverted_prefixes) %}
-
         {{ macros.render_inline_link(content, 'path', 'property') }}
         {{ macros.render_inline_values(content, 'minCount', 'min', '0') }}
         {{ macros.render_inline_values(content, 'maxCount', 'max', '*') }}

@@ -8,7 +8,7 @@
     {% set namespaces = namespace_inventory(inverted_prefixes) %}
 
     {% include "document_properties/main.html" with context %}
-{#    {% include "lam_classes/main.html" with context %}#}
-{#    {% include "celex_classes/main.html" with context %}#}
+    {% include "lam_classes/main.html" with context %}
+    {% include "celex_classes/main.html" with context %}
 
 {% endblock %}
