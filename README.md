@@ -54,6 +54,8 @@ A CELEX index record contains the following fields:
 - **examples**: The example of the current record, if any.
 - **editorialNotes**: The editorial note of the current record, if any.
 
+For additional information, please consult [this file](templates/indexes/queries/celex.rq)
+
 ## Classes index
 
 A class index record contains the following fields:
@@ -89,6 +91,8 @@ A property index record contains the following fields:
 - **scopeNotes**: The scope notes for the property (for example "32013R0298 → 32004R0314")
 - **notations**: The notations for the property (for example "SUSPEND_PAR") 
 - **labels**: The labels for the property (for example "Link: Partially suspends document")
+
+For additional information, please consult [this file](./templates/indexes/queries/properties.rq)
 
 # Contributing
 You are more than welcome to help expand and mature this project. We adhere to [Apache code of conduct](https://www.apache.org/foundation/policies/conduct), please follow it in all your interactions on the project.   
