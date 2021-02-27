@@ -1,4 +1,4 @@
-{% import "common/macros.html" as macros %}
+{% import "common/macros.html" as macros with context %}
 
 {% macro build_instance_view (parameters, instance_uri, instance_label, level, is_concept=false) %}
     {% if conf.debug %}
@@ -338,8 +338,6 @@
         <p class="debug-render">render_lam_classification_hint</p>
     {% endif %}
     {% if not content.empty %}
-        {% set _ = replace_strings_in_tabular(content, target_columns=['path'], value_mapping_dict=inverted_prefixes) %}
-
         {{ macros.render_inline_link(content, 'path', 'property') }}
         {{ macros.render_inline_values(content, 'minCount', 'min', '0') }}
         {{ macros.render_inline_values(content, 'maxCount', 'max', '*') }}
@@ -394,7 +392,7 @@
                         Useful links
                     </a>
                 </div>
-                <div class="collapse show">
+                <div class="collapse hide">
                     <div class="card-body">
                         {% for row in content.itertuples() %}
                             <a href="#{{ row.link }}">{{ row.linkLabel }}</a><br>

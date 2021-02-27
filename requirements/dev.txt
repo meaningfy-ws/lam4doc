@@ -1,10 +1,10 @@
 -r common.txt
 
 # Testing Dependencies
-pytest
+pytest==6.2.2
 pytest-bdd
-coverage==5.3  # https://coverage.readthedocs.io/en/coverage-5.3/
-pytest-cov==2.10.1  # https://github.com/pytest-dev/pytest-cov
+coverage==5.4  # https://coverage.readthedocs.io/en/coverage-5.3/
+pytest-cov==2.11.1  # https://github.com/pytest-dev/pytest-cov
 selenium==3.141.0  # https://selenium-python.readthedocs.io/
 beautifulsoup4==4.9.3  # https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 pytest-html

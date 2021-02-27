@@ -70,7 +70,7 @@
             {% if accordion_style %}
                 <div class="card">
                     <div class="card-header">
-                         <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        <i class="fa fa-caret-down" aria-hidden="true"></i>
                         <a class="text-dark font-weight-bold" onclick="showContent()">
                             {{ property_label }}
                         </a>
@@ -78,30 +78,30 @@
 
                     <div class="collapse {{ accordion_content_state }}">
                         <div class="card-body">
-                        {% if code_mode %}
-                            <pre>
+                            {% if code_mode %}
+                                <pre>
                             {% for idx, item in values.iteritems() %}
                                 <code property="{{ rdfa_property }}">{{ item|e|replace("\n","<br/>") }}</code>
                                 {{ "<hr> " if not loop.last }}
                             {% endfor %}
                             </pre>
-                        {% else %}
-                            {% for idx, item in values.iteritems() %}
-                                <p property="{{ rdfa_property }}">{{ item|e|replace("\n","<br/>") }}</p>
-                                {{ "<hr> " if not loop.last }}
-                            {% endfor %}
-                        {% endif %}
+                            {% else %}
+                                {% for idx, item in values.iteritems() %}
+                                    <p property="{{ rdfa_property }}">{{ item|e|replace("\n","<br/>") }}</p>
+                                    {{ "<hr> " if not loop.last }}
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-                {% else %}
+            {% else %}
                 <dl>
                     <dt title="{{ property_id }}">{{ property_label }}</dt>
                     {% for idx, item in values.iteritems() %}
                         <dd title="{{ property_id }}" property="{{ rdfa_property }}">{{ item|e }}</dd>
                     {% endfor %}
                 </dl>
-                {% endif %}
+            {% endif %}
         {% endif %}
     {% else %}
         {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
@@ -129,9 +129,10 @@
                         <div class="card-body">
                             {% for idx, item in values.iteritems() %}
                                 {% if link_label_property_id is none %}
-                                    <a href={{'"' + item +'"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ item|e|replace("\n","<br/>") }}</a><br>
+                                    <a href={{ '"' + item +'"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ namespaces.uri_to_qname(item, error_fail=False) |e|replace("\n","<br/>") }}</a>
+                                    <br>
                                 {% else %}
-                                    <a href={{'"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a>
+                                    <a href={{ '"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a>
                                 {% endif %}
                                 {{ "<hr> " if not loop.last }}
                             {% endfor %}
@@ -143,9 +144,13 @@
                     <dt>{{ property_label }}</dt>
                     {% for idx, item in values.iteritems() %}
                         {% if link_label_property_id is none %}
-                            <dd><a href={{'"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ item|e|replace("\n","<br/>") }}</a></dd>
+                            <dd>
+                                <a href={{ '"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ namespaces.uri_to_qname(item, error_fail=False)|e|replace("\n","<br/>") }}</a>
+                            </dd>
                         {% else %}
-                            <dd><a href={{'"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a></dd>
+                            <dd>
+                                <a href={{ '"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a>
+                            </dd>
                         {% endif %}
                     {% endfor %}
                 </dl>
@@ -178,9 +183,10 @@
             {{ label + " " }}
             {% for idx, item in values.iteritems() %}
                 {% if external %}
-                    <a href="{{ item }}" target="_blank">{{ item|e|replace("\n","<br/>") }}</a>
+                    <a href="{{ item }}"
+                       target="_blank">{{ namespaces.uri_to_qname(item, error_fail=False)|e|replace("\n","<br/>") }}</a>
                 {% else %}
-                    <a href="#{{ item }}">{{ item|e|replace("\n","<br/>") }}</a>
+                    <a href="#{{ item }}">{{ namespaces.uri_to_qname(item, error_fail=False)|e|replace("\n","<br/>") }}</a>
                 {% endif %}
             {% endfor %}
         {% endif %}
@@ -188,3 +194,15 @@
         {{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }}
     {% endif %}
 {% endmacro %}
+
+
+{% macro render_namespaces(namesapces_dist) %}
+    <dl>
+        {% for prefix, ns in namesapces_dist|dictsort %}
+            <dt>{{ prefix }}</dt>
+            <dd><p class="iri_monospace">{{ ns }}</p></dd>
+        {% endfor %}
+    </dl>
+{% endmacro %}
+
+
