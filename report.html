@@ -429,24 +429,24 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
 }
 </script>
     <h1>report.html</h1>
-    <p>Report generated on 17-Jan-2021 at 13:59:19 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
+    <p>Report generated on 27-Feb-2021 at 10:37:12 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
     <h2>Environment</h2>
     <table id="environment">
       <tr>
         <td>Packages</td>
-        <td>{"pluggy": "0.13.1", "py": "1.9.0", "pytest": "6.1.2"}</td></tr>
+        <td>{"pluggy": "0.13.1", "py": "1.9.0", "pytest": "6.2.2"}</td></tr>
       <tr>
         <td>Platform</td>
-        <td>Linux-5.4.0-62-generic-x86_64-with-glibc2.29</td></tr>
+        <td>Linux-5.4.0-66-generic-x86_64-with-glibc2.29</td></tr>
       <tr>
         <td>Plugins</td>
-        <td>{"bdd": "4.0.2", "cov": "2.10.1", "html": "3.1.1", "metadata": "1.11.0"}</td></tr>
+        <td>{"bdd": "4.0.2", "cov": "2.11.1", "html": "3.1.1", "metadata": "1.11.0"}</td></tr>
       <tr>
         <td>Python</td>
         <td>3.8.5</td></tr></table>
     <h2>Summary</h2>
-    <p>9 tests ran in 104.35 seconds. </p>
-    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">9 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <p>17 tests ran in 103.54 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">17 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
     <h2>Results</h2>
     <table id="results-table">
       <thead id="results-table-head">
@@ -460,8 +460,92 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_handlers.py::test_upload_rdfs_at_least_one_file_mandatory</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2021-02-27 10:35:29,186 DEBUG upload_rdfs: Entering upload_rdfs
+2021-02-27 10:35:29,186 ERROR upload_rdfs: No file was specified. Returning 400.
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_handlers.py::test_generate_lam_report_exception_not_supported</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2021-02-27 10:35:29,223 DEBUG generate_lam_report: start generate lam report endpoint
+2021-02-27 10:35:29,223 ERROR generate_lam_report: Wrong report_extension format. Accepted formats: html, pdf
+NoneType: None
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_entrypoints_ui_views.py::test_index</td>
+          <td class="col-duration">0.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2021-02-27 10:35:29,229 DEBUG index: request index view
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_entrypoints_ui_views.py::test_upload_rdf</td>
+          <td class="col-duration">0.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2021-02-27 10:35:29,280 DEBUG upload_rdf: request upload RDFs view
+2021-02-27 10:35:29,280 DEBUG upload_rdf: upload RDFs clean view
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_service_handlers.py::test_generate_report</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2021-02-27 10:35:29,303 DEBUG generate_report: start service for generating report with location: /tmp/pytest-of-laur/pytest-0/test_generate_report0/report
+2021-02-27 10:35:29,303 DEBUG generate_report: finish service for generating report with location: /tmp/pytest-of-laur/pytest-0/test_generate_report0/report
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_service_handlers.py::test_get_report_location_html</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2021-02-27 10:35:29,305 DEBUG LAM_HTML_REPORT_TEMPLATE_LOCATION: /home/laur/work/lam4doc/templates/html
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_service_handlers.py::test_get_report_location_pdf</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>2021-02-27 10:35:29,307 DEBUG LAM_PDF_REPORT_TEMPLATE_LOCATION: /home/laur/work/lam4doc/templates/pdf
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_service_handlers.py::test_get_report_location_failure</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc01__access_lam_online_tool</td>
-          <td class="col-duration">14.04</td>
+          <td class="col-duration">14.20</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -470,7 +554,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc03_toc_for_properties_expands_and_collapses</td>
-          <td class="col-duration">10.41</td>
+          <td class="col-duration">9.83</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -479,7 +563,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc03_toc_for_properties_selected_entry_is_highlighted</td>
-          <td class="col-duration">9.50</td>
+          <td class="col-duration">9.10</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -488,7 +572,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc04_toc_for_templates_expands_and_collapses</td>
-          <td class="col-duration">11.66</td>
+          <td class="col-duration">11.58</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -497,7 +581,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc05_toc_for_celex_numbers_expands_and_collapses</td>
-          <td class="col-duration">11.63</td>
+          <td class="col-duration">11.41</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -506,7 +590,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_tc05_toc_for_celex_numbers_selected_entry_is_highlighted</td>
-          <td class="col-duration">10.51</td>
+          <td class="col-duration">10.18</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -515,7 +599,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_verify_that_specific_properties_exist</td>
-          <td class="col-duration">12.76</td>
+          <td class="col-duration">12.83</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -524,7 +608,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_verify_that_specific_classes_exist</td>
-          <td class="col-duration">11.65</td>
+          <td class="col-duration">11.44</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
@@ -533,7 +617,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">tests/steps/test_cases_functional.py::test_verify_that_specific_celexs_exist</td>
-          <td class="col-duration">11.80</td>
+          <td class="col-duration">12.19</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">

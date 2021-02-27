@@ -141,7 +141,14 @@ def step_impl(browser, scenario_context, field_id, css_class):
 @then(parsers.cfparse('the field with XPath {field_xpath:String} has CSS class {css_class:String}',
                       extra_types=dict(String=str)))
 def step_impl(browser, scenario_context, field_xpath, css_class):
-    assert str(browser.find_element_by_xpath(field_xpath).get_attribute("class")) == css_class
+    all_css_present = True
+    element_css_list = browser.find_element_by_xpath(field_xpath).get_attribute("class").split()
+    reference_css_list = css_class.split()
+    for reference_css in reference_css_list:
+        if reference_css not in element_css_list:
+            all_css_present = False
+            break
+    assert all_css_present
 
 
 @when(parsers.cfparse('I click on the button with id {control_id:String}', extra_types=dict(String=str)))

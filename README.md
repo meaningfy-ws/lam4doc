@@ -18,7 +18,10 @@ The user interface is simple and intuitive. Choose what you need to generate and
 - Upgrades PIP to the latest version and installs the local requirements
 
 **test**
-- Runs pytest which in turns executes the unit and BDD tests
+- Runs pytest which in turns executes the unit and BDD tests which are ran using headless Chrome. You need to successfully run the **install** target beforehand, as it installs the necessary prerequisites (the chrome browser and the driver which corresponds to that specific chrome browser version)
+
+**test-with-ui**
+- Runs pytest which in turns executes the unit and BDD tests which are ran using the fully UI enabled Chrome. You need to successfully run the **install** target beforehand, as it installs the necessary prerequisites (the chrome browser and the driver which corresponds to that specific chrome browser version). A "Chrome is being controlled by automated test software" message will be displayed on the top. Please wait for the tests to finish and do not interact with the browser window(s) driven by the BDD tests. 
 
 **build-services**
 - Uses docker-compose to build all the services defined in the docker/docker-compose.yml file.

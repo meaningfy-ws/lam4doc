@@ -16,6 +16,10 @@ test:
 	@ echo "$(BUILD_PRINT)Running the tests"
 	@ pytest --html=report.html --self-contained-html
 
+test-with-ui:
+	@ echo "$(BUILD_PRINT)Running the tests"
+	@ (export RUN_HEADLESS_UI_TESTS=False; pytest -s --html=report.html --self-contained-html)
+
 build-services:
 	@ echo -e '$(BUILD_PRINT)Building the containers'
 	@ docker-compose --file docker/docker-compose.yml --env-file .env build
