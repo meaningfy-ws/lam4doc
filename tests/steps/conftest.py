@@ -2,6 +2,7 @@
 # Date:  2020.11.27
 # Author: Laurentiu Mandru
 # Email: mclaurentiu79@gmail.com
+import os
 
 import pytest
 from selenium.webdriver.chrome.options import Options
@@ -17,7 +18,7 @@ def scenario_context():
 def browser():
     chrome_options = Options()
     from tests.config import RUN_HEADLESS_UI_TESTS
-    if RUN_HEADLESS_UI_TESTS:
+    if RUN_HEADLESS_UI_TESTS is True or RUN_HEADLESS_UI_TESTS == 'True':
         chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--window-size=1920,1080")

@@ -32,7 +32,7 @@ Feature: Test basic functionality LAM
     And I switch to the iframe with ID content
     And I click on the element with XPath //li[@data-unique='document-properties']
     And I click on the element with XPath //li[@data-unique='-essential-information-[cl]-']
-    Then the field with XPath //li[@data-unique='-essential-information-[cl]-'] has CSS class tocify-item ui-widget-content ui-state-hover ui-state-default
+    Then the field with XPath //li[@data-unique='-essential-information-[cl]-'] has CSS class tocify-item ui-widget-content ui-state-default
 
 
     Scenario: TC.04 – TOC for Templates - Expands and collapses
@@ -63,7 +63,7 @@ Feature: Test basic functionality LAM
     And I click on the element with XPath //li[@data-unique='celex-classes']
     And I click on the element with XPath //li[@data-unique='-celex-sector-1-[cl]-']
     And I click on the element with XPath //li[@data-unique='-declaration-annexed-to-the-final-act-[cn]-']
-    Then the field with XPath //li[@data-unique='-declaration-annexed-to-the-final-act-[cn]-'] has CSS class tocify-item ui-widget-content ui-state-hover ui-state-default
+    Then the field with XPath //li[@data-unique='-declaration-annexed-to-the-final-act-[cn]-'] has CSS class tocify-item ui-widget-content ui-state-default
 
 
     Scenario: Verify that specific properties exist
