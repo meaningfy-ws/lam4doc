@@ -11,7 +11,7 @@ install:
 	@ pip install --upgrade pip
 	@ pip install -r requirements/dev.txt
 	@ sudo ./requirements/install_chrome_and_driver.sh
-	@ sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra texlive-bibtex-extra
+	@ sudo apt-get install -y zip texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra texlive-bibtex-extra
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"
