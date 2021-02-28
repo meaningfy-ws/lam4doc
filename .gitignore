@@ -146,3 +146,22 @@ junit_report.xml
 
 # Fuseki
 fuseki-lam-volume/
+
+# Auxiliary files resulted by latex processing
+*.aux
+*.dvi
+*.lof
+*.lot
+*.bit
+*.idx
+*.glo
+*.bbl
+*.bcf
+*.ilg
+*.toc
+*.ind
+*.out
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
