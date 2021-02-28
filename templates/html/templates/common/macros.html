@@ -129,10 +129,10 @@
                         <div class="card-body">
                             {% for idx, item in values.iteritems() %}
                                 {% if link_label_property_id is none %}
-                                    <a href={{ '"' + item +'"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ namespaces.uri_to_qname(item, error_fail=False) |e|replace("\n","<br/>") }}</a>
+                                    <a title="{{ item }}" href={{ '"' + item +'"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ namespaces.uri_to_qname(item, error_fail=False) |e|replace("\n","<br/>") }}</a>
                                     <br>
                                 {% else %}
-                                    <a href={{ '"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a>
+                                    <a title="{{ item }}" href={{ '"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a>
                                 {% endif %}
                                 {{ "<hr> " if not loop.last }}
                             {% endfor %}
@@ -145,11 +145,11 @@
                     {% for idx, item in values.iteritems() %}
                         {% if link_label_property_id is none %}
                             <dd>
-                                <a href={{ '"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ namespaces.uri_to_qname(item, error_fail=False)|e|replace("\n","<br/>") }}</a>
+                                <a title="{{ item }}" href={{ '"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ namespaces.uri_to_qname(item, error_fail=False)|e|replace("\n","<br/>") }}</a>
                             </dd>
                         {% else %}
                             <dd>
-                                <a href={{ '"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a>
+                                <a title="{{ item }}" href={{ '"' + item + '"' + ' target="_blank"' if external_link else '"#' + item + '"' }} property="{{ rdfa_property }}">{{ link_label_property_id }}</a>
                             </dd>
                         {% endif %}
                     {% endfor %}
@@ -183,10 +183,10 @@
             {{ label + " " }}
             {% for idx, item in values.iteritems() %}
                 {% if external %}
-                    <a href="{{ item }}"
+                    <a title="{{ item }}" href="{{ item }}"
                        target="_blank">{{ namespaces.uri_to_qname(item, error_fail=False)|e|replace("\n","<br/>") }}</a>
                 {% else %}
-                    <a href="#{{ item }}">{{ namespaces.uri_to_qname(item, error_fail=False)|e|replace("\n","<br/>") }}</a>
+                    <a title="{{ item }}" href="#{{ item }}">{{ namespaces.uri_to_qname(item, error_fail=False)|e|replace("\n","<br/>") }}</a>
                 {% endif %}
             {% endfor %}
         {% endif %}
