@@ -11,6 +11,7 @@ install:
 	@ pip install --upgrade pip
 	@ pip install -r requirements/dev.txt
 	@ sudo ./requirements/install_chrome_and_driver.sh
+	@ sudo apt-get install texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra texlive-bibtex-extra
 
 test:
 	@ echo "$(BUILD_PRINT)Running the tests"
@@ -50,6 +51,15 @@ generate-indexes:
 generate-content:
 	@ echo -e '$(BUILD_PRINT)Generating the content'
 	@ mkreport --target ./templates/html/ --output ./docker/nginx/www/
+
+generate-pdf:
+	@ echo -e '$(BUILD_PRINT)Generating the PDF'
+	@ mkreport --target ./templates/pdf/ --output ./docker/nginx/www/
+	@ (cd ./docker/nginx/www/; pdflatex -synctex=1 -interaction=nonstopmode main-all.tex; rm *.aux *.bcf *.idx *.log *.ptc *.tex *.toc *.xml *.gz *.ist; rm -rf images/)
+
+generate-zip: generate-indexes generate-content generate-pdf
+	@ echo -e '$(BUILD_PRINT)Generating the ZIP file'
+	@ (cd ./docker/nginx/www/; zip -r everything.zip .)
 #-----------------------------------------------------------------------------
 # Gherkin feature and acceptance test generation commands
 #-----------------------------------------------------------------------------
