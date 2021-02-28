@@ -34,6 +34,12 @@ class AbstractSPARQLAdapter(ABC):
     """
 
     @abstractmethod
+    def create_dataset(self, dataset_name: str):
+        """
+        :param dataset_name: the name of the target dataset
+        """
+
+    @abstractmethod
     def delete_graph(self, dataset_name: str, graph_name: str):
         """
         :param dataset_name: the name of the target dataset
@@ -51,11 +57,27 @@ class AbstractSPARQLAdapter(ABC):
 
 
 class FusekiSPARQLAdapter(AbstractSPARQLAdapter):
+    def create_dataset(self, dataset_name: str):
+        logger.debug('Attempting to create dataset named ' + dataset_name)
+
+        response = self.http_client.post(
+            url=urljoin(self.triplestore_service_url, "/$/datasets?dbName=" + dataset_name + "&dbType=tdb"),
+            auth=HTTPBasicAuth(config.LAM_FUSEKI_USERNAME,
+                               config.LAM_FUSEKI_PASSWORD))
+        logger.debug(response.text)
+        if response.status_code != 200:
+            raise FusekiException(f'Error while attempting to create the specified dataset: {response.text}')
+
+        try:
+            return response.json()
+        except JSONDecodeError:
+            return response.text
+
     def __init__(self, triplestore_service_url: str, http_client):
         self.triplestore_service_url = triplestore_service_url
         self.http_client = http_client
 
-    def delete_graph(self, dataset_name: str, graph_name: str):
+    def delete_graph(self, dataset_name: str, graph_name: str) -> bool:
         query_data = {"update": "DROP GRAPH " + f"<{graph_name}>"}
         logger.debug("QUERY DATA = " + str(query_data))
 
@@ -64,13 +86,12 @@ class FusekiSPARQLAdapter(AbstractSPARQLAdapter):
                                                             config.LAM_FUSEKI_PASSWORD),
                                          data=query_data)
         logger.debug(response.text)
-        if response.status_code != 200 and response.status_code != 404:
+        if response.status_code == 200:
+            return True
+        elif response.status_code == 404:
+            return False
+        else:
             raise FusekiException(f'Error while attempting to delete the graph: {response.text}')
-
-        try:
-            return response.json()
-        except JSONDecodeError:
-            return response.text
 
     def upload_file_to_graph(self, dataset_name: str, graph_name: str, file_path: str) -> dict:
         """
