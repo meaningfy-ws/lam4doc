@@ -19,7 +19,7 @@ test:
 
 test-with-ui:
 	@ echo "$(BUILD_PRINT)Running the tests"
-	@ (export RUN_HEADLESS_UI_TESTS=False; pytest -s --html=report.html --self-contained-html)
+	@ (export RUN_HEADLESS_UI_TESTS=False; export LAM_URL=http://srv.meaningfy.ws:9090; pytest -s --html=report.html --self-contained-html)
 
 build-services:
 	@ echo -e '$(BUILD_PRINT)Building the containers'
