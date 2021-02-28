@@ -64,7 +64,7 @@ class FusekiSPARQLAdapter(AbstractSPARQLAdapter):
                                                             config.LAM_FUSEKI_PASSWORD),
                                          data=query_data)
         logger.debug(response.text)
-        if response.status_code != 200:
+        if response.status_code != 200 and response.status_code != 404:
             raise FusekiException(f'Error while attempting to delete the graph: {response.text}')
 
         try:
@@ -93,14 +93,16 @@ class FusekiSPARQLAdapter(AbstractSPARQLAdapter):
             fields={'file': (file_path, open(file_path, 'rb'), get_file_format(file_path))}
         )
 
-        response = self.http_client.post(urljoin(self.triplestore_service_url, f"/{dataset_name}/data?graph=" + graph_name),
-                                         data=multipart_encoder,
-                                         auth=HTTPBasicAuth(config.LAM_FUSEKI_USERNAME,
-                                                            config.LAM_FUSEKI_PASSWORD),
-                                         headers={'Content-Type': multipart_encoder.content_type})
+        response = self.http_client.post(
+            urljoin(self.triplestore_service_url, f"/{dataset_name}/data?graph=" + graph_name),
+            data=multipart_encoder,
+            auth=HTTPBasicAuth(config.LAM_FUSEKI_USERNAME,
+                               config.LAM_FUSEKI_PASSWORD),
+            headers={'Content-Type': multipart_encoder.content_type})
 
         if response.status_code == 201:
-            logger.debug("Successfully uploaded the file '" + file_path + "' into the graph '" + graph_name + "' of the dataset '" + dataset_name + "'")
+            logger.debug(
+                "Successfully uploaded the file '" + file_path + "' into the graph '" + graph_name + "' of the dataset '" + dataset_name + "'")
 
         if response.status_code == 200:
             logger.warning("The triple store responded with HTTP status code 200 OK ! This means you ADDED "
@@ -113,4 +115,3 @@ class FusekiSPARQLAdapter(AbstractSPARQLAdapter):
             return response.json()
         except JSONDecodeError:
             return response.text
-
