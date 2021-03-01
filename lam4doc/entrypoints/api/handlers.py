@@ -116,7 +116,8 @@ def upload_rdfs(body: dict, lam_properties_document: FileStorage = None, lam_cla
                 local_lam_properties_file = Path(temp_folder) / lam_properties_document.filename
                 lam_properties_document.save(local_lam_properties_file)
                 logger.info("lam_properties_document - saved to " + str(local_lam_properties_file))
-                sparql_adapter.delete_graph(dataset_name, config.LAM_DOCUMENT_PROPERTY_GRAPH)
+                if not sparql_adapter.delete_graph(dataset_name, config.LAM_DOCUMENT_PROPERTY_GRAPH):
+                    sparql_adapter.create_dataset(dataset_name)
                 sparql_adapter.upload_file_to_graph(dataset_name,
                                                     config.LAM_DOCUMENT_PROPERTY_GRAPH,
                                                     str(local_lam_properties_file))
