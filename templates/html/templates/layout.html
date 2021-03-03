@@ -78,6 +78,14 @@
             overflow-wrap: anywhere;
         }
 
+        #modalButton {
+            right: 0;
+            position: fixed;
+            bottom: 0;
+            background-color: #087faa;
+            border-color: #087faa;
+        }
+
         .loading {
             position: fixed;
             top: 0;
@@ -194,7 +202,7 @@
             counter-reset: H5;
         }
 
-        h5:before {
+        h5:not(.counter-skip):before {
             content: counter(H1) "." counter(H2) "." counter(H3) "." counter(H4) "." counter(H5) " ";
             counter-increment: H5;
         }
@@ -262,7 +270,7 @@
                 <div id="toc"></div>
             </div>
             <div class="col-sm-12 col-md-9">
-                <h1 class="text-center counter-skip" id="skip-toc">{{ conf.title }}</h1>
+                <h1 class="text-center counter-skip skip-toc" id="skip-toc">{{ conf.title }}</h1>
                 <div id="content">
                     {% block content %}
                         < empty >
@@ -271,7 +279,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </main>
@@ -298,7 +305,7 @@
                 selectors: "h1,h2,h3,h4,h5,h6,h7,h8",
                 theme: "jqueryui",
                 hashGenerator: "pretty",
-                ignoreSelector: "#skip-toc",
+                ignoreSelector: ".skip-toc",
                 highlightOnScroll: "true",
                 highlightDefault: "true"
             });
