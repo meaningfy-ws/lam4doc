@@ -3,7 +3,7 @@
   "template_flavour_syntax": "latex",
   "latex_engine": "xelatex",
   "conf": {
-    "default_endpoint": "http://srv.meaningfy.ws:3030/lam/query",
+    "default_endpoint": "http://srv.meaningfy.ws:3010/lam/query",
     "title": "LAM Report",
     "type": "report",
     "author": "Meaningfy",
