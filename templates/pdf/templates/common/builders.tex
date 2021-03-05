@@ -211,22 +211,22 @@
             %- set superscript_text=" \\textsuperscript{\\normalsize "+super_script_symbol+" }"
             %- set text = values[0]
             %- if level == 1
-                \part{\VAR{ text|replace("\n"," // ")} }
+                \part{\VAR{ text|escape_latex|replace("\n"," // ")} }
                 \label{sec:\VAR{instance_uri}}
             %- elif level == 2
-                \chapter{ \VAR{ text |replace("\n"," // ")} \VAR{ superscript_text } }
+                \chapter{ \VAR{ text|escape_latex|replace("\n"," // ")} \VAR{ superscript_text } }
                 \label{sec:\VAR{instance_uri}}
             %- elif level == 3
-                \section{ \VAR{ text |replace("\n"," // ")} \VAR{ superscript_text } }
+                \section{ \VAR{ text|escape_latex|replace("\n"," // ")} \VAR{ superscript_text } }
                 \label{sec:\VAR{instance_uri}}
             %- elif level == 4
-                \subsection{ \VAR{ text |replace("\n"," // ")} \VAR{ superscript_text } }
+                \subsection{ \VAR{ text|escape_latex|replace("\n"," // ")} \VAR{ superscript_text } }
                 \label{sec:\VAR{instance_uri}}
             %- elif level == 5
-                \subsubsection{ \VAR{ text |replace("\n"," // ")} \VAR{ superscript_text } }
+                \subsubsection{ \VAR{ text|escape_latex|replace("\n"," // ")} \VAR{ superscript_text } }
                 \label{sec:\VAR{instance_uri}}
             %- else
-                \section{Headding level out of boundaries: use a number 1 -- 5}
+                \section{Headding level \VAR{level} out of boundaries: use a number 1 -- 5}
             %- endif
         %- endif
     %- endcall

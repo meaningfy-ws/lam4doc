@@ -1,0 +1,21 @@
+{
+  "template": "main-lam-classes.tex",
+  "template_flavour_syntax": "latex",
+  "latex_engine": "xelatex",
+  "conf": {
+    "default_endpoint": "http://srv.meaningfy.ws:3010/lam/query",
+    "title": "LAM Report",
+    "type": "report",
+    "author": "Meaningfy",
+    "debug": false,
+    "lam_properties": {
+      "graph": "http://publications.europa.eu/resources/authority/lam/DocumentProperty"
+    },
+    "lam_classes": {
+      "graph": "http://publications.europa.eu/resources/authority/lam/LAMLegalDocument"
+    },
+    "celex_classes": {
+      "graph": "http://publications.europa.eu/resources/authority/celex/CelexLegalDocument"
+    }
+  }
+}

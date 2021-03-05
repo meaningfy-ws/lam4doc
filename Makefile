@@ -48,14 +48,28 @@ generate-indexes:
 	@ rm -rf ./output/classes/
 	@ rm -rf ./output/properties/
 
-generate-content:
-	@ echo -e '$(BUILD_PRINT)Generating the content'
+generate-html:
+	@ echo -e '$(BUILD_PRINT)Generating the HTML content'
 	@ mkreport --target ./templates/html/ --output ./docker/nginx/www/
 
 generate-pdf:
 	@ echo -e '$(BUILD_PRINT)Generating the PDF'
-	@ mkreport --target ./templates/pdf/ --output ./docker/nginx/www/
-	@ (cd ./docker/nginx/www/; pdflatex -synctex=1 -interaction=nonstopmode main-all.tex; rm *.aux *.bcf *.idx *.log *.ptc *.tex *.toc *.xml *.gz *.ist; rm -rf images/)
+
+	@ echo -e '$(BUILD_PRINT)(dev) Generating PDF for CELEX...'
+	@ cd templates/pdf/; mkreport --config main-celex.json --xelatex
+	@ mv ./templates/pdf/output/main-celex-classes.pdf ./docker/nginx/www/main-celex-classes.pdf
+
+	@ echo -e '$(BUILD_PRINT)(dev) Generating PDF for Properties...'
+	@ cd templates/pdf/; mkreport --config main-properties.json --xelatex
+	@ mv ./templates/pdf/output/main-lam-properties.pdf ./docker/nginx/www/main-lam-properties.pdf
+
+	@ echo -e '$(BUILD_PRINT)(dev) Generating PDF for LAM Classes...'
+	@ cd templates/pdf/; mkreport --config main-classes.json --xelatex
+	@ mv ./templates/pdf/output/main-lam-classes.pdf ./docker/nginx/www/main-lam-classes.pdf
+
+	@ echo -e '$(BUILD_PRINT)(dev) Generating PDF for the whole LAM content...'
+	@ cd templates/pdf/; mkreport --config main-all.json --xelatex
+	@ mv ./templates/pdf/output/main-all.pdf ./docker/nginx/www/main-all.pdf
 
 generate-zip: generate-indexes generate-content generate-pdf
 	@ echo -e '$(BUILD_PRINT)Generating the ZIP file'
