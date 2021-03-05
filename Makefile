@@ -48,8 +48,8 @@ generate-indexes:
 	@ rm -rf ./output/classes/
 	@ rm -rf ./output/properties/
 
-generate-content:
-	@ echo -e '$(BUILD_PRINT)Generating the content'
+generate-html:
+	@ echo -e '$(BUILD_PRINT)Generating the HTML content'
 	@ mkreport --target ./templates/html/ --output ./docker/nginx/www/
 
 generate-pdf:
@@ -69,7 +69,7 @@ generate-pdf:
 
 	@ echo -e '$(BUILD_PRINT)(dev) Generating PDF for the whole LAM content...'
 	@ cd templates/pdf/; mkreport --config main-all.json --xelatex
-	@ mv ./templates/pdf/output/main-all.pdf ./docker/nginx/www/main-all.pdf
+	@ mv ./templates/pdf/output/main-all.pdf ./docker/nginx/www/main-alll.pdf
 
 generate-zip: generate-indexes generate-content generate-pdf
 	@ echo -e '$(BUILD_PRINT)Generating the ZIP file'
