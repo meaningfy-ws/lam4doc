@@ -9,13 +9,13 @@ PREFIX lamd: <http://publications.europa.eu/resources/authority/lam/>
 select
 ?classURI
 (group_concat(distinct ?rdfType; separator=", ") as ?types)
-(group_concat(distinct ?authorConfigValue; separator=", ") as ?authors)
-(group_concat(distinct ?resourceTypeConfigValue; separator=", ") as ?resourceTypes)
+(group_concat(distinct ?authorConfigValue; separator=", ") as ?AU)
+(group_concat(distinct ?resourceTypeConfigValue; separator=", ") as ?FM)
 (group_concat(distinct ?collectionURI; separator=", ") as ?collections)
-(group_concat(distinct ?dnClassValue; separator=", ") as ?dnClassValues)
-(group_concat(distinct ?dcValue; separator=", ") as ?dc)
-(group_concat(distinct ?ctValue; separator=", ") as ?ct)
-(group_concat(distinct ?ccValue; separator=", ") as ?cc)
+(group_concat(distinct ?dnClassValue; separator=", ") as ?CDM_CLASS)
+(group_concat(distinct ?dcValue; separator=", ") as ?DC)
+(group_concat(distinct ?ctValue; separator=", ") as ?CT)
+(group_concat(distinct ?ccValue; separator=", ") as ?CC)
 (group_concat(?label; separator=", ") as ?labels)
 (group_concat(?note; separator=", ") as ?notes)
 (group_concat(?example; separator=", ") as ?examples)
@@ -35,17 +35,17 @@ FROM <http://publications.europa.eu/resources/authority/lam/LAMLegalDocument>
         sh:value ?dnClassValue .
   }
   optional{
-    ?classURI lam:classifyWith ?dcPropConfig .
+    ?classURI lam:hasPropertyConfiguration ?dcPropConfig .
     ?dcPropConfig lam:path lamd:md_DC;
         sh:value ?dcValue .
   }
   optional{
-    ?classURI lam:classifyWith ?ctPropConfig .
+    ?classURI lam:hasPropertyConfiguration ?ctPropConfig .
     ?ctPropConfig lam:path lamd:md_CT;
         sh:value ?ctValue .
   }
   optional{
-    ?classURI lam:classifyWith ?ccPropConfig .
+    ?classURI lam:hasPropertyConfiguration ?ccPropConfig .
     ?ccPropConfig lam:path lamd:md_CC;
         sh:value ?ccValue .
   }
