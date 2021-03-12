@@ -16,6 +16,7 @@ select
 (group_concat(distinct ?dcValue; separator=", ") as ?DC)
 (group_concat(distinct ?ctValue; separator=", ") as ?CT)
 (group_concat(distinct ?ccValue; separator=", ") as ?CC)
+(group_concat(distinct ?celexClassValue; separator=", ") as ?DN_CLASS)
 (group_concat(?label; separator=", ") as ?labels)
 (group_concat(?note; separator=", ") as ?notes)
 (group_concat(?example; separator=", ") as ?examples)
@@ -33,6 +34,11 @@ FROM <http://publications.europa.eu/resources/authority/lam/LAMLegalDocument>
     ?classURI lam:classifyWith ?dnClassPropConfig .
     ?dnClassPropConfig lam:path lamd:md_CDM_CLASS;
         sh:value ?dnClassValue .
+  }
+  optional {
+    ?classURI lam:classifyWith ?celexClassifyWith .
+    ?celexClassifyWith lam:path lamd:md_DN_CLASS;
+        sh:value ?celexClassValue .
   }
   optional{
     ?classURI lam:hasPropertyConfiguration ?dcPropConfig .
