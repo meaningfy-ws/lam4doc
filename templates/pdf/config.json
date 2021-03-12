@@ -1,5 +1,4 @@
 {
-  "template": "main-lam-properties.tex",
   "template_flavour_syntax": "latex",
   "latex_engine": "xelatex",
   "conf": {
