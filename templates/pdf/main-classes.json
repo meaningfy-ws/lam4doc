@@ -1,5 +1,5 @@
 {
-  "template": "main-all.tex",
+  "template": "main-lam-classes.tex",
   "template_flavour_syntax": "latex",
   "latex_engine": "xelatex",
   "conf": {
