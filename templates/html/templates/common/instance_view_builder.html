@@ -115,7 +115,7 @@
             {{ macros.render_description_item_plain_literal (content, "modified", "Modified on", "dct:modified") }}
             {{ macros.render_description_item_plain_literal (content, "notation", "Notation", "skos:notation") }}
             {{ macros.render_description_item_plain_literal (content, "identifier", "Identifier", "dct:identifier") }}
-            {{ macros.render_description_item_plain_literal (content, "order", "Order", "euvoc:order") }}
+            {{ macros.render_description_item_plain_literal (content, "order", "Order", "euvoc:order", is_integer=True) }}
             {% if conf.debug %}
                 <p class="debug-render">skos concept part for</p>
             {% endif %}
@@ -135,7 +135,7 @@
     PREFIX dct: <http://purl.org/dc/terms/>
     PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
 
-    select ?definition ?scopeNote ?example ?changeNote ?historyNote ?editorialNote ?note ?member ?broaderConcept ?shName ?shDescription
+    select ?definition ?scopeNote ?example ?changeNote ?historyNote ?editorialNote ?note ?member ?narrowerConcept ?shName ?shDescription
     FROM <~graph>
     {
       values ?instance {<"~instance_uri~">}
@@ -164,7 +164,7 @@
         ?instance skos:member ?member .
       }
       union {
-        ?broaderConcept skos:broader ?instance .
+        ?narrowerConcept skos:broader ?instance .
       }
       union {
         ?instance sh:name ?shName .
@@ -188,7 +188,7 @@
             {{ macros.render_description_item_plain_literal (content, "editorialNote", "Editorial note", "skos:editorialNote", True) }}
             {{ macros.render_description_item_plain_literal (content, "note", "Note" , "skos:note", True) }}
             {{ macros.render_description_item_iri (content, "member", "Members", "skos:member", None,True) }}
-            {{ macros.render_description_item_iri (content, "broaderConcept", "Broader Concepts", "skos:broader", None,True) }}
+            {{ macros.render_description_item_iri (content, "narrowerConcept", "Narrower Concepts", "skos:broader", None,True) }}
             {% if conf.debug %}
                 <p class="debug-render">sh editorial part for <strong>{{ instance_uri }}</strong></p>
             {% endif %}
@@ -338,13 +338,14 @@
         <p class="debug-render">render_lam_classification_hint</p>
     {% endif %}
     {% if not content.empty %}
+{#        {% set content_reference =  content.astype("int64", copy=False, errors="ignore") %}#}
         {{ macros.render_inline_link(content, 'path', 'property') }}
         {{ macros.render_inline_values(content, 'minCount', 'min', '0') }}
         {{ macros.render_inline_values(content, 'maxCount', 'max', '*') }}
         {{ macros.render_inline_values(content, "flags", "flags") }}
         {{ macros.render_inline_values(content, "pattern", "pattern") }}
         {{ macros.render_inline_values(content, "class", "class") }}
-        {{ macros.render_inline_link(content, "value", "value", True) }}
+        {{ macros.render_inline_values(content, "value", "value", is_integer=True) }}
         <br>
     {% endif %}
 {% endmacro %}
@@ -357,6 +358,8 @@
     {#    {% set graph = parameters.graph %}#}
 
     {{ build_links_from_classify_with_or_has_property_configuration(parameters, instance_uri) }}
+    {{ build_links_from_lam_class_property_configurations_for_celex_uri(parameters, instance_uri) }}
+    {{ build_links_from_lam_class_property_configurations_for_lam_property_uri(parameters, instance_uri) }}
 {% endmacro %}
 
 {% macro build_links_from_classify_with_or_has_property_configuration(parameters, instance_uri) %}
@@ -389,13 +392,119 @@
                 <div class="card-header">
                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                     <a class="text-dark font-weight-bold" onclick="showContent()">
-                        Useful links
+                        Useful links - LAM templates
                     </a>
                 </div>
                 <div class="collapse hide">
                     <div class="card-body">
                         {% for row in content.itertuples() %}
                             <a href="#{{ row.link }}">{{ row.linkLabel }}</a><br>
+                            {{ "<hr> " if not loop.last }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endcall %}
+{% endmacro %}
+
+
+{% macro build_links_from_lam_class_property_configurations_for_celex_uri(parameters, instance_uri) %}
+    {% if conf.debug %}
+        <p class="debug">build_links_from_celex_class_property_configurations <strong>{{ instance_uri }}</strong>
+        </p>
+    {% endif %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+    prefix celexd: <http://publications.europa.eu/resources/authority/celex/>
+    prefix lamd: <http://publications.europa.eu/resources/authority/lam/>
+    prefix sh: <http://www.w3.org/ns/shacl#>
+
+    select distinct ?lam_class_uri ?lam_class_label
+    {
+        values ?celex_class_uri {<"~instance_uri~">}
+        values ?celex_class_linker { lamd:md_DN_CLASS }
+        graph ?graphUri {
+
+            ?lam_class_uri lam:classifyWith | lam:hasPropertyConfiguration ?prop_config .
+            ?lam_class_uri skos:prefLabel ?lam_class_label .
+
+             ?prop_config lam:path ?celex_class_linker .
+
+            ?prop_config sh:value ?celex_class_uri .
+            ?prop_config sh:name ?name .
+        }
+    }" %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
+    {% call macros.render_fetch_results(content, error) %}
+        {% if not content.dropna().empty %}
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    <a class="text-dark font-weight-bold" onclick="showContent()">
+                        Useful links - LAM templates
+                    </a>
+                </div>
+                <div class="collapse hide">
+                    <div class="card-body">
+                        {% for row in content.itertuples() %}
+                            <a href="#{{ row.lam_class_uri }}">{{ row.lam_class_label }}</a><br>
+                            {{ "<hr> " if not loop.last }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endcall %}
+{% endmacro %}
+
+{% macro build_links_from_lam_class_property_configurations_for_lam_property_uri(parameters, instance_uri) %}
+    {% if conf.debug %}
+        <p class="debug">build_links_from_celex_class_property_configurations <strong>{{ instance_uri }}</strong>
+        </p>
+    {% endif %}
+    {% set select_query =
+    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        prefix lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+        prefix celexd: <http://publications.europa.eu/resources/authority/celex/>
+        prefix lamd: <http://publications.europa.eu/resources/authority/lam/>
+        prefix sh: <http://www.w3.org/ns/shacl#>
+
+        select distinct ?celex_class_uri ?celex_class_label
+        {
+            values ?lam_property_uri {<"~instance_uri~">}
+            values ?celex_class_linker { lamd:md_DN_CLASS }
+
+            graph ?lam_class_graph_uri {
+                ?prop_config lam:path ?lam_property_uri .
+                ?lam_class lam:classifyWith | lam:hasPropertyConfiguration ?prop_config .
+                optional {
+                    ?lam_class skos:prefLabel ?lam_class_label .
+                }
+
+                ?lam_class lam:classifyWith | lam:hasPropertyConfiguration ?prop_config_celex .
+                ?prop_config_celex lam:path ?celex_class_linker .
+                ?prop_config_celex sh:value ?celex_class_uri .
+            }
+            GRAPH ?celex_graph {
+                ?celex_class_uri skos:prefLabel ?celex_class_label
+            }
+        }" %}
+    {% set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() %}
+    {% call macros.render_fetch_results(content, error) %}
+        {% if not content.dropna().empty %}
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    <a class="text-dark font-weight-bold" onclick="showContent()">
+                        Useful links - CELEX classes
+                    </a>
+                </div>
+                <div class="collapse hide">
+                    <div class="card-body">
+                        {% for row in content.itertuples() %}
+                            <a href="#{{ row.celex_class_uri }}">{{ row.celex_class_label }}</a><br>
                             {{ "<hr> " if not loop.last }}
                         {% endfor %}
                     </div>
