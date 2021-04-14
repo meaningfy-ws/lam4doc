@@ -67,7 +67,7 @@
     {% if not result_set.empty and property_id in result_set.columns %}
         {% set values = result_set[property_id].dropna() %}
         {% if is_integer %}
-            {% set values = values.astype("int64", copy=False) %}
+            {% set values = values.astype("int64", copy=False, errors="ignore") %}
         {% endif %}
         {% if not values.empty %}
             {% if accordion_style %}
