@@ -10,13 +10,13 @@ SELECT
 (group_concat(distinct ?propertyCollection; separator=", ") as ?propertyCollections)
 (group_concat(distinct ?propertyCollectionLabel; separator=", ") as ?propertyCollectionLabels)
 (group_concat(distinct ?propertyType; separator=", ") as ?propertyTypes)
-(group_concat(?skosDefinition; separator=", ") as ?skosDefinitions)
-(group_concat(?editorialNote; separator=", ") as ?editorialNotes)
-(group_concat(?example; separator=", ") as ?examples)
-(group_concat(?historyNote; separator=", ") as ?historyNotes)
-(group_concat(?scopeNote; separator=", ") as ?scopeNotes)
-(group_concat(?notation; separator=", ") as ?notations)
-(group_concat(?label; separator=", ") as ?labels)
+(group_concat(distinct ?skosDefinition; separator=", ") as ?skosDefinitions)
+(group_concat(distinct ?editorialNote; separator=", ") as ?editorialNotes)
+(group_concat(distinct ?example; separator=", ") as ?examples)
+(group_concat(distinct ?historyNote; separator=", ") as ?historyNotes)
+(group_concat(distinct ?scopeNote; separator=", ") as ?scopeNotes)
+(group_concat(distinct ?notation; separator=", ") as ?notations)
+(group_concat(distinct ?label; separator=", ") as ?labels)
 
 FROM <http://publications.europa.eu/resources/authority/lam/DocumentProperty>
 
