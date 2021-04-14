@@ -2,15 +2,17 @@
 %! Date = 06/01/2021
 %! Builder macros aggregate selectors and renderers into a coherent document building logic
 
-%- import "common/selectors.tex" as selectors
-%- import "common/renderers.tex" as renderers
+%- import "common/selectors.tex" as selectors with context
+%- import "common/renderers.tex" as renderers with context
 
 %- macro build_instance_view (instance_uri, query_substitution_parameters, level, is_concept=false)
     \VAR{ _build_instance_header_part(instance_uri, query_substitution_parameters, level, is_concept=is_concept) }
     \VAR{ _build_instance_metadata_part(instance_uri, query_substitution_parameters) }
     \VAR{ _build_instance_editorial_part(instance_uri, query_substitution_parameters) }
     \VAR{ _build_instance_structural_relations_part(instance_uri, query_substitution_parameters) }
-     \VAR { "KIKI" }
+    \VAR{ _build_instance_property_configurations_part(instance_uri, query_substitution_parameters) }
+
+
 %- endmacro
 
 %- macro _build_instance_metadata_part(instance_uri, parameters)
@@ -54,22 +56,22 @@
       }
     }" }
 
-    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() 
-    %- call renderers.render_fetch_results(content, error) 
-        %- if not content.dropna(how="all").empty 
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular()
+    %- call renderers.render_fetch_results(content, error)
+        %- if not content.dropna(how="all").empty
             \paragraph*{IRI} \texttt{\footnotesize \VAR{instance_uri|escape_latex} }
 
             \VAR{ renderers.render_description_item_plain_literal (content, "deprecated", "Deprecated on") }
             \VAR{ renderers.render_description_item_plain_literal (content, "altLabel", "Alternative label") }
             \VAR{ renderers.render_description_item_plain_literal (content, "created", "Created on") }
             \VAR{ renderers.render_description_item_plain_literal (content, "modified", "Modified on") }
-            \VAR{ renderers.render_description_item_plain_literal (content, "notation", "Notation") }
-            \VAR{ renderers.render_description_item_plain_literal (content, "identifier", "Identifier") }
-            \VAR{ renderers.render_description_item_plain_literal (content, "order", "Order") }
-            \VAR{ renderers.render_description_item_plain_literal (content, "class", "Class") }
-            \VAR{ renderers.render_description_item_plain_literal (content, "path", "Path") }
+            \VAR{ renderers.render_description_item_plain_literal (content, "notation", "Notation", is_integer=True) }
+            \VAR{ renderers.render_description_item_plain_literal (content, "identifier", "Identifier", is_integer=True) }
+            \VAR{ renderers.render_description_item_plain_literal (content, "order", "Order", is_integer=True) }
+            \VAR{ renderers.render_description_item_plain_literal (content, "class", "Class", uri_to_qname=True) }
+            \VAR{ renderers.render_description_item_plain_literal (content, "path", "Path", uri_to_qname=True) }
         %- endif
-    %- endcall 
+    %- endcall
 %- endmacro
 
 %- macro _build_instance_editorial_part(instance_uri, parameters)
@@ -118,9 +120,9 @@
       }
     }"}
 
-    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() 
-    %- call renderers.render_fetch_results(content, error) 
-        %- if not content.dropna(how="all").empty 
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular()
+    %- call renderers.render_fetch_results(content, error)
+        %- if not content.dropna(how="all").empty
             \VAR{ renderers.render_description_item_plain_literal (content, "definition", "Definition") }
             \VAR{ renderers.render_description_item_plain_literal (content, "scopeNote", "Scope note") }
             \VAR{ renderers.render_description_item_listing (content, "example", "Example") }
@@ -130,8 +132,8 @@
             \VAR{ renderers.render_description_item_plain_literal (content, "note", "Note") }
             \VAR{ renderers.render_description_item_plain_literal (content, "shName", "Name") }
             \VAR{ renderers.render_description_item_plain_literal (content, "shDescription", "Description") }
-        %- endif 
-    %- endcall 
+        %- endif
+    %- endcall
 %- endmacro
 
 %- macro _build_instance_structural_relations_part(instance_uri, parameters)
@@ -184,7 +186,7 @@
     %- call renderers.render_fetch_results(content, error)
         %- if not content.dropna(how="all").empty
             \VAR{ renderers.render_description_item_local_iri (content, "member", "Members", None) }
-            \VAR{ renderers.render_description_item_local_iri (content, "broaderConcept", "Broader concepts", None) }
+            \VAR{ renderers.render_description_item_local_iri (content, "broaderConcept", "Narrower concepts", None) }
         %- endif
     %- endcall
 %- endmacro
@@ -252,5 +254,64 @@
 %- macro build_instance_concepts(parent_collection_uri, query_substitution_parameters, level)
     %- call(member_collection) selectors.select_member_concepts(parent_collection_uri, query_substitution_parameters)
         \VAR{ build_instance_view(instance_uri=member_collection, query_substitution_parameters=query_substitution_parameters, level=level, is_concept=true) }
+    %- endcall
+%- endmacro
+
+
+
+% -----------------------------------------------
+
+%- macro _build_instance_property_configurations_part(instance_uri, query_substitution_parameters)
+    %- call(property_configuration) selectors.select_instance_defining_configurations_part(instance_uri, query_substitution_parameters)
+        \VAR{ build_property_configuration(property_configuration, query_substitution_parameters=query_substitution_parameters)}
+    %- endcall
+    %- call(property_configuration) selectors.select_instance_property_configurations_part(instance_uri, query_substitution_parameters)
+        \VAR{ build_property_configuration(property_configuration, query_substitution_parameters=query_substitution_parameters)}
+    %- endcall
+%- endmacro
+
+%- macro build_property_configuration(property_configuration_uri, query_substitution_parameters )
+ \BLOCK{ set select_query =
+    """PREFIX sh: <http://www.w3.org/ns/shacl#>
+    PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
+
+    select ?name ?path ?flags ?pattern ?class ?value ?minCount ?maxCount ?configurations
+    FROM <~graph>
+    {
+      values ?instance {<"""~property_configuration_uri~""">}
+      {
+        ?instance sh:name ?name .
+      }
+      union {
+        ?instance lam:path ?path .
+      }
+      union {
+        ?instance sh:flags ?flags
+      }
+      union {
+        ?instance sh:pattern ?pattern
+      }
+      union {
+        ?instance sh:class ?class
+      }
+      union {
+        ?instance sh:value ?value
+      }
+      union {
+        ?instance sh:minCount ?minCount
+      }
+      union {
+        ?instance sh:maxCount ?maxCount
+      }
+      union {
+        ?instance lam:hasAnnotationConfiguration ?configurations
+      }
+    }"""}
+
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, query_substitution_parameters).fetch_tabular()
+    %- call renderers.render_fetch_results(content, error)
+        %- if not content.dropna(how="all").empty
+        \noindent \VAR{ renderers.render_inline_values(content, 'path', 'property', uri_to_qname=True) } \VAR{ renderers.render_inline_values(content, 'minCount', 'min', '0') } \VAR{ renderers.render_inline_values(content, 'maxCount', 'max', '*') } \VAR{ renderers.render_inline_values(content, "flags", "flags") } \VAR{ renderers.render_inline_values(content, "pattern", "pattern") } \VAR{ renderers.render_inline_values(content, "class", "class", uri_to_qname=True) } \VAR{ renderers.render_inline_values(content, "value", "value", is_integer=True, uri_to_qname=True) }
+        %- endif
     %- endcall
 %- endmacro

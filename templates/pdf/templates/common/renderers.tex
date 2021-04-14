@@ -47,9 +47,15 @@
     %- endif
 %- endmacro
 
-%- macro render_description_item_plain_literal(result_set, property_id, property_label)
+%- macro render_description_item_plain_literal(result_set, property_id, property_label, is_integer=False, uri_to_qname=False)
     %- if not result_set.empty and property_id in result_set.columns
         %- set values = result_set[property_id].dropna()
+        %- if is_integer
+            %- set values = values.astype("int64", copy=False, errors="ignore")
+        %- endif
+        %- if uri_to_qname
+            %- set values = values.apply(namespaces.uri_to_qname)
+        %- endif
         %- if not values.empty
             \paragraph*{\VAR{ property_label } }%\mbox{}\\
                 %- for idx, item in values.iteritems()
@@ -65,6 +71,7 @@
 %- macro render_description_item_local_iri(result_set, property_id, property_label, link_label_property_id=None)
     %- if not result_set.empty and property_id in result_set.columns
         %- set values =  result_set[property_id].dropna()
+        %- set values = values.apply(namespaces.uri_to_qname)
         %- if not values.empty
             \paragraph*{\VAR{ property_label } } %\mbox{}\\
             %- for idx, item in values.iteritems()
@@ -91,6 +98,27 @@
 \VAR{ item | trim }
 \end{lstlisting} \mbox{}\\
                 %- endfor
+        %- endif
+    %- else
+        \VAR{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }
+    %- endif
+%- endmacro
+
+%- macro render_inline_values(result_set, property_id, label, default_value=None, separator=',', is_integer=False, uri_to_qname=False)
+    %- if not result_set.empty and property_id in result_set.columns
+        %- set values = result_set[property_id].dropna()
+        %- if is_integer
+            %- set values = values.astype("int64", copy=False, errors="ignore")
+        %- endif
+        %- if not values.empty
+            %- if uri_to_qname
+                %- set values = values.apply(namespaces.uri_to_qname)
+            %- endif
+\VAR{ label + " " + ", ".join(values.astype('str').tolist()) |escape_latex|replace("\n","
+") }
+        %- elif default_value
+\VAR{ label + " " + default_value |escape_latex|replace("\n","
+") }
         %- endif
     %- else
         \VAR{ render_error("Either the result set is empty or the property id "~property_id~" doesn't exist") }

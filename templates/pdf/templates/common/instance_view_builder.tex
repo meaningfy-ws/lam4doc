@@ -1,27 +1,31 @@
-%- import "common/macros.tex" as macros
+%# TODO: this is a deprecated module
+
+%- import "common/macros.tex" as macros with context
+
+
 
 %- macro render_section_header(instance_uri, instance_label, level, is_concept=false) 
-    %- set super_script_symbol = "Cn" if is_concept else "Cl" 
+    %- set super_script_symbol = "Cn" if is_concept else "Cl"
     %- set superscript_text=" \\textsuperscript{\\normalsize "+super_script_symbol+" }"
     %- set text = instance_label
-    %- if level == 1 
+    %- if level == 1
 \part{\VAR{ text } }
 \label{sec:\VAR{instance_uri}}
-    %- elif level == 2 
+    %- elif level == 2
 \chapter{ \VAR{ text + superscript_text } }
 \label{sec:\VAR{instance_uri}}
-    %- elif level == 3 
+    %- elif level == 3
 \section{\VAR{ text + superscript_text } }
 \label{sec:\VAR{instance_uri}}
-    %- elif level == 4 
+    %- elif level == 4
 \subsection{\VAR{ text + superscript_text } }
 \label{sec:\VAR{instance_uri}}
-    %- elif level == 5 
+    %- elif level == 5
 \subsubsection{\VAR{text + superscript_text } }
 \label{sec:\VAR{instance_uri}}
-    %- else 
+    %- else
 \section{Headding level out of boundaries: use a number 1 -- 5}
-    %- endif 
+    %- endif
 %- endmacro 
 
 
@@ -67,9 +71,9 @@
       }
     }""" }
 
-    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() 
-    %- call macros.render_fetch_results(content, error) 
-        %- if not content.dropna(how="all").empty 
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular()
+    %- call macros.render_fetch_results(content, error)
+        %- if not content.dropna(how="all").empty
             \paragraph*{IRI} \texttt{\VAR{instance_uri|escape_latex} }
 
             \VAR{ macros.render_description_item_plain_literal (content, "deprecated", "Deprecated on") }
@@ -82,7 +86,7 @@
             \VAR{ macros.render_description_item_plain_literal (content, "class", "Class") }
             \VAR{ macros.render_description_item_plain_literal (content, "path", "Path") }
         %- endif
-    %- endcall 
+    %- endcall
 %- endmacro
 
 %- macro build_instance_editorial_part(parameters, instance_uri)
@@ -131,9 +135,9 @@
       }
     }"""}
 
-    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular() 
-    %- call macros.render_fetch_results(content, error) 
-        %- if not content.dropna(how="all").empty 
+    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular()
+    %- call macros.render_fetch_results(content, error)
+        %- if not content.dropna(how="all").empty
 
             \VAR{ macros.render_description_item_plain_literal (content, "definition", "Definition") }
             \VAR{ macros.render_description_item_plain_literal (content, "scopeNote", "Scope note") }
@@ -146,103 +150,22 @@
             \VAR{ macros.render_description_item_local_iri (content, "broaderConcept", "Broader Concepts", None) }
             \VAR{ macros.render_description_item_plain_literal (content, "shName", "Name") }
             \VAR{ macros.render_description_item_plain_literal (content, "shDescription", "Description") }
-        %- endif 
-    %- endcall 
-%- endmacro
-
-
-
-%- macro build_lam_classification_hint_or_property_configuration(parameters, instance_uri)
- \BLOCK{ set select_query =
-    """PREFIX sh: <http://www.w3.org/ns/shacl#>
-    PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
-
-    select ?name ?path ?flags ?pattern ?class ?value ?minCount ?maxCount ?configurations
-    FROM <~graph>
-    {
-      values ?instance {<"""~instance_uri~""">}
-      {
-        ?instance sh:name ?name .
-      }
-      union {
-        ?instance lam:path ?path .
-      }
-      union {
-        ?instance sh:flags ?flags
-      }
-      union {
-        ?instance sh:pattern ?pattern
-      }
-      union {
-        ?instance sh:class ?class
-      }
-      union {
-        ?instance sh:value ?value
-      }
-      union {
-        ?instance sh:minCount ?minCount
-      }
-      union {
-        ?instance sh:maxCount ?maxCount
-      }
-      union {
-        ?instance lam:hasAnnotationConfiguration ?configurations
-      }
-    }"""
-
-     %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular()
-     %- call macros.render_fetch_results(content, error)
-     \VAR { content|string }
-     \VAR { render_lam_classification_hint_or_property_configuration(content.dropna(how="all")) }
-
-        \BLOCK { for idx, item in content.iteritems() }
-            \VAR{ build_lam_classification_hint_or_property_configuration(parameters, item) }
-        \BLOCK{ endfor }
-     %- endcall
-%- endmacro
-
-
-%- macro render_lam_classification_hint_or_property_configuration(content)
-    \BLOCK { if not content.empty }
-        \VAR { macros.render_inline_link(content, 'path', 'property') }
-        \VAR { macros.render_inline_values(content, 'minCount', 'min', '0') }
-        \VAR { macros.render_inline_values(content, 'maxCount', 'max', '*') }
-        \VAR { macros.render_inline_values(content, "flags", "flags") }
-        \VAR { macros.render_inline_values(content, "pattern", "pattern") }
-        \VAR { macros.render_inline_values(content, "class", "class") }
-        \VAR { macros.render_inline_values(content, "value", "value") }
-    \BLOCK { endif }
-%- endmacro
-
-%- macro build_instance_property_configurations_part(parameters, instance_uri)
- \BLOCK{ set select_query =
-    """PREFIX sh: <http://www.w3.org/ns/shacl#>
-    PREFIX lam: <http://publications.europa.eu/ontology/lam-skos-ap#>
-
-    select ?propertyConfiguration
-    FROM <~graph>
-    {
-      values ?instance {<"""~instance_uri~""">}
-      ?instance lam:hasPropertyConfiguration ?propertyConfiguration .
-    }"""}
-
-    %- set content, error = from_endpoint(conf.default_endpoint).with_query(select_query, parameters).fetch_tabular()
-    %- call macros.render_fetch_results(content, error)
-        %- if not content.dropna(how="all").empty
-     \VAR { content|string }
-    \BLOCK { for row in content.itertuples() }
-     \VAR { build_lam_classification_hint_or_property_configuration(parameters, row.propertyConfiguration) }
-    \BLOCK { endfor }
-
         %- endif
     %- endcall
 %- endmacro
+
+
+
+
+
+
+
+
+
 
 %- macro build_instance_view (parameters, instance_uri, instance_label, level, is_concept=false) 
     \VAR{ render_section_header(instance_uri, instance_label, level, is_concept=false) }
     \VAR{ build_instance_metadata_part(parameters, instance_uri) }
     \VAR{ build_instance_editorial_part(parameters, instance_uri) }
-     \VAR { "KIKI" }
     \VAR{ build_instance_property_configurations_part(parameters, instance_uri) }
-      \VAR { "RIKI" }
 %- endmacro
