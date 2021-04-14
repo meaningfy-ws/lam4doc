@@ -1,5 +1,5 @@
-%- import "common/macros.tex" as macros
-%- import "common/instance_view_builder.tex" as instance_builder
+%- import "common/macros.tex" as macros with context
+%- import "common/builders.tex" as instance_builder with context
 
 %- macro build_child_collections(parameters, collection_uri, level) 
     \BLOCK{ set select_query =

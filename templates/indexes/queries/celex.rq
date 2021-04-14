@@ -19,7 +19,7 @@ SELECT
 (group_concat(distinct ?dtnValue; separator=", ") as ?dtnValues)
 (group_concat(distinct ?prefLabel; separator=", ") as ?labels)
 (group_concat(distinct ?example; separator=", ") as ?examples)
-(group_concat(?editorialNote; separator=", ") as ?editorialNotes)
+(group_concat(distinct ?editorialNote; separator=", ") as ?editorialNotes)
 
 FROM <http://publications.europa.eu/resources/authority/celex/CelexLegalDocument>
 

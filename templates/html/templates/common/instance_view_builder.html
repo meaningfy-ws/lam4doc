@@ -113,14 +113,14 @@
             {{ macros.render_description_item_plain_literal (content, "altLabel", "Alternative label", "skos:altLabel") }}
             {{ macros.render_description_item_plain_literal (content, "created", "Created on", "dct:created") }}
             {{ macros.render_description_item_plain_literal (content, "modified", "Modified on", "dct:modified") }}
-            {{ macros.render_description_item_plain_literal (content, "notation", "Notation", "skos:notation") }}
-            {{ macros.render_description_item_plain_literal (content, "identifier", "Identifier", "dct:identifier") }}
+            {{ macros.render_description_item_plain_literal (content, "notation", "Notation", "skos:notation", is_integer=True) }}
+            {{ macros.render_description_item_plain_literal (content, "identifier", "Identifier", "dct:identifier", is_integer=True) }}
             {{ macros.render_description_item_plain_literal (content, "order", "Order", "euvoc:order", is_integer=True) }}
             {% if conf.debug %}
                 <p class="debug-render">skos concept part for</p>
             {% endif %}
             {{ macros.render_description_item_iri (content, "class", "Class", "sh:class", external_link=True) }}
-            {{ macros.render_description_item_iri (content, "path", "Path", "sh:path", external_link=True) }}
+            {{ macros.render_description_item_plain_literal (content, "path", "Path", "sh:path") }}
         {% endif %}
     {% endcall %}
 {% endmacro %}
@@ -338,7 +338,6 @@
         <p class="debug-render">render_lam_classification_hint</p>
     {% endif %}
     {% if not content.empty %}
-{#        {% set content_reference =  content.astype("int64", copy=False, errors="ignore") %}#}
         {{ macros.render_inline_link(content, 'path', 'property') }}
         {{ macros.render_inline_values(content, 'minCount', 'min', '0') }}
         {{ macros.render_inline_values(content, 'maxCount', 'max', '*') }}

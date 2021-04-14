@@ -2,8 +2,8 @@
 
 %- block content
     %- set level = 2
-    % set prefixes, error = from_file(conf.template_path+'/prefixes.json').fetch_tree()
-    % set inverted_prefixes = invert_dict(prefixes)
+    %- set prefixes, error = from_file(conf.template_path+'/prefixes.json').fetch_tree()
+    %- set namespaces = namespace_inventory(prefixes)
 
     %- include "celex_classes/part.tex" with context
 
